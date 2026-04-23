@@ -17,12 +17,14 @@
     ?>
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/main-layout.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/header.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/sidebar.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/pages.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/footer.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body>
 <div class="container-fluid">
     <?php require __DIR__ . '/partials/header.php'; ?>
+    <?php require __DIR__ . '/partials/sidebar.php'; ?>
 
     <main class="content">
         <?php echo $content; ?>
@@ -30,5 +32,6 @@
 
     <?php require __DIR__ . '/partials/footer.php'; ?>
 </div>
+<script src="<?php echo htmlspecialchars($asset('js/user/sidebar.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

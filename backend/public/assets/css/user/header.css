@@ -15,6 +15,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 50px;
+  position: relative;
 }
 
 .logo-section {
@@ -24,6 +25,28 @@
 
 .logo-link {
   text-decoration: none;
+}
+
+.menu-toggle-btn {
+  display: none;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 24px;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Tren desktop (tu 1097px tro len), an tuyet doi nut menu 3 gach. */
+@media (min-width: 1097px) {
+  .menu-toggle-btn {
+    display: none !important;
+  }
 }
 
 .logo-img {
@@ -101,17 +124,25 @@
   background-color: #3ebcf6;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1096px) {
   .auth-section {
     display: none;
   }
 
   .desktop-menu {
-    display: none;
+    display: none !important;
+  }
+
+  .menu-toggle-btn {
+    display: block;
+    position: absolute;
+    left: 15px;
+    top: 18px;
   }
 
   .logo-section {
     width: 100%;
     justify-content: center;
+    order: -1;
   }
 }

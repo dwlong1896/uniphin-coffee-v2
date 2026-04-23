@@ -27,6 +27,7 @@ $navItems = [
 ?>
 <header class="header-container">
     <div class="header-content">
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Mo menu">☰</button>
         <div class="logo-section">
             <a href="<?php echo htmlspecialchars($toUrl('/'), ENT_QUOTES, 'UTF-8'); ?>" class="logo-link">
                 <img src="<?php echo htmlspecialchars($assetUrl('image/rmbgblack1.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="UNIPHIN COFFEE Logo" class="logo-img">
