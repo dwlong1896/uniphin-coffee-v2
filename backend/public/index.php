@@ -12,6 +12,7 @@ require_once __DIR__ . '/../core/Router.php';
 
 // Nap cac lop ung dung hien dang duoc route su dung.
 require_once __DIR__ . '/../app/controllers/PageController.php';
+require_once __DIR__ . '/../app/controllers/AuthController.php';
 
 // Dang ky tat ca route web.
 require_once __DIR__ . '/../routes/web.php';

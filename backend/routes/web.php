@@ -3,6 +3,7 @@
 // Tao doi tuong router va dang ky cac route giao dien.
 $router = new Router();
 $pageController = new PageController();
+$authController = new AuthController();
 
 $pages = [
     '/' => 'Trang chủ',
@@ -11,8 +12,6 @@ $pages = [
     '/san-pham' => 'Sản phẩm',
     '/lien-he' => 'Liên hệ',
     '/faqs' => 'FAQs',
-    '/register' => 'Đăng ký',
-    '/login' => 'Đăng nhập',
     '/account' => 'Tài khoản',
     '/terms' => 'Điều khoản sử dụng',
 ];
@@ -22,3 +21,12 @@ foreach ($pages as $path => $title) {
         $pageController->show($title);
     });
 }
+
+// Trang auth hien thuc rieng theo giao dien yeu cau.
+$router->get('/login', static function () use ($authController): void {
+    $authController->login();
+});
+
+$router->get('/register', static function () use ($authController): void {
+    $authController->register();
+});
