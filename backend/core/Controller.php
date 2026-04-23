@@ -2,7 +2,7 @@
 
 class Controller
 {
-    protected function view(string $view, array $data = [], ?string $layout = 'layouts/user/main'): void
+    protected function view(string $view, array $data = [], ?string $layout = 'users/layouts/main'): void
     {
         // Tao duong dan tuyet doi toi file view.
         // Neu truyen 'users/index' thi file se la app/views/users/index.php

@@ -2,9 +2,9 @@
 
 class PageController extends Controller
 {
-    public function show(string $pageTitle): void
+    public function show(string $viewName, string $pageTitle): void
     {
-        $this->view('pages/placeholder', [
+        $this->view('users/pages/' . $viewName, [
             'pageTitle' => $pageTitle,
             'pageName' => $pageTitle,
         ]);

@@ -11,7 +11,7 @@ $assetUrl = static function (string $path) use ($publicBase): string {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Đăng Ký</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo htmlspecialchars($assetUrl('css/user/signup.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($assetUrl('css/auth/signup.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 <body>
 <div class="signup-page">

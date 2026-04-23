@@ -6,19 +6,19 @@ $pageController = new PageController();
 $authController = new AuthController();
 
 $pages = [
-    '/' => 'Trang chủ',
-    '/gioi-thieu' => 'Giới thiệu',
-    '/tin-tuc' => 'Tin tức',
-    '/san-pham' => 'Sản phẩm',
-    '/lien-he' => 'Liên hệ',
-    '/faqs' => 'FAQs',
-    '/account' => 'Tài khoản',
-    '/terms' => 'Điều khoản sử dụng',
+    '/' => ['view' => 'trang-chu', 'title' => 'Trang chủ'],
+    '/gioi-thieu' => ['view' => 'gioi-thieu', 'title' => 'Giới thiệu'],
+    '/tin-tuc' => ['view' => 'tin-tuc', 'title' => 'Tin tức'],
+    '/san-pham' => ['view' => 'san-pham', 'title' => 'Sản phẩm'],
+    '/lien-he' => ['view' => 'lien-he', 'title' => 'Liên hệ'],
+    '/faqs' => ['view' => 'faqs', 'title' => 'FAQs'],
+    '/account' => ['view' => 'tai-khoan', 'title' => 'Tài khoản'],
+    '/terms' => ['view' => 'dieu-khoan', 'title' => 'Điều khoản sử dụng'],
 ];
 
-foreach ($pages as $path => $title) {
-    $router->get($path, static function () use ($pageController, $title): void {
-        $pageController->show($title);
+foreach ($pages as $path => $page) {
+    $router->get($path, static function () use ($pageController, $page): void {
+        $pageController->show($page['view'], $page['title']);
     });
 }
 
