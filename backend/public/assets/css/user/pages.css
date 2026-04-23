@@ -1,0 +1,47 @@
+.placeholder-page {
+  min-height: calc(100vh - 74px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px 72px;
+  background:
+    radial-gradient(circle at top, rgba(117, 221, 255, 0.22), transparent 32%),
+    linear-gradient(180deg, #f9fcff 0%, #eef7fb 100%);
+}
+
+.placeholder-card {
+  width: min(720px, 100%);
+  padding: 48px 36px;
+  border-radius: 28px;
+  background-color: #ffffff;
+  box-shadow: 0 24px 60px rgba(19, 54, 74, 0.12);
+  text-align: center;
+}
+
+.placeholder-eyebrow {
+  margin: 0 0 12px;
+  color: #00aeef;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+}
+
+.placeholder-card h1 {
+  margin: 0 0 14px;
+  color: #0c2233;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+}
+
+.placeholder-message {
+  margin: 0;
+  color: #456072;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .placeholder-card {
+    padding: 36px 24px;
+    border-radius: 22px;
+  }
+}
