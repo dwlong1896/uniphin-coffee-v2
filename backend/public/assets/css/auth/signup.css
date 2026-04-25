@@ -47,14 +47,35 @@ body {
   font-weight: 700;
 }
 
-.form-error {
-  margin-bottom: 16px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background: #fdeaea;
-  color: #9f1d1d;
-  font-size: 13px;
+.auth-alert {
+  position: relative;
+  margin-bottom: 22px;
+  padding: 14px 16px 14px 48px;
+  border-radius: 14px;
+  border: 1px solid #ffd2d2;
+  background: linear-gradient(180deg, #fff7f7 0%, #fff0f0 100%);
+  color: #b42318;
+  font-size: 14px;
   font-weight: 600;
+  line-height: 1.5;
+  box-shadow: 0 10px 24px rgba(17, 17, 17, 0.06);
+}
+
+.auth-alert::before {
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: "!";
+  color: #ffffff;
+  background: #d92d20;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .form-group {

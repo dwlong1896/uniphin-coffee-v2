@@ -30,13 +30,13 @@ $assetUrl = static function (string $path) use ($publicBase): string {
             <h1 class="signin-title">Đăng Nhập</h1>
             <div class="signin-card">
                 <?php if (($registered ?? null) === '1'): ?>
-                <div class="form-success">Đăng ký thành công. Bạn có thể đăng nhập ngay bây giờ.</div>
+                <div class="auth-alert auth-alert-success">Đăng ký thành công. Bạn có thể đăng nhập ngay bây giờ.</div>
                 <?php endif; ?>
 
                 <form action="<?php echo htmlspecialchars($publicBase . '/login', ENT_QUOTES, 'UTF-8'); ?>"
-                    method="post" class="signin-form">
+                    method="post" class="signin-form" autocomplete="off">
                     <?php if (!empty($error)): ?>
-                    <div class="form-error">
+                    <div class="auth-alert auth-alert-error">
                         <?php
                         echo match($error) {
                             'empty'   => 'Vui lòng nhập đầy đủ email và mật khẩu.',
@@ -50,13 +50,15 @@ $assetUrl = static function (string $path) use ($publicBase): string {
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Email" required>
+                        <input type="email" id="email" name="email" placeholder="Email" required autocomplete="off"
+                            autocapitalize="off" autocorrect="off" spellcheck="false">
                     </div>
 
                     <div class="form-group password-group">
                         <label for="password">Mật khẩu</label>
                         <div class="input-with-icon">
-                            <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                            <input type="password" id="password" name="password" placeholder="Mật khẩu" required
+                                autocomplete="new-password">
                             <button type="button" class="toggle-password-btn" data-target="password"
                                 aria-label="Hiển thị mật khẩu">👁</button>
                         </div>

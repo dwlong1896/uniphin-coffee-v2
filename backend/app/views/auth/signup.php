@@ -31,7 +31,7 @@ $assetUrl = static function (string $path) use ($publicBase): string {
 
             <div class="signup-card">
                 <?php if (!empty($error)): ?>
-                <div class="form-error">
+                <div class="auth-alert auth-alert-error">
                     <?php
                     echo match($error) {
                         'empty' => 'Vui lòng nhập đầy đủ thông tin.',
@@ -46,26 +46,30 @@ $assetUrl = static function (string $path) use ($publicBase): string {
                 <?php endif; ?>
 
                 <form action="<?php echo htmlspecialchars($publicBase . '/register', ENT_QUOTES, 'UTF-8'); ?>"
-                    method="post">
+                    method="post" autocomplete="off">
                     <div class="form-group">
                         <label for="fullName">Họ và tên</label>
-                        <input type="text" id="fullName" name="fullName" placeholder="Họ và tên" required>
+                        <input type="text" id="fullName" name="fullName" placeholder="Họ và tên" required
+                            autocomplete="off" autocapitalize="words" autocorrect="off" spellcheck="false">
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Email" required>
+                        <input type="email" id="email" name="email" placeholder="Email" required autocomplete="off"
+                            autocapitalize="off" autocorrect="off" spellcheck="false">
                     </div>
 
                     <div class="form-group">
                         <label for="phone">Số điện thoại</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Số điện thoại" required>
+                        <input type="tel" id="phone" name="phone" placeholder="Số điện thoại" required autocomplete="off"
+                            autocapitalize="off" autocorrect="off" spellcheck="false">
                     </div>
 
                     <div class="form-group">
                         <label for="password">Mật khẩu</label>
                         <div class="password-input-wrapper">
-                            <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                            <input type="password" id="password" name="password" placeholder="Mật khẩu" required
+                                autocomplete="new-password">
                             <button type="button" class="eye-btn" data-target="password"
                                 aria-label="Hiển thị mật khẩu">👁</button>
                         </div>
