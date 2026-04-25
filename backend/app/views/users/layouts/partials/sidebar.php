@@ -12,14 +12,16 @@ $assetUrl = static function (string $path) use ($publicBase): string {
 
 <aside class="sidebar-container" id="userSidebar">
     <div class="sidebar-header">
-        <img src="<?php echo htmlspecialchars($assetUrl('image/rmbgblack1.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="UNIPHIN COFFEE" class="sidebar-logo">
+        <img src="<?php echo htmlspecialchars($assetUrl('image/rmbgblack1.png'), ENT_QUOTES, 'UTF-8'); ?>"
+            alt="UNIPHIN COFFEE" class="sidebar-logo">
         <button class="close-btn" id="sidebarCloseBtn" aria-label="Dong menu">×</button>
     </div>
 
     <nav class="sidebar-nav">
         <ul>
             <li><a href="<?php echo htmlspecialchars($toUrl('/'), ENT_QUOTES, 'UTF-8'); ?>">TRANG CHỦ</a></li>
-            <li><a href="<?php echo htmlspecialchars($toUrl('/gioi-thieu'), ENT_QUOTES, 'UTF-8'); ?>">GIỚI THIỆU</a></li>
+            <li><a href="<?php echo htmlspecialchars($toUrl('/gioi-thieu'), ENT_QUOTES, 'UTF-8'); ?>">GIỚI THIỆU</a>
+            </li>
             <li><a href="<?php echo htmlspecialchars($toUrl('/tin-tuc'), ENT_QUOTES, 'UTF-8'); ?>">TIN TỨC</a></li>
             <li><a href="<?php echo htmlspecialchars($toUrl('/san-pham'), ENT_QUOTES, 'UTF-8'); ?>">SẢN PHẨM</a></li>
             <li><a href="<?php echo htmlspecialchars($toUrl('/lien-he'), ENT_QUOTES, 'UTF-8'); ?>">LIÊN HỆ</a></li>
@@ -28,11 +30,25 @@ $assetUrl = static function (string $path) use ($publicBase): string {
     </nav>
 
     <div class="sidebar-auth">
+        <?php if (!empty($_SESSION['user_id'])): ?>
+        <!-- Đã đăng nhập -->
+        <a href="<?php echo htmlspecialchars($toUrl('/account'), ENT_QUOTES, 'UTF-8'); ?>">
+            <button class="btn-register-side">THÔNG TIN CÁ NHÂN</button>
+        </a>
+        <a href="<?php echo htmlspecialchars($toUrl('/cart'), ENT_QUOTES, 'UTF-8'); ?>">
+            <button class="btn-register-side">GIỎ HÀNG</button>
+        </a>
+        <form action="<?php echo htmlspecialchars($toUrl('/logout'), ENT_QUOTES, 'UTF-8'); ?>" method="post">
+            <button type="submit" class="btn-logout-side">ĐĂNG XUẤT</button>
+        </form>
+        <?php else: ?>
+        <!-- Chưa đăng nhập -->
         <a href="<?php echo htmlspecialchars($toUrl('/register'), ENT_QUOTES, 'UTF-8'); ?>">
             <button class="btn-register-side">ĐĂNG KÝ</button>
         </a>
         <a href="<?php echo htmlspecialchars($toUrl('/login'), ENT_QUOTES, 'UTF-8'); ?>">
             <button class="btn-login-side">ĐĂNG NHẬP</button>
         </a>
+        <?php endif; ?>
     </div>
 </aside>

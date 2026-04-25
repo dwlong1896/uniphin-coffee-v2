@@ -42,6 +42,44 @@
   line-height: 1;
 }
 
+.auth-section {
+  display: flex;
+  align-items: center; /* Thêm dòng này để ép các icon và nút thẳng hàng dọc */
+  gap: 15px; /* Giãn cách ra 15px nhìn sẽ thoáng hơn 10px */
+}
+
+.auth-section form {
+  display: flex;
+  align-items: center;
+  margin: 0;
+}
+
+.auth-icon-link {
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; /* Căn giữa dọc */
+  width: 44px; /* Bóp khung lại 44px cho gọn */
+  height: 44px;
+  text-decoration: none;
+}
+
+.action-img {
+  width: 24px; /* Kích thước ảnh thực tế hiển thị */
+  height: 24px;
+  object-fit: contain; /* Giữ tỷ lệ ảnh không bị méo */
+  display: block;
+}
+
+/* 5. Bổ sung màu cho nút Đăng xuất (hiện file css của bạn đang thiếu class này) */
+.btn-logout {
+  background-color: #f2f2f2;
+  color: #941b1b;
+}
+
+.btn-logout:hover {
+  background-color: #e0e0e0;
+}
+
 /* Tren desktop (tu 1097px tro len), an tuyet doi nut menu 3 gach. */
 @media (min-width: 1097px) {
   .menu-toggle-btn {

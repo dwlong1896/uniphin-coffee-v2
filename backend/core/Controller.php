@@ -2,10 +2,32 @@
 
 class Controller
 {
+    protected function baseUrl(string $path = ''): string
+    {
+        $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+        return $base . '/' . ltrim($path, '/');
+    }
+
+    protected function setFlash(string $key, string $message): void
+    {
+        $_SESSION['_flash'][$key] = $message;
+    }
+
+    protected function getFlash(string $key): ?string
+    {
+        if (!isset($_SESSION['_flash'][$key])) {
+            return null;
+        }
+        $message = $_SESSION['_flash'][$key];
+        unset($_SESSION['_flash'][$key]);
+        if (empty($_SESSION['_flash'])) {
+            unset($_SESSION['_flash']);
+        }
+        return is_string($message) ? $message : null;
+    }
+
     protected function view(string $view, array $data = [], ?string $layout = 'users/layouts/main'): void
     {
-        // Tao duong dan tuyet doi toi file view.
-        // Neu truyen 'users/index' thi file se la app/views/users/index.php
         $basePath = defined('ROOT_PATH') ? ROOT_PATH : dirname(__DIR__);
         $viewPath = $basePath . '/app/views/' . $view . '.php';
 
@@ -13,11 +35,11 @@ class Controller
             $this->abort(404, 'View not found: ' . $view);
         }
 
-        // Bien doi mang du lieu thanh bien de dung truc tiep trong view.
-        // Vi du ['users' => $users] se tro thanh bien $users.
+        $data['flashSuccess'] ??= $this->getFlash('success');
+        $data['flashError']   ??= $this->getFlash('error');
+
         extract($data, EXTR_SKIP);
 
-        // Render noi dung view truoc, sau do chen vao layout tong.
         ob_start();
         require $viewPath;
         $content = ob_get_clean();
@@ -44,7 +66,6 @@ class Controller
 
     protected function redirect(string $url): void
     {
-        // Sau khi redirect can dung ngay de tranh render tiep noi dung cu.
         header('Location: ' . $url);
         exit;
     }

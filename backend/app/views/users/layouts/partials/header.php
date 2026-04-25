@@ -30,28 +30,49 @@ $navItems = [
         <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Mo menu">☰</button>
         <div class="logo-section">
             <a href="<?php echo htmlspecialchars($toUrl('/'), ENT_QUOTES, 'UTF-8'); ?>" class="logo-link">
-                <img src="<?php echo htmlspecialchars($assetUrl('image/rmbgblack1.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="UNIPHIN COFFEE Logo" class="logo-img">
+                <img src="<?php echo htmlspecialchars($assetUrl('image/rmbgblack1.png'), ENT_QUOTES, 'UTF-8'); ?>"
+                    alt="UNIPHIN COFFEE Logo" class="logo-img">
             </a>
         </div>
 
         <nav class="nav-section desktop-menu">
             <ul class="nav-links">
                 <?php foreach ($navItems as $navItem): ?>
-                    <li>
-                        <a
-                            class="<?php echo $isActive($navItem['path']) ? 'active' : ''; ?>"
-                            href="<?php echo htmlspecialchars($toUrl($navItem['path']), ENT_QUOTES, 'UTF-8'); ?>"
-                        >
-                            <?php echo htmlspecialchars($navItem['label'], ENT_QUOTES, 'UTF-8'); ?>
-                        </a>
-                    </li>
+                <li>
+                    <a class="<?php echo $isActive($navItem['path']) ? 'active' : ''; ?>"
+                        href="<?php echo htmlspecialchars($toUrl($navItem['path']), ENT_QUOTES, 'UTF-8'); ?>">
+                        <?php echo htmlspecialchars($navItem['label'], ENT_QUOTES, 'UTF-8'); ?>
+                    </a>
+                </li>
                 <?php endforeach; ?>
             </ul>
         </nav>
 
         <div class="auth-section">
-            <a href="<?php echo htmlspecialchars($toUrl('/register'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-link"><button class="btn-register">ĐĂNG KÝ</button></a>
-            <a href="<?php echo htmlspecialchars($toUrl('/login'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-link"><button class="btn-login">ĐĂNG NHẬP</button></a>
+            <?php if (!empty($_SESSION['user_id'])): ?>
+            <!-- Đã đăng nhập -->
+            <a href="<?php echo htmlspecialchars($toUrl('/cart'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-icon-link"
+                aria-label="Giỏ hàng">
+                <img src="<?php echo htmlspecialchars($assetUrl('image/shopping-bag.png'), ENT_QUOTES, 'UTF-8'); ?>"
+                    alt="Cart" class="action-img">
+            </a>
+            <a href="<?php echo htmlspecialchars($toUrl('/account'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-icon-link"
+                aria-label="Tài khoản">
+                <img src="<?php echo htmlspecialchars($assetUrl('image/user.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="User"
+                    class="action-img">
+            </a>
+            <form action="<?php echo htmlspecialchars($toUrl('/logout'), ENT_QUOTES, 'UTF-8'); ?>" method="post">
+                <button type="submit" class="btn-logout">ĐĂNG XUẤT</button>
+            </form>
+            <?php else: ?>
+            <!-- Chưa đăng nhập -->
+            <a href="<?php echo htmlspecialchars($toUrl('/register'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-link">
+                <button class="btn-register">ĐĂNG KÝ</button>
+            </a>
+            <a href="<?php echo htmlspecialchars($toUrl('/login'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-link">
+                <button class="btn-login">ĐĂNG NHẬP</button>
+            </a>
+            <?php endif; ?>
         </div>
     </div>
 </header>
