@@ -73,7 +73,7 @@
 /* 5. Bổ sung màu cho nút Đăng xuất (hiện file css của bạn đang thiếu class này) */
 .btn-logout {
   background-color: #f2f2f2;
-  color: #941b1b;
+  color: #646464;
 }
 
 .btn-logout:hover {

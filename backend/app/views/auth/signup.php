@@ -20,8 +20,7 @@ $assetUrl = static function (string $path) use ($publicBase): string {
 <body>
     <div class="signup-page">
         <div class="logo-header">
-            <a
-                href="<?php echo htmlspecialchars(($publicBase === '' ? '' : $publicBase) . '/', ENT_QUOTES, 'UTF-8'); ?>">
+            <a href="<?php echo htmlspecialchars(($publicBase === '' ? '' : $publicBase) . '/', ENT_QUOTES, 'UTF-8'); ?>">
                 <img src="<?php echo htmlspecialchars($assetUrl('image/rmbgblack1.png'), ENT_QUOTES, 'UTF-8'); ?>"
                     alt="UNIPHIN COFFEE Logo" class="logo-img">
             </a>
@@ -31,6 +30,21 @@ $assetUrl = static function (string $path) use ($publicBase): string {
             <h1 class="signup-title">Đăng Ký</h1>
 
             <div class="signup-card">
+                <?php if (!empty($error)): ?>
+                <div class="form-error">
+                    <?php
+                    echo match($error) {
+                        'empty' => 'Vui lòng nhập đầy đủ thông tin.',
+                        'email' => 'Email không hợp lệ.',
+                        'password' => 'Mật khẩu phải có ít nhất 6 ký tự.',
+                        'exists' => 'Email này đã được sử dụng.',
+                        'failed' => 'Không thể tạo tài khoản. Vui lòng thử lại.',
+                        default => 'Đã có lỗi xảy ra.',
+                    };
+                    ?>
+                </div>
+                <?php endif; ?>
+
                 <form action="<?php echo htmlspecialchars($publicBase . '/register', ENT_QUOTES, 'UTF-8'); ?>"
                     method="post">
                     <div class="form-group">

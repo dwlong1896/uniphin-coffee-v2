@@ -56,7 +56,7 @@ $navItems = [
                 <img src="<?php echo htmlspecialchars($assetUrl('image/shopping-bag.png'), ENT_QUOTES, 'UTF-8'); ?>"
                     alt="Cart" class="action-img">
             </a>
-            <a href="<?php echo htmlspecialchars($toUrl('/account'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-icon-link"
+            <a href="<?php echo htmlspecialchars($toUrl('/tai-khoan'), ENT_QUOTES, 'UTF-8'); ?>" class="auth-icon-link"
                 aria-label="Tài khoản">
                 <img src="<?php echo htmlspecialchars($assetUrl('image/user.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="User"
                     class="action-img">

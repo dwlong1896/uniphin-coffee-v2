@@ -48,6 +48,16 @@ body {
   border-radius: 15px;
 }
 
+.form-success {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #e9f8ee;
+  color: #155724;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .form-group {
   margin-bottom: 20px;
 }

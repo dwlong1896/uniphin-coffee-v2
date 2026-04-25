@@ -37,6 +37,11 @@
                 <?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?>
             </div>
             <?php endif; ?>
+            <?php if (!empty($flashError)): ?>
+            <div class="flash-message flash-message-error">
+                <?php echo htmlspecialchars($flashError, ENT_QUOTES, 'UTF-8'); ?>
+            </div>
+            <?php endif; ?>
             <?php echo $content; ?>
         </main>
 

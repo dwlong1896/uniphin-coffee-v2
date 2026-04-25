@@ -47,6 +47,16 @@ body {
   font-weight: 700;
 }
 
+.form-error {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fdeaea;
+  color: #9f1d1d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .form-group {
   margin-bottom: 15px;
   text-align: left;

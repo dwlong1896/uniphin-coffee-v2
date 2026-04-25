@@ -32,3 +32,9 @@ body {
   background: #e9f8ee;
   border: 1px solid #b7e4c7;
 }
+
+.flash-message-error {
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f1aeb5;
+}

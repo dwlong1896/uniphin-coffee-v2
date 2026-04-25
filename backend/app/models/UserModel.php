@@ -11,7 +11,7 @@ class UserModel extends Model
         $stmt->execute();
 
         $result = $stmt->get_result();
-        $user   = $result->fetch_assoc();
+        $user = $result->fetch_assoc();
         $stmt->close();
 
         return $user ?: null;
@@ -27,6 +27,33 @@ class UserModel extends Model
         $stmt->close();
 
         return $user ?: null;
+    }
+
+    public function createCustomer(array $data): bool
+    {
+        $stmt = $this->db->prepare('
+            INSERT INTO users (first_name, last_name, email, phone, password, role, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ');
+
+        $role = 'customer';
+        $status = 'active';
+
+        $stmt->bind_param(
+            'sssssss',
+            $data['first_name'],
+            $data['last_name'],
+            $data['email'],
+            $data['phone'],
+            $data['password'],
+            $role,
+            $status
+        );
+
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
     }
 
     public function updateProfile(int $userId, array $data, ?string $imagePath = null): bool

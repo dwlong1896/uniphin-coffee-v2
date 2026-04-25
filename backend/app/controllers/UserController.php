@@ -14,7 +14,7 @@ class UserController extends Controller
 
         $user = $this->userModel->findById($_SESSION['user_id']);
 
-        $this->view('users/pages/profile', [
+        $this->view('users/pages/tai-khoan', [
             'user' => $user
         ], 'users/layouts/main');
     }
@@ -48,7 +48,8 @@ class UserController extends Controller
             $allowed = ['jpg', 'jpeg', 'png', 'webp'];
 
             if (!in_array($ext, $allowed)) {
-                $this->redirect('/profile');
+                $this->setFlash('error', 'Chỉ chấp nhận file jpg, jpeg, png hoặc webp.');
+                $this->redirect($this->baseUrl('tai-khoan'));
             }
 
             $fileName = 'avatar_' . $userId . '_' . time() . '.' . $ext;
@@ -76,7 +77,9 @@ class UserController extends Controller
         $this->userModel->updateProfile($userId, $data, $imageName);
 
         $_SESSION['name'] = $data['first_name'] . ' ' . $data['last_name'];
+        $_SESSION['email'] = $data['email'];
 
-        $this->redirect('/profile');
+        $this->setFlash('success', 'Cập nhật thông tin thành công.');
+        $this->redirect($this->baseUrl('tai-khoan'));
     }
 }
