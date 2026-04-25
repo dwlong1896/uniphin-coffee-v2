@@ -28,4 +28,49 @@ class UserModel extends Model
 
         return $user ?: null;
     }
+
+    public function updateProfile(int $userId, array $data, ?string $imagePath = null): bool
+    {
+        if ($imagePath !== null) {
+            $stmt = $this->db->prepare('
+                UPDATE users
+                SET first_name=?, last_name=?, email=?, phone=?, address=?, gender=?, birth_date=?, image=?
+                WHERE ID=?
+            ');
+            $stmt->bind_param(
+                'ssssssssi',
+                $data['first_name'],
+                $data['last_name'],
+                $data['email'],
+                $data['phone'],
+                $data['address'],
+                $data['gender'],
+                $data['birth_date'],
+                $imagePath,
+                $userId
+            );
+        } else {
+            $stmt = $this->db->prepare('
+                UPDATE users
+                SET first_name=?, last_name=?, email=?, phone=?, address=?, gender=?, birth_date=?
+                WHERE ID=?
+            ');
+            $stmt->bind_param(
+                'sssssssi',
+                $data['first_name'],
+                $data['last_name'],
+                $data['email'],
+                $data['phone'],
+                $data['address'],
+                $data['gender'],
+                $data['birth_date'],
+                $userId
+            );
+        }
+
+        $result = $stmt->execute();
+        $stmt->close();
+
+        return $result;
+    }
 }

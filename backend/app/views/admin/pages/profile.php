@@ -1,14 +1,33 @@
 <?php
+
+$publicBase = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+
+// helper asset
+$assetUrl = static function (string $path) use ($publicBase): string {
+    return ($publicBase === '' ? '' : $publicBase) . '/assets/' . ltrim($path, '/');
+};
+
+// helper route/url
+$toUrl = static function (string $path) use ($publicBase): string {
+    return ($publicBase === '' ? '' : $publicBase) . '/' . ltrim($path, '/');
+};
+
 $fullName  = htmlspecialchars(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''), ENT_QUOTES, 'UTF-8');
 $firstName = htmlspecialchars($user['first_name'] ?? '', ENT_QUOTES, 'UTF-8');
 $lastName  = htmlspecialchars($user['last_name']  ?? '', ENT_QUOTES, 'UTF-8');
 $email     = htmlspecialchars($user['email']      ?? '', ENT_QUOTES, 'UTF-8');
-$role      = htmlspecialchars($user['role']        ?? '', ENT_QUOTES, 'UTF-8');
-$phone     = htmlspecialchars($user['phone']       ?? '', ENT_QUOTES, 'UTF-8');
-$address   = htmlspecialchars($user['address']     ?? '', ENT_QUOTES, 'UTF-8');
-$gender    = htmlspecialchars($user['gender']      ?? '', ENT_QUOTES, 'UTF-8');
-$birthDate = htmlspecialchars($user['birth_date']  ?? '', ENT_QUOTES, 'UTF-8');
+$role      = htmlspecialchars($user['role']       ?? '', ENT_QUOTES, 'UTF-8');
+$phone     = htmlspecialchars($user['phone']      ?? '', ENT_QUOTES, 'UTF-8');
+$address   = htmlspecialchars($user['address']    ?? '', ENT_QUOTES, 'UTF-8');
+$gender    = htmlspecialchars($user['gender']     ?? '', ENT_QUOTES, 'UTF-8');
+$birthDate = htmlspecialchars($user['birth_date'] ?? '', ENT_QUOTES, 'UTF-8');
+
+// 🔥 Avatar
+$avatar = !empty($user['image'])
+    ? $toUrl('uploads/' . $user['image'])
+    : $toUrl('images/default-avatar.png');
 ?>
+
 <!-- profile header card -->
 <div class="row mt-4">
     <div class="col-12">
@@ -73,7 +92,9 @@ $birthDate = htmlspecialchars($user['birth_date']  ?? '', ENT_QUOTES, 'UTF-8');
                 <h4 class="header-title mb-0">Edit Profile</h4>
             </div>
             <div class="card-body">
-                <form action="<?php echo $toUrl('admin/profile/update'); ?>" method="post">
+
+                <form action="<?php echo $toUrl('admin/profile'); ?>" method="post" enctype="multipart/form-data">
+
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">First Name</label>
@@ -85,6 +106,7 @@ $birthDate = htmlspecialchars($user['birth_date']  ?? '', ENT_QUOTES, 'UTF-8');
                             <input type="text" name="last_name" class="form-control" value="<?php echo $lastName; ?>" />
                         </div>
                     </div>
+
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Email</label>
@@ -95,18 +117,20 @@ $birthDate = htmlspecialchars($user['birth_date']  ?? '', ENT_QUOTES, 'UTF-8');
                             <input type="tel" name="phone" class="form-control" value="<?php echo $phone; ?>" />
                         </div>
                     </div>
+
                     <div class="row mb-3">
                         <div class="col-12">
                             <label class="form-label">Address</label>
                             <input type="text" name="address" class="form-control" value="<?php echo $address; ?>" />
                         </div>
                     </div>
+
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Gender</label>
                             <select name="gender" class="form-control">
                                 <option value="">-- Select --</option>
-                                <option value="male" <?php echo $gender === 'male'   ? 'selected' : ''; ?>>Male</option>
+                                <option value="male" <?php echo $gender === 'male' ? 'selected' : ''; ?>>Male</option>
                                 <option value="female" <?php echo $gender === 'female' ? 'selected' : ''; ?>>Female
                                 </option>
                             </select>
@@ -117,6 +141,15 @@ $birthDate = htmlspecialchars($user['birth_date']  ?? '', ENT_QUOTES, 'UTF-8');
                                 value="<?php echo $birthDate; ?>" />
                         </div>
                     </div>
+
+
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Avatar</label>
+                            <input type="file" name="avatar" class="form-control">
+                        </div>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                 </form>
             </div>

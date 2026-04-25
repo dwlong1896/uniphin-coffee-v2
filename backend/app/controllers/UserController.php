@@ -1,0 +1,82 @@
+<?php
+class UserController extends Controller
+{
+    private UserModel $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
+
+    public function profile(): void
+    {
+        AuthMiddleware::requireLogin();
+
+        $user = $this->userModel->findById($_SESSION['user_id']);
+
+        $this->view('users/pages/profile', [
+            'user' => $user
+        ], 'users/layouts/main');
+    }
+
+    public function updateProfile(): void
+    {
+        AuthMiddleware::requireLogin();
+
+        $userId = $_SESSION['user_id'];
+
+        $data = [
+            'first_name' => trim($_POST['first_name'] ?? ''),
+            'last_name'  => trim($_POST['last_name']  ?? ''),
+            'email'      => trim($_POST['email']      ?? ''),
+            'phone'      => trim($_POST['phone']      ?? ''),
+            'address'    => trim($_POST['address']    ?? ''),
+            'gender'     => trim($_POST['gender']     ?? ''),
+            'birth_date' => trim($_POST['birth_date'] ?? ''),
+        ];
+
+        $file = $_FILES['avatar'] ?? null;
+        $imageName = null;
+
+        // 🔥 lấy avatar cũ
+        $currentUser = $this->userModel->findById($userId);
+        $oldImage = $currentUser['image'] ?? null;
+
+        if ($file && $file['error'] === UPLOAD_ERR_OK) {
+
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+            if (!in_array($ext, $allowed)) {
+                $this->redirect('/profile');
+            }
+
+            $fileName = 'avatar_' . $userId . '_' . time() . '.' . $ext;
+
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uniphin2/backend/public/uploads/';
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            if (move_uploaded_file($file['tmp_name'], $uploadDir . $fileName)) {
+
+                $imageName = $fileName;
+
+                // 🔥 xóa ảnh cũ
+                if ($oldImage && $oldImage !== 'default-avatar.png') {
+                    $oldFile = $uploadDir . $oldImage;
+                    if (file_exists($oldFile)) {
+                        unlink($oldFile);
+                    }
+                }
+            }
+        }
+
+        $this->userModel->updateProfile($userId, $data, $imageName);
+
+        $_SESSION['name'] = $data['first_name'] . ' ' . $data['last_name'];
+
+        $this->redirect('/profile');
+    }
+}

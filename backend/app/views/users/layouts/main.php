@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/sidebar.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/pages.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/footer.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo htmlspecialchars($asset('css/user/tai-khoan.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 
 <body>
@@ -31,9 +33,9 @@
 
         <main class="content">
             <?php if (!empty($flashSuccess)): ?>
-                <div class="flash-message flash-message-success">
-                    <?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?>
-                </div>
+            <div class="flash-message flash-message-success">
+                <?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?>
+            </div>
             <?php endif; ?>
             <?php echo $content; ?>
         </main>

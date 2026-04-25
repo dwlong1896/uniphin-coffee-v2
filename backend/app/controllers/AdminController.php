@@ -2,7 +2,14 @@
 
 class AdminController extends Controller
 {
-    
+    private UserModel $userModel;
+
+    public function __construct()
+    {
+        $this->userModel = new UserModel();
+    }
+
+
     public function dashboard(): void
     {
         AuthMiddleware::requireAdmin();
@@ -54,8 +61,79 @@ class AdminController extends Controller
     public function profile(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/profile', ['title' => 'My Profile'], 'admin/layouts/main');
+
+        $user = $this->userModel->findById($_SESSION['user_id']);
+        
+        $this->view('admin/pages/profile', [
+        'title' => 'My Profile',
+        'user'  => $user,
+    ], 'admin/layouts/main');
     }
+
+
+    public function updateProfile(): void
+    {
+        AuthMiddleware::requireAdmin();
+
+        $userId = $_SESSION['user_id'];
+
+        $data = [
+            'first_name' => trim($_POST['first_name'] ?? ''),
+            'last_name'  => trim($_POST['last_name']  ?? ''),
+            'email'      => trim($_POST['email']      ?? ''),
+            'phone'      => trim($_POST['phone']      ?? ''),
+            'address'    => trim($_POST['address']    ?? ''),
+            'gender'     => trim($_POST['gender']     ?? ''),
+            'birth_date' => trim($_POST['birth_date'] ?? ''),
+        ];
+
+        $file = $_FILES['avatar'] ?? null;
+        $imageName = null;
+
+        // lấy user hiện tại
+        $currentUser = $this->userModel->findById($userId);
+        $oldImage = $currentUser['image'] ?? null;
+
+        if ($file && $file['error'] === UPLOAD_ERR_OK) {
+
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
+
+            if (!in_array($ext, $allowed)) {
+                $this->setFlash('error', 'File không hợp lệ');
+                $this->redirect($this->baseUrl('admin/profile'));
+            }
+
+            $fileName = 'avatar_' . $userId . '_' . time() . '.' . $ext;
+
+            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uniphin2/backend/public/uploads/';
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+
+            if (move_uploaded_file($file['tmp_name'], $uploadDir . $fileName)) {
+
+                $imageName = $fileName;
+
+                if ($oldImage) {
+                    $oldFile = $uploadDir . $oldImage;
+                    if (file_exists($oldFile)) {
+                        unlink($oldFile);
+                    }
+                }
+            }
+        }
+
+        // 👉 Gọi model
+        $this->userModel->updateProfile($userId, $data, $imageName);
+
+        $_SESSION['name'] = $data['first_name'] . ' ' . $data['last_name'];
+
+        $this->setFlash('success', 'Cập nhật hồ sơ thành công!');
+        $this->redirect($this->baseUrl('admin/profile'));
+    }
+    
     public function homepage(): void
     {
         AuthMiddleware::requireAdmin();

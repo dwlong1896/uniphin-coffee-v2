@@ -126,8 +126,6 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
                     </div>
                     <div class="col-sm-6 clearfix">
                         <div class="user-profile float-end">
-                            <img class="avatar user-thumb" src="<?php echo $assetUrl('images/author/avatar.png'); ?>"
-                                alt="avatar" />
                             <h4 class="user-name dropdown-toggle" data-bs-toggle="dropdown">
                                 <span><?php echo $adminName; ?></span>
                                 <i class="fa-solid fa-angle-down"></i>

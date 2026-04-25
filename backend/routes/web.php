@@ -16,7 +16,7 @@ $router->get('/tin-tuc', static function () use ($pageController): void {$pageCo
 $router->get('/san-pham', static function () use ($pageController): void {$pageController->show('san-pham', 'Sản phẩm');});
 $router->get('/lien-he', static function () use ($pageController): void {$pageController->show('lien-he', 'Liên hệ');});
 $router->get('/faqs', static function () use ($pageController): void {$pageController->show('faqs', 'FAQs');});
-$router->get('/account', static function () use ($pageController): void {$pageController->show('tai-khoan', 'Tài khoản');});
+$router->get('/profile', static function () use ($pageController): void {$pageController->show('tai-khoan', 'Tài khoản');});
 
 // Trang auth hien thuc rieng theo giao dien yeu cau.
 $router->get('/login', static function () use ($authController): void {$authController->login();});
@@ -42,3 +42,5 @@ $router->get('/admin/homepage',   static function () use ($adminController): voi
 $router->get('/admin/faqpage',    static function () use ($adminController): void { $adminController->faqspage(); });
 $router->get('/admin/contactpage',    static function () use ($adminController): void { $adminController->contactpage(); });
 $router->get('/admin/aboutpage',    static function () use ($adminController): void { $adminController->aboutpage(); });
+
+$router->post('/admin/profile', function () use ($adminController) {$adminController->updateProfile();});
