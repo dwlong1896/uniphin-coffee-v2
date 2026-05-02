@@ -1,16 +1,18 @@
 -- 1. Tắt kiểm tra khóa ngoại để reset database
 SET FOREIGN_KEY_CHECKS = 0;
+
 DROP DATABASE IF EXISTS shop_db;
-SET FOREIGN_KEY_CHECKS = 1;
 
 -- 2. Tạo Database
 CREATE DATABASE shop_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE shop_db;
----------------------------------------------------------
+
+SET FOREIGN_KEY_CHECKS = 1;
+-- -------------------------------------------------------
 -- 3. TẠO CÁC BẢNG (Giữ nguyên cấu trúc của bạn)
----------------------------------------------------------
+-- -------------------------------------------------------
 -- 1. Bảng USER (Bảng gốc cho Admin và Customer)
-CREATE TABLE USER (
+CREATE TABLE USERS (
     ID INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50),
     last_name VARCHAR(50),
@@ -27,17 +29,17 @@ CREATE TABLE USER (
     image VARCHAR(255) -- Lưu đường dẫn ảnh avatar
 );
 
--- 2. Bảng CUSTOMER (Kế thừa từ USER)
+-- 2. Bảng CUSTOMER (Kế thừa từ USERS)
 CREATE TABLE CUSTOMER (
     ID INT PRIMARY KEY,
     loyalty_point INT DEFAULT 0,
-    FOREIGN KEY (ID) REFERENCES USER(ID) ON DELETE CASCADE
+    FOREIGN KEY (ID) REFERENCES USERS(ID) ON DELETE CASCADE
 );
 
--- 3. Bảng ADMIN (Kế thừa từ USER)
+-- 3. Bảng ADMIN (Kế thừa từ USERS)
 CREATE TABLE ADMIN (
     ID INT PRIMARY KEY,
-    FOREIGN KEY (ID) REFERENCES USER(ID) ON DELETE CASCADE
+    FOREIGN KEY (ID) REFERENCES USERS(ID) ON DELETE CASCADE
 );
 
 -- 4. Bảng NEWS_CATEGORIES
@@ -58,9 +60,9 @@ CREATE TABLE NEWS (
 	status ENUM('published', 'archived') DEFAULT 'published',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     slug VARCHAR(255) UNIQUE NOT NULL,
+    FOREIGN KEY (Admin_ID) REFERENCES ADMIN(ID),
     meta_description VARCHAR(255),
     keywords VARCHAR(255),
-    FOREIGN KEY (Admin_ID) REFERENCES ADMIN(ID),
     FOREIGN KEY (N_Cate_ID) REFERENCES NEWS_CATEGORIES(ID)
 );
 
@@ -72,18 +74,13 @@ CREATE TABLE COMMENTS (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     User_ID INT,
     News_ID INT,
-    FOREIGN KEY (User_ID) REFERENCES USER(ID),
-    FOREIGN KEY (News_ID) REFERENCES NEWS(ID) ON DELETE CASCADE
+    parent_comment_id INT DEFAULT NULL,
+    FOREIGN KEY (User_ID) REFERENCES USERS(ID),
+    FOREIGN KEY (News_ID) REFERENCES NEWS(ID) ON DELETE CASCADE,
+    FOREIGN KEY (parent_comment_id) REFERENCES COMMENTS(ID) ON DELETE CASCADE
 );
 
--- 7. Bảng COMMENTS_RELY (Phản hồi bình luận)
-CREATE TABLE COMMENT_REPLIES (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    comment_id INT,
-    parent_comment_id INT,
-    FOREIGN KEY (comment_id) REFERENCES COMMENTS(ID),
-    FOREIGN KEY (parent_comment_id) REFERENCES COMMENTS(ID)
-);
+
 
 -- 8. Bảng FAQS
 CREATE TABLE FAQS (
@@ -195,14 +192,12 @@ CREATE TABLE CART_ITEMS (
     FOREIGN KEY (Product_ID) REFERENCES PRODUCTS(ID)
 );
 
-/* ------------------------------------------------------
-   4. TẠO CÁC TRIGGER CẦN THIẾT
---------------------------------------------------------- */
-DELIMITER //
+--    4. TẠO CÁC TRIGGER CẦN THIẾT
+DELIMITER $$
 
 -- Trigger 1: Tự động phân loại User & Tạo giỏ hàng
 CREATE TRIGGER after_user_insert
-AFTER INSERT ON USER
+AFTER INSERT ON USERS
 FOR EACH ROW
 BEGIN
     IF NEW.role = 'admin' THEN
@@ -211,7 +206,7 @@ BEGIN
         INSERT INTO CUSTOMER (ID, loyalty_point) VALUES (NEW.ID, 0);
         INSERT INTO CARTS (Customer_ID) VALUES (NEW.ID);
     END IF;
-END //
+END $$
 
 -- Trigger 2: Tích điểm thưởng khi đơn hàng hoàn tất
 CREATE TRIGGER update_loyalty_points
@@ -223,13 +218,13 @@ BEGIN
         SET loyalty_point = loyalty_point + FLOOR(NEW.total_price / 100000)
         WHERE ID = NEW.Customer_ID;
     END IF;
-END //
+END $$
 
-/* ------------------------------------------------------
-   5. STORED PROCEDURE 
---------------------------------------------------------- */
 
-DELIMITER //
+-- /* ------------------------------------------------------
+--    5. STORED PROCEDURE 
+-- --------------------------------------------------------- */
+
 
 CREATE PROCEDURE sp_place_order(
     IN p_customer_id INT,
@@ -297,15 +292,15 @@ BEGIN
     ELSE
         SELECT -1 AS result_status;
     END IF;
-END //
+END $$
 
 DELIMITER ;
 
-/* ------------------------------------------------------
-   6. CHÈN DỮ LIỆU BAN ĐẦU (SEED DATA) 
---------------------------------------------------------- */
+-- /* ------------------------------------------------------
+--    6. CHÈN DỮ LIỆU BAN ĐẦU (SEED DATA) 
+-- --------------------------------------------------------- */
 -- 6.1. NGƯỜI DÙNG (Trigger tự tạo bản ghi trong CUSTOMER, ADMIN và CARTS)
-INSERT INTO USER (first_name, last_name, email, password, role, phone, address) VALUES 
+INSERT INTO USERS (first_name, last_name, email, password, role, phone, address) VALUES 
 ('Minh', 'Quản Trị', 'admin.master@shop.com', 'pass_admin_123', 'admin', '0901111222', '123 Quận 1, TP.HCM'),
 ('Hoàng', 'Khách', 'hoang.customer@gmail.com', 'pass_hoang_456', 'customer', '0903333444', '456 Quận 7, TP.HCM'),
 ('Lan', 'Nguyễn', 'lan.nguyen@gmail.com', 'pass_lan_789', 'customer', '0905555666', '789 Quận 3, TP.HCM'),
@@ -328,7 +323,6 @@ INSERT INTO COMMENTS (content, User_ID, News_ID, status) VALUES
 -- Admin phản hồi cho bình luận ID 1
 INSERT INTO COMMENTS (content, User_ID, News_ID, status) VALUES 
 ('Cảm ơn bạn Hoàng đã ủng hộ shop nhé!', 1, 2, 'presented'); -- ID 4
-INSERT INTO COMMENTS_RELY (ID, Relied_ID) VALUES (4, 1);
 
 -- 6.4. HỖ TRỢ & LIÊN HỆ (FAQS, CONTACTS, RELIED)
 INSERT INTO FAQS (question, answer, Admin_ID) VALUES 
@@ -360,7 +354,7 @@ INSERT INTO CART_ITEMS (Cart_ID, Product_ID, quantity) VALUES (3, 2, 1);
 
 SET SQL_SAFE_UPDATES = 0;
 -- BƯỚC 1: Tìm ID thực tế của Khách Hoàng và Cart của ông ấy
-SET @TargetUser = (SELECT ID FROM USER WHERE email = 'hoang.customer@gmail.com');
+SET @TargetUser = (SELECT ID FROM USERS WHERE email = 'hoang.customer@gmail.com');
 SET @TargetCart = (SELECT ID FROM CARTS WHERE Customer_ID = @TargetUser);
 
 -- BƯỚC 2: Chuẩn bị giỏ hàng (Xóa sạch giỏ cũ cho chắc ăn rồi thêm đồ mới)
@@ -373,9 +367,9 @@ INSERT INTO CART_ITEMS (Cart_ID, Product_ID, quantity) VALUES
 -- Nó sẽ tự: Tính tổng 57tr -> Tạo Order -> Chuyển Item -> Trừ kho -> Xóa giỏ
 CALL sp_place_order(@TargetUser, '0903333444', 'Hoàng', 'Khách', '456 Quận 7, TP.HCM', 'Bank_Transfer');
 
-/* ======================================================
-   XEM KẾT QUẢ ĐỂ THẤY TRIGGER, PRODUCED HOẠT ĐỘNG
-   ====================================================== */
+-- /* ======================================================
+--    XEM KẾT QUẢ ĐỂ THẤY TRIGGER, PRODUCED HOẠT ĐỘNG
+--    ====================================================== */
 
 -- 1. Xem Đơn hàng (Phải có total_price = 57,000,000)
 SELECT '1. ĐƠN HÀNG MỚI' AS Status;
@@ -394,11 +388,11 @@ UPDATE ORDERS SET status = 'completed' WHERE Customer_ID = @TargetUser;
 
 -- Xem điểm (57tr -> 570 điểm)
 SELECT '4. ĐIỂM THƯỞNG LOYALTY' AS Status;
-SELECT u.email, cu.loyalty_point FROM USER u JOIN CUSTOMER cu ON u.ID = cu.ID WHERE u.ID = @TargetUser;
+SELECT u.email, cu.loyalty_point FROM USERS u JOIN CUSTOMER cu ON u.ID = cu.ID WHERE u.ID = @TargetUser;
 
 
 -- 1. Lấy ID của khách Hoàng
-SET @Hoang_ID = (SELECT ID FROM USER WHERE email = 'hoang.customer@gmail.com');
+SET @Hoang_ID = (SELECT ID FROM USERS WHERE email = 'hoang.customer@gmail.com');
 SET @Hoang_Cart = (SELECT ID FROM CARTS WHERE Customer_ID = @Hoang_ID);
 
 -- 2. Bỏ đồ vào giỏ (1 Mac 45tr, 2 AirPods 12tr => Tổng 57tr)
@@ -414,11 +408,11 @@ SELECT * FROM ORDERS WHERE Customer_ID = @Hoang_ID; -- Check total_price = 57,00
 SELECT name, stock_quantity FROM PRODUCTS WHERE ID IN (1, 3); -- Check kho giảm
 SELECT * FROM CART_ITEMS WHERE Cart_ID = @Hoang_Cart; -- Check giỏ trống
 
----------------------------------------------------------
+-- -------------------------------------------------------
 -- 7. CÂU LỆNH IN RA KIỂM TRA (TEST)
----------------------------------------------------------
+-- -------------------------------------------------------
 -- Lệnh in nhanh toàn bộ các bảng chính để test
-SELECT '--- USERS ---' AS Info; SELECT * FROM USER;
+SELECT '--- USERS ---' AS Info; SELECT * FROM USERS;
 SELECT '--- CUSTOMERS ---' AS Info; SELECT * FROM CUSTOMER;
 SELECT '--- ADMINS ---' AS Info; SELECT * FROM ADMIN;
 SELECT '--- PRODUCTS ---' AS Info; SELECT * FROM PRODUCTS;
