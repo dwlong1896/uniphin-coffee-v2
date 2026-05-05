@@ -1,0 +1,553 @@
+/* ═══════════════════════════════════════════
+   BIẾN TOÀN CỤC
+   Định nghĩa một lần, dùng xuyên suốt file.
+   Muốn đổi màu chủ đạo → chỉ sửa --accent là xong.
+═══════════════════════════════════════════ */
+:root {
+  --accent: #009ce4; /* Màu chủ đạo (xanh dương) */
+  --accent-glow: rgba(0, 156, 228, 0.3); /* Bóng phát sáng màu accent */
+  --text-dark: #222222; /* Màu chữ chính */
+  --text-muted: #555; /* Màu chữ phụ (mờ hơn) */
+  --bg-circle: #fdf0e3; /* Màu nền vòng tròn sau ảnh sản phẩm */
+  --brown: #4a2c2a; /* Màu nâu cafe — dùng cho Best Seller */
+  --brown-muted: #8c6b5d; /* Nâu nhạt hơn — vạch gạch chân Best Seller */
+  --spring: cubic-bezier(
+    0.175,
+    0.885,
+    0.32,
+    1.275
+  ); /* Easing lò xo — dùng chung cho mọi animation */
+}
+
+/* ═══════════════════════════════════════════
+   WRAPPER
+═══════════════════════════════════════════ */
+html {
+  scroll-behavior: smooth; /* Cuộn mượt khi click anchor (#) */
+}
+
+.uniphin-menu-wrapper {
+  background: linear-gradient(
+    to bottom,
+    #b6ecff 0%,
+    #ffffff 700px
+  ); /* Nền chuyển xanh nhạt → trắng trong 300px đầu */
+  width: 100%;
+  min-height: calc(
+    100vh - 70px
+  ); /* Bù trừ padding-top: 70px của .content trong main-layout.css */
+  /* padding: 40px 0; */
+  color: var(--text-dark);
+  box-sizing: border-box;
+}
+
+/* Giới hạn chiều rộng và căn giữa — dùng chung cho header lẫn body */
+.uniphin-menu-header,
+.uniphin-menu-body {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 50px;
+  box-sizing: border-box;
+}
+
+/* ═══════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════ */
+.uniphin-menu-header {
+  display: flex;
+  justify-content: space-between; /* Logo trái, search phải */
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* ── Logo ── */
+.uniphin-menu-logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+
+.uniphin-logo-top {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.uniphin-logo-bottom {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* ── Thanh tìm kiếm ── */
+.uniphin-menu-search {
+  position: relative; /* Làm gốc định vị cho nút search bên trong */
+  width: 280px; /* Thu nhỏ ban đầu, giãn ra khi hover/focus */
+  transition: width 0.5s var(--spring);
+}
+
+.uniphin-menu-search:focus-within,
+.uniphin-menu-search:hover {
+  width: 350px; /* Kéo dài thanh search khi tương tác */
+}
+
+.uniphin-menu-search input {
+  width: 100%;
+  padding: 14px 50px 14px 20px; /* 50px bên phải — chừa chỗ cho nút tròn không đè lên chữ */
+  border: 2px solid #bde0f2;
+  border-radius: 50px; /* Bo tròn hoàn toàn kiểu pill */
+  outline: none;
+  font-size: 15px;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02); /* Bóng cực nhạt trạng thái mặc định */
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.uniphin-menu-search input:focus {
+  border-color: var(--accent);
+  box-shadow:
+    0 0 18px rgba(0, 156, 228, 0.25),
+    /* Glow xanh lan rộng ra ngoài viền */ 0 4px 15px rgba(0, 0, 0, 0.05); /* Bóng đổ dưới để tạo chiều sâu */
+}
+
+.uniphin-search-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%); /* Căn giữa dọc so với input */
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  transition: all 0.3s var(--spring);
+}
+
+.uniphin-search-btn:hover {
+  background-color: #007bb5;
+  transform: translateY(-50%) scale(1.1) rotate(15deg); /* Giữ translateY(-50%) để không bị lệch dọc */
+  box-shadow: 0 4px 12px rgba(0, 156, 228, 0.4);
+}
+
+.uniphin-search-btn:active {
+  transform: translateY(-50%) scale(0.95); /* Lún xuống khi đang giữ chuột */
+  box-shadow: 0 2px 5px rgba(0, 156, 228, 0.4);
+}
+
+/* ═══════════════════════════════════════════
+   BANNER SLIDER
+═══════════════════════════════════════════ */
+.uniphin-banner-slider {
+  position: relative; /* Làm gốc định vị cho dots bên trong */
+  max-width: 1600px;
+  overflow: hidden; /* Cắt mũi tên nếu tràn ra ngoài */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.uniphin-banner-slider .banner-item {
+  outline: none; /* Bỏ viền focus mặc định khi click vào slide */
+}
+
+.uniphin-banner-slider .banner-item img {
+  display: block; /* Xóa khoảng trắng thừa phía dưới ảnh (inline gap) */
+  width: 100%;
+  height: 400px; /* Chiều cao cố định — tăng/giảm tùy layout */
+  object-fit: cover; /* Ảnh fill đầy khung, không bị méo */
+}
+
+/* Kéo mũi tên vào bên trong banner (left/right dương) để không bị
+   overflow: hidden phía trên cắt mất */
+.uniphin-banner-slider .slick-prev {
+  left: 20px;
+  z-index: 10;
+}
+.uniphin-banner-slider .slick-next {
+  right: 20px;
+  z-index: 10;
+}
+
+.uniphin-banner-slider .slick-prev:before,
+.uniphin-banner-slider .slick-next:before {
+  font-size: 25px;
+  color: var(--accent);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.uniphin-banner-slider .slick-prev:hover:before,
+.uniphin-banner-slider .slick-next:hover:before {
+  opacity: 1; /* Hiện rõ hơn khi rê chuột vào */
+}
+
+/* ── Dots (chấm tròn phân trang) ── */
+.uniphin-banner-slider .slick-dots {
+  position: absolute; /* Đè lên ảnh, không chiếm không gian layout */
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  z-index: 15; /* Phải cao hơn ảnh (z-index mặc định) để không bị đè */
+}
+
+.uniphin-banner-slider .slick-dots li {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.uniphin-banner-slider .slick-dots li button:before {
+  font-size: 10px;
+  color: #fff; /* Chấm trắng — nổi trên ảnh tối */
+  opacity: 0.5; /* Mờ = chưa active */
+}
+
+.uniphin-banner-slider .slick-dots li.slick-active button:before {
+  color: var(--accent); /* Chấm xanh = slide đang hiển thị */
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════
+   LAYOUT BODY
+═══════════════════════════════════════════ */
+.uniphin-menu-body {
+  display: flex;
+  gap: 60px; /* Khoảng cách giữa sidebar và danh sách sản phẩm */
+}
+
+/* ═══════════════════════════════════════════
+   SIDEBAR CATEGORIES
+═══════════════════════════════════════════ */
+.uniphin-menu-categories {
+  width: 240px;
+  flex-shrink: 0; /* Không bị co lại khi sản phẩm chiếm nhiều chỗ */
+}
+
+.uniphin-menu-categories ul {
+  list-style: none;
+  padding: 0;
+  position: sticky;
+  top: 130px; /* Sidebar bám theo khi cuộn, cách đỉnh viewport 130px */
+}
+
+.uniphin-menu-categories li {
+  margin-bottom: 25px;
+}
+
+/* Link danh mục + hiệu ứng gạch chân trượt ra khi hover/active */
+.uniphin-menu-categories a {
+  position: relative; /* Làm gốc định vị cho ::after (thanh gạch chân) */
+  display: inline-block; /* Cần để ::after bám sát chiều rộng chữ */
+  padding-bottom: 5px; /* Tạo khoảng trống giữa chữ và thanh gạch */
+  text-decoration: none;
+  color: var(--text-dark);
+  font-size: 23px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.uniphin-menu-categories a:hover,
+.uniphin-menu-categories a.menu-active {
+  color: var(--accent);
+}
+
+/* Thanh gạch chân — ẩn ban đầu (width: 0), trượt ra khi hover/active */
+.uniphin-menu-categories a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0; /* Ẩn ban đầu */
+  height: 3px;
+  background-color: var(--accent);
+  border-radius: 2px;
+  transition: width 0.3s ease-in-out; /* Trượt từ trái sang phải */
+}
+
+.uniphin-menu-categories a:hover::after,
+.uniphin-menu-categories a.menu-active::after {
+  width: 100%; /* Kéo dài full chiều rộng chữ */
+}
+
+/* ═══════════════════════════════════════════
+   PRODUCTS LIST
+═══════════════════════════════════════════ */
+.uniphin-menu-products {
+  flex-grow: 1; /* Chiếm hết không gian còn lại bên cạnh sidebar */
+}
+
+.uniphin-category-section {
+  margin-bottom: 60px;
+  scroll-margin-top: 100px; /* Khi click anchor, section dừng cách đỉnh 100px — tránh bị header che */
+}
+
+.uniphin-category-title {
+  color: var(--accent);
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+}
+
+.uniphin-product-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    4,
+    1fr
+  ); /* Luôn 4 cột đều nhau, không tự wrap */
+  gap: 40px 20px; /* Hàng cách nhau 40px, cột cách nhau 20px */
+}
+
+/* ═══════════════════════════════════════════
+   PRODUCT CARD
+═══════════════════════════════════════════ */
+.uniphin-product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  border-radius: 16px;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.uniphin-product-card:hover {
+  background-color: #fbfbfb; /* Nền xám cực nhạt — không dùng shadow để tránh rối mắt */
+}
+
+/* ── Khung chứa ảnh + vòng tròn nền ── */
+.uniphin-image-wrapper {
+  position: relative; /* Làm gốc định vị cho ::before (vòng tròn) và img */
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 1 / 1; /* Luôn giữ hình vuông bất kể chiều rộng thực tế */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Vòng tròn nền trang trí phía sau ảnh sản phẩm */
+.uniphin-image-wrapper::before {
+  content: "";
+  position: absolute;
+  width: 85%;
+  height: 85%;
+  background-color: var(--bg-circle);
+  border-radius: 50%;
+  z-index: 1; /* Nằm dưới ảnh sản phẩm (img có z-index: 2) */
+  box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.02); /* Bóng trong — tạo cảm giác lõm nhẹ */
+  transition: all 0.4s var(--spring);
+}
+
+/* Vòng tròn phình nhẹ khi hover — làm nền cho ly nước phóng to */
+.uniphin-product-card:hover .uniphin-image-wrapper::before {
+  transform: scale(1.1);
+}
+
+/* Ảnh sản phẩm — ngôi sao chính của hiệu ứng hover */
+.uniphin-image-wrapper img {
+  width: 90%;
+  height: auto;
+  position: relative;
+  z-index: 2; /* Nằm trên vòng tròn nền */
+  object-fit: contain;
+  transform-origin: bottom center; /* Xoay quanh đáy ly — tạo cảm giác tự nhiên hơn */
+  transition: all 0.4s var(--spring);
+}
+
+/* Phóng to 15% + nghiêng trái 6° khi hover */
+.uniphin-product-card:hover .uniphin-image-wrapper img {
+  transform: scale(1.15) rotate(-6deg);
+}
+
+/* ── Text sản phẩm ── */
+.uniphin-product-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.uniphin-product-name {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  min-height: 40px; /* Chiều cao cố định — tránh card lệch nhau khi tên dài/ngắn */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--spring);
+}
+
+/* Tên món: đổi xanh + nhấc lên nhẹ khi hover */
+.uniphin-product-card:hover .uniphin-product-name {
+  color: var(--accent);
+  transform: translateY(-4px);
+}
+
+.uniphin-product-price {
+  display: inline-block; /* Bắt buộc — phần tử block mặc định không áp dụng được scale() */
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--accent);
+  transition: all 0.3s var(--spring);
+}
+
+/* Giá: phóng to + glow xanh nhạt khi hover */
+.uniphin-product-card:hover .uniphin-product-price {
+  transform: scale(1.15) translateY(-2px);
+  text-shadow: 0 4px 10px var(--accent-glow);
+}
+
+/* ═══════════════════════════════════════════
+   BEST SELLER SECTION
+═══════════════════════════════════════════ */
+.uniphin-bestseller-section {
+  margin: 80px auto 40px;
+  max-width: 1000px; /* Thu hẹp để slider trông gọn gàng, ly giữa nổi bật hơn */
+  text-align: center;
+  padding: 0 50px;
+}
+
+/* ── Tiêu đề ── */
+.bestseller-header {
+  margin-bottom: 40px;
+}
+
+.bestseller-header h2 {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--brown);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.bestseller-line {
+  width: 100px;
+  height: 2px;
+  background-color: var(--brown-muted); /* Vạch gạch chân màu nâu nhạt */
+  margin: 0 auto;
+}
+
+/* ── Slider ── */
+.bestseller-slider {
+  margin: 0 auto 30px;
+  padding: 40px 0; /* Chừa khoảng trên/dưới để ly giữa phóng to không bị cắt */
+}
+
+/* Trạng thái mặc định — các ly phụ hai bên */
+.bestseller-item {
+  opacity: 0.4; /* Mờ hơn để tôn ly giữa lên */
+  transform: scale(0.75); /* Thu nhỏ ly phụ */
+  transition: all 0.5s var(--spring);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Khung nền phía sau ly (card wrapper) */
+.bestseller-item .bestseller-img-wrapper {
+  background-color: #fcf6f0; /* Nền ấm — tone nâu cafe nhạt */
+  border-radius: 20px;
+  padding: 30px 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03); /* Bóng nhẹ cho ly phụ */
+  transition: all 0.4s ease;
+}
+
+/* Ảnh ly nước */
+.bestseller-item img {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+  display: block;
+  transform-origin: bottom center; /* Lấy đáy ly làm tâm xoay/phóng to */
+  transition: all 0.4s var(--spring);
+}
+
+/* Hover vào ly phụ — gợi mời người dùng click */
+.bestseller-slider .bestseller-item:not(.slick-center):hover {
+  opacity: 0.85;
+  transform: scale(0.85); /* Phình nhẹ để báo hiệu có thể click */
+}
+
+/* Ly chính giữa (active) — nổi bật hoàn toàn */
+.bestseller-slider .slick-center {
+  opacity: 1;
+  transform: scale(1.15); /* Phóng to hơn các ly phụ */
+  z-index: 10;
+  position: relative; /* Cần để z-index hoạt động trong Slick */
+}
+
+/* Bóng đổ mạnh hơn cho card nền của ly giữa — tạo cảm giác nổi lên (3D) */
+.bestseller-slider .slick-center .bestseller-img-wrapper {
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* Hover vào ly giữa — thêm hiệu ứng sống động */
+.bestseller-slider .slick-center:hover img {
+  transform: scale(1.08) translateY(-5px); /* Phóng to thêm + nảy nhẹ lên */
+  filter: drop-shadow(
+    0 15px 15px rgba(0, 0, 0, 0.15)
+  ); /* Bóng đổ xuống nền — khác box-shadow, bám theo hình dạng ly */
+}
+
+/* ── Thông tin sản phẩm bên dưới slider ── */
+.bestseller-info-wrapper {
+  margin-top: 25px;
+  transition: opacity 0.3s ease; /* Mờ dần mượt khi chuyển slide */
+}
+
+.bestseller-active-name {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 5px; /* Khoảng cách với giá tiền */
+}
+
+.bestseller-active-price {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 4px 10px rgba(0, 156, 228, 0.2); /* Glow nhạt — tạo cảm giác sang trọng */
+}
+
+/* ── Nút mũi tên chuyển slide ── */
+.bestseller-slider .slick-prev,
+.bestseller-slider .slick-next {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1.5px solid var(--brown);
+  background-color: #fff;
+  z-index: 20;
+  transition: all 0.3s ease;
+}
+
+.bestseller-slider .slick-prev {
+  left: -30px;
+}
+.bestseller-slider .slick-next {
+  right: -30px;
+}
+
+.bestseller-slider .slick-prev:before,
+.bestseller-slider .slick-next:before {
+  color: var(--brown); /* Mũi tên màu nâu — đồng bộ với tiêu đề */
+  font-size: 20px;
+  line-height: 45px; /* Căn giữa dọc icon trong nút tròn */
+  opacity: 1;
+}
+
+.bestseller-slider .slick-prev:hover,
+.bestseller-slider .slick-next:hover {
+  background-color: #f7f1eb; /* Nền ấm khi hover — tone nâu cafe nhạt */
+}

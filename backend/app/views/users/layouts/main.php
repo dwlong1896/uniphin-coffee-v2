@@ -16,6 +16,7 @@
         return ($publicBase === '' ? '' : $publicBase) . '/assets/' . ltrim($path, '/');
     };
     ?>
+    <!-- CSS nội bộ của bạn -->
     <link rel="stylesheet"
         href="<?php echo htmlspecialchars($asset('css/user/main-layout.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/header.css'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -24,6 +25,15 @@
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/footer.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet"
         href="<?php echo htmlspecialchars($asset('css/user/tai-khoan.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/san-pham.css'), ENT_QUOTES, 'UTF-8'); ?>">
+
+    <!-- CSS của Slick Slider (ĐÃ SỬA THÀNH LINK CDN TRỰC TIẾP) -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
+    <!-- CSS CỦA AOS (THÊM VÀO ĐÂY) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 
 <body>
@@ -48,6 +58,18 @@
         <?php require __DIR__ . '/partials/footer.php'; ?>
     </div>
     <script src="<?php echo htmlspecialchars($asset('js/user/sidebar.js'), ENT_QUOTES, 'UTF-8'); ?>"></script>
+
+    <!-- JS của jQuery và Slick Slider (ĐÃ SỬA THÀNH LINK CDN TRỰC TIẾP VÀ CHUẨN HTTPS) -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+    <!-- JS CỦA AOS (THÊM VÀO ĐÂY) -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Ép trình duyệt tải lại file JS mới nhất của bạn -->
+    <script
+        src="<?php echo htmlspecialchars($asset('js/user/san-pham.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>">
+    </script>
 </body>
 
 </html>
