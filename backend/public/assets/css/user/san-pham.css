@@ -1,47 +1,28 @@
-/* ═══════════════════════════════════════════
-   BIẾN TOÀN CỤC
-   Định nghĩa một lần, dùng xuyên suốt file.
-   Muốn đổi màu chủ đạo → chỉ sửa --accent là xong.
-═══════════════════════════════════════════ */
+/* ── BIẾN TOÀN CỤC ── */
 :root {
-  --accent: #009ce4; /* Màu chủ đạo (xanh dương) */
-  --accent-glow: rgba(0, 156, 228, 0.3); /* Bóng phát sáng màu accent */
-  --text-dark: #222222; /* Màu chữ chính */
-  --text-muted: #555; /* Màu chữ phụ (mờ hơn) */
-  --bg-circle: #fdf0e3; /* Màu nền vòng tròn sau ảnh sản phẩm */
-  --brown: #4a2c2a; /* Màu nâu cafe — dùng cho Best Seller */
-  --brown-muted: #8c6b5d; /* Nâu nhạt hơn — vạch gạch chân Best Seller */
-  --spring: cubic-bezier(
-    0.175,
-    0.885,
-    0.32,
-    1.275
-  ); /* Easing lò xo — dùng chung cho mọi animation */
+  --accent: #009ce4;
+  --accent-glow: rgba(0, 156, 228, 0.3);
+  --text-dark: #222222;
+  --text-muted: #555;
+  --bg-circle: #fdf0e3;
+  --brown: #4a2c2a;
+  --brown-muted: #8c6b5d;
+  --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ═══════════════════════════════════════════
-   WRAPPER
-═══════════════════════════════════════════ */
+/* ── WRAPPER ── */
 html {
-  scroll-behavior: smooth; /* Cuộn mượt khi click anchor (#) */
+  scroll-behavior: smooth;
 }
 
 .uniphin-menu-wrapper {
-  background: linear-gradient(
-    to bottom,
-    #b6ecff 0%,
-    #ffffff 700px
-  ); /* Nền chuyển xanh nhạt → trắng trong 300px đầu */
+  background: linear-gradient(to bottom, #b6ecff 0%, #ffffff 700px);
   width: 100%;
-  min-height: calc(
-    100vh - 70px
-  ); /* Bù trừ padding-top: 70px của .content trong main-layout.css */
-  /* padding: 40px 0; */
+  min-height: calc(100vh - 70px);
   color: var(--text-dark);
   box-sizing: border-box;
 }
 
-/* Giới hạn chiều rộng và căn giữa — dùng chung cho header lẫn body */
 .uniphin-menu-header,
 .uniphin-menu-body {
   max-width: 1600px;
@@ -50,76 +31,69 @@ html {
   box-sizing: border-box;
 }
 
-/* ═══════════════════════════════════════════
-   HEADER
-═══════════════════════════════════════════ */
+/* ── HEADER ── */
 .uniphin-menu-header {
   display: flex;
-  justify-content: space-between; /* Logo trái, search phải */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
 
-/* ── Logo ── */
 .uniphin-menu-logo {
   display: flex;
   flex-direction: column;
   line-height: 1.5;
 }
-
 .uniphin-logo-top {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-
 .uniphin-logo-bottom {
   font-size: 32px;
   font-weight: 800;
   color: var(--accent);
 }
 
-/* ── Thanh tìm kiếm ── */
+/* ── SEARCH ── */
 .uniphin-menu-search {
-  position: relative; /* Làm gốc định vị cho nút search bên trong */
-  width: 280px; /* Thu nhỏ ban đầu, giãn ra khi hover/focus */
+  position: relative;
+  width: 280px;
   transition: width 0.5s var(--spring);
 }
-
 .uniphin-menu-search:focus-within,
 .uniphin-menu-search:hover {
-  width: 350px; /* Kéo dài thanh search khi tương tác */
+  width: 350px;
 }
 
 .uniphin-menu-search input {
   width: 100%;
-  padding: 14px 50px 14px 20px; /* 50px bên phải — chừa chỗ cho nút tròn không đè lên chữ */
+  padding: 14px 50px 14px 20px;
   border: 2px solid #bde0f2;
-  border-radius: 50px; /* Bo tròn hoàn toàn kiểu pill */
+  border-radius: 50px;
   outline: none;
   font-size: 15px;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02); /* Bóng cực nhạt trạng thái mặc định */
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
   transition: all 0.3s ease;
   box-sizing: border-box;
 }
-
 .uniphin-menu-search input:focus {
   border-color: var(--accent);
   box-shadow:
     0 0 18px rgba(0, 156, 228, 0.25),
-    /* Glow xanh lan rộng ra ngoài viền */ 0 4px 15px rgba(0, 0, 0, 0.05); /* Bóng đổ dưới để tạo chiều sâu */
+    0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
 .uniphin-search-btn {
   position: absolute;
   right: 6px;
   top: 50%;
-  transform: translateY(-50%); /* Căn giữa dọc so với input */
+  transform: translateY(-50%);
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background-color: var(--accent);
+  background: var(--accent);
   border: none;
   cursor: pointer;
   display: flex;
@@ -128,41 +102,32 @@ html {
   color: #fff;
   transition: all 0.3s var(--spring);
 }
-
 .uniphin-search-btn:hover {
-  background-color: #007bb5;
-  transform: translateY(-50%) scale(1.1) rotate(15deg); /* Giữ translateY(-50%) để không bị lệch dọc */
+  background: #007bb5;
+  transform: translateY(-50%) scale(1.1) rotate(15deg);
   box-shadow: 0 4px 12px rgba(0, 156, 228, 0.4);
 }
-
 .uniphin-search-btn:active {
-  transform: translateY(-50%) scale(0.95); /* Lún xuống khi đang giữ chuột */
+  transform: translateY(-50%) scale(0.95);
   box-shadow: 0 2px 5px rgba(0, 156, 228, 0.4);
 }
 
-/* ═══════════════════════════════════════════
-   BANNER SLIDER
-═══════════════════════════════════════════ */
+/* ── BANNER SLIDER ── */
 .uniphin-banner-slider {
-  position: relative; /* Làm gốc định vị cho dots bên trong */
+  position: relative;
   max-width: 1600px;
-  overflow: hidden; /* Cắt mũi tên nếu tràn ra ngoài */
+  overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
-
 .uniphin-banner-slider .banner-item {
-  outline: none; /* Bỏ viền focus mặc định khi click vào slide */
+  outline: none;
 }
-
 .uniphin-banner-slider .banner-item img {
-  display: block; /* Xóa khoảng trắng thừa phía dưới ảnh (inline gap) */
+  display: block;
   width: 100%;
-  height: 400px; /* Chiều cao cố định — tăng/giảm tùy layout */
-  object-fit: cover; /* Ảnh fill đầy khung, không bị méo */
+  height: 400px;
+  object-fit: cover;
 }
-
-/* Kéo mũi tên vào bên trong banner (left/right dương) để không bị
-   overflow: hidden phía trên cắt mất */
 .uniphin-banner-slider .slick-prev {
   left: 20px;
   z-index: 10;
@@ -171,7 +136,6 @@ html {
   right: 20px;
   z-index: 10;
 }
-
 .uniphin-banner-slider .slick-prev:before,
 .uniphin-banner-slider .slick-next:before {
   font-size: 25px;
@@ -179,72 +143,60 @@ html {
   opacity: 0.8;
   transition: opacity 0.3s ease;
 }
-
 .uniphin-banner-slider .slick-prev:hover:before,
 .uniphin-banner-slider .slick-next:hover:before {
-  opacity: 1; /* Hiện rõ hơn khi rê chuột vào */
+  opacity: 1;
 }
 
-/* ── Dots (chấm tròn phân trang) ── */
 .uniphin-banner-slider .slick-dots {
-  position: absolute; /* Đè lên ảnh, không chiếm không gian layout */
+  position: absolute;
   bottom: 10px;
   left: 0;
   width: 100%;
   margin: 0;
   padding: 0;
   text-align: center;
-  z-index: 15; /* Phải cao hơn ảnh (z-index mặc định) để không bị đè */
+  z-index: 15;
 }
-
 .uniphin-banner-slider .slick-dots li {
   display: inline-block;
   margin: 0 5px;
 }
-
 .uniphin-banner-slider .slick-dots li button:before {
   font-size: 10px;
-  color: #fff; /* Chấm trắng — nổi trên ảnh tối */
-  opacity: 0.5; /* Mờ = chưa active */
+  color: #fff;
+  opacity: 0.5;
 }
-
 .uniphin-banner-slider .slick-dots li.slick-active button:before {
-  color: var(--accent); /* Chấm xanh = slide đang hiển thị */
+  color: var(--accent);
   opacity: 1;
 }
 
-/* ═══════════════════════════════════════════
-   LAYOUT BODY
-═══════════════════════════════════════════ */
+/* ── LAYOUT BODY ── */
 .uniphin-menu-body {
   display: flex;
-  gap: 60px; /* Khoảng cách giữa sidebar và danh sách sản phẩm */
+  gap: 60px;
 }
 
-/* ═══════════════════════════════════════════
-   SIDEBAR CATEGORIES
-═══════════════════════════════════════════ */
+/* ── SIDEBAR ── */
 .uniphin-menu-categories {
   width: 240px;
-  flex-shrink: 0; /* Không bị co lại khi sản phẩm chiếm nhiều chỗ */
+  flex-shrink: 0;
 }
-
 .uniphin-menu-categories ul {
   list-style: none;
   padding: 0;
   position: sticky;
-  top: 130px; /* Sidebar bám theo khi cuộn, cách đỉnh viewport 130px */
+  top: 130px;
 }
-
 .uniphin-menu-categories li {
   margin-bottom: 25px;
 }
 
-/* Link danh mục + hiệu ứng gạch chân trượt ra khi hover/active */
 .uniphin-menu-categories a {
-  position: relative; /* Làm gốc định vị cho ::after (thanh gạch chân) */
-  display: inline-block; /* Cần để ::after bám sát chiều rộng chữ */
-  padding-bottom: 5px; /* Tạo khoảng trống giữa chữ và thanh gạch */
+  position: relative;
+  display: inline-block;
+  padding-bottom: 5px;
   text-decoration: none;
   color: var(--text-dark);
   font-size: 23px;
@@ -252,42 +204,35 @@ html {
   letter-spacing: 0.5px;
   transition: color 0.3s ease;
 }
-
 .uniphin-menu-categories a:hover,
 .uniphin-menu-categories a.menu-active {
   color: var(--accent);
 }
 
-/* Thanh gạch chân — ẩn ban đầu (width: 0), trượt ra khi hover/active */
 .uniphin-menu-categories a::after {
   content: "";
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 0; /* Ẩn ban đầu */
+  width: 0;
   height: 3px;
-  background-color: var(--accent);
+  background: var(--accent);
   border-radius: 2px;
-  transition: width 0.3s ease-in-out; /* Trượt từ trái sang phải */
+  transition: width 0.3s ease-in-out;
 }
-
 .uniphin-menu-categories a:hover::after,
 .uniphin-menu-categories a.menu-active::after {
-  width: 100%; /* Kéo dài full chiều rộng chữ */
+  width: 100%;
 }
 
-/* ═══════════════════════════════════════════
-   PRODUCTS LIST
-═══════════════════════════════════════════ */
+/* ── PRODUCTS ── */
 .uniphin-menu-products {
-  flex-grow: 1; /* Chiếm hết không gian còn lại bên cạnh sidebar */
+  flex-grow: 1;
 }
-
 .uniphin-category-section {
   margin-bottom: 60px;
-  scroll-margin-top: 100px; /* Khi click anchor, section dừng cách đỉnh 100px — tránh bị header che */
+  scroll-margin-top: 100px;
 }
-
 .uniphin-category-title {
   color: var(--accent);
   font-size: 28px;
@@ -295,19 +240,13 @@ html {
   margin-bottom: 30px;
   text-transform: uppercase;
 }
-
 .uniphin-product-grid {
   display: grid;
-  grid-template-columns: repeat(
-    4,
-    1fr
-  ); /* Luôn 4 cột đều nhau, không tự wrap */
-  gap: 40px 20px; /* Hàng cách nhau 40px, cột cách nhau 20px */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px 20px;
 }
 
-/* ═══════════════════════════════════════════
-   PRODUCT CARD
-═══════════════════════════════════════════ */
+/* ── PRODUCT CARD ── */
 .uniphin-product-card {
   display: flex;
   flex-direction: column;
@@ -315,239 +254,621 @@ html {
   text-align: center;
   padding: 10px;
   border-radius: 16px;
-  background-color: transparent;
+  background: transparent;
   transition: background-color 0.3s ease;
 }
-
 .uniphin-product-card:hover {
-  background-color: #fbfbfb; /* Nền xám cực nhạt — không dùng shadow để tránh rối mắt */
+  background: #fbfbfb;
 }
 
-/* ── Khung chứa ảnh + vòng tròn nền ── */
 .uniphin-image-wrapper {
-  position: relative; /* Làm gốc định vị cho ::before (vòng tròn) và img */
+  position: relative;
   width: 100%;
   max-width: 180px;
-  aspect-ratio: 1 / 1; /* Luôn giữ hình vuông bất kể chiều rộng thực tế */
+  aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
 }
-
-/* Vòng tròn nền trang trí phía sau ảnh sản phẩm */
 .uniphin-image-wrapper::before {
   content: "";
   position: absolute;
   width: 85%;
   height: 85%;
-  background-color: var(--bg-circle);
+  background: var(--bg-circle);
   border-radius: 50%;
-  z-index: 1; /* Nằm dưới ảnh sản phẩm (img có z-index: 2) */
-  box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.02); /* Bóng trong — tạo cảm giác lõm nhẹ */
+  z-index: 1;
+  box-shadow: inset 0 -10px 20px rgba(0, 0, 0, 0.02);
   transition: all 0.4s var(--spring);
 }
-
-/* Vòng tròn phình nhẹ khi hover — làm nền cho ly nước phóng to */
 .uniphin-product-card:hover .uniphin-image-wrapper::before {
   transform: scale(1.1);
 }
 
-/* Ảnh sản phẩm — ngôi sao chính của hiệu ứng hover */
 .uniphin-image-wrapper img {
   width: 90%;
   height: auto;
   position: relative;
-  z-index: 2; /* Nằm trên vòng tròn nền */
+  z-index: 2;
   object-fit: contain;
-  transform-origin: bottom center; /* Xoay quanh đáy ly — tạo cảm giác tự nhiên hơn */
+  transform-origin: bottom center;
   transition: all 0.4s var(--spring);
 }
-
-/* Phóng to 15% + nghiêng trái 6° khi hover */
 .uniphin-product-card:hover .uniphin-image-wrapper img {
   transform: scale(1.15) rotate(-6deg);
 }
 
-/* ── Text sản phẩm ── */
 .uniphin-product-sub {
   font-size: 12px;
   font-weight: 600;
   color: var(--text-muted);
   margin-bottom: 5px;
 }
-
 .uniphin-product-name {
   font-size: 15px;
   font-weight: 800;
   margin-bottom: 15px;
-  min-height: 40px; /* Chiều cao cố định — tránh card lệch nhau khi tên dài/ngắn */
+  min-height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s var(--spring);
 }
-
-/* Tên món: đổi xanh + nhấc lên nhẹ khi hover */
 .uniphin-product-card:hover .uniphin-product-name {
   color: var(--accent);
   transform: translateY(-4px);
 }
 
 .uniphin-product-price {
-  display: inline-block; /* Bắt buộc — phần tử block mặc định không áp dụng được scale() */
+  display: inline-block;
   font-size: 16px;
   font-weight: 800;
   color: var(--accent);
   transition: all 0.3s var(--spring);
 }
-
-/* Giá: phóng to + glow xanh nhạt khi hover */
 .uniphin-product-card:hover .uniphin-product-price {
   transform: scale(1.15) translateY(-2px);
   text-shadow: 0 4px 10px var(--accent-glow);
 }
 
-/* ═══════════════════════════════════════════
-   BEST SELLER SECTION
-═══════════════════════════════════════════ */
+/* ── BEST SELLER ── */
 .uniphin-bestseller-section {
-  margin: 80px auto 40px;
-  max-width: 1000px; /* Thu hẹp để slider trông gọn gàng, ly giữa nổi bật hơn */
+  margin: 40px auto;
+  max-width: 1200px;
   text-align: center;
   padding: 0 50px;
 }
-
-/* ── Tiêu đề ── */
 .bestseller-header {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
-
 .bestseller-header h2 {
   font-size: 36px;
   font-weight: 800;
   color: var(--brown);
   text-transform: uppercase;
   letter-spacing: 2px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
-
 .bestseller-line {
   width: 100px;
   height: 2px;
-  background-color: var(--brown-muted); /* Vạch gạch chân màu nâu nhạt */
+  background: var(--brown-muted);
   margin: 0 auto;
 }
 
-/* ── Slider ── */
 .bestseller-slider {
-  margin: 0 auto 30px;
-  padding: 40px 0; /* Chừa khoảng trên/dưới để ly giữa phóng to không bị cắt */
+  margin: 0 auto 20px;
+  padding: 40px 0;
 }
 
-/* Trạng thái mặc định — các ly phụ hai bên */
 .bestseller-item {
-  opacity: 0.4; /* Mờ hơn để tôn ly giữa lên */
-  transform: scale(0.75); /* Thu nhỏ ly phụ */
+  opacity: 0.4;
+  transform: scale(0.75);
   transition: all 0.5s var(--spring);
   outline: none;
   cursor: pointer;
 }
-
-/* Khung nền phía sau ly (card wrapper) */
 .bestseller-item .bestseller-img-wrapper {
-  background-color: #fcf6f0; /* Nền ấm — tone nâu cafe nhạt */
+  background: #fcf6f0;
   border-radius: 20px;
   padding: 30px 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03); /* Bóng nhẹ cho ly phụ */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
   transition: all 0.4s ease;
 }
-
-/* Ảnh ly nước */
 .bestseller-item img {
   width: 100%;
-  height: 300px;
+  height: 250px;
   object-fit: contain;
+  border-radius: 20px;
   display: block;
-  transform-origin: bottom center; /* Lấy đáy ly làm tâm xoay/phóng to */
+  transform-origin: bottom center;
   transition: all 0.4s var(--spring);
 }
-
-/* Hover vào ly phụ — gợi mời người dùng click */
 .bestseller-slider .bestseller-item:not(.slick-center):hover {
   opacity: 0.85;
-  transform: scale(0.85); /* Phình nhẹ để báo hiệu có thể click */
+  transform: scale(0.85);
 }
-
-/* Ly chính giữa (active) — nổi bật hoàn toàn */
 .bestseller-slider .slick-center {
   opacity: 1;
-  transform: scale(1.15); /* Phóng to hơn các ly phụ */
+  transform: scale(1.15);
   z-index: 10;
-  position: relative; /* Cần để z-index hoạt động trong Slick */
+  position: relative;
 }
-
-/* Bóng đổ mạnh hơn cho card nền của ly giữa — tạo cảm giác nổi lên (3D) */
 .bestseller-slider .slick-center .bestseller-img-wrapper {
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
 }
-
-/* Hover vào ly giữa — thêm hiệu ứng sống động */
 .bestseller-slider .slick-center:hover img {
-  transform: scale(1.08) translateY(-5px); /* Phóng to thêm + nảy nhẹ lên */
-  filter: drop-shadow(
-    0 15px 15px rgba(0, 0, 0, 0.15)
-  ); /* Bóng đổ xuống nền — khác box-shadow, bám theo hình dạng ly */
+  transform: scale(1.08) translateY(-5px);
+  filter: drop-shadow(0 15px 15px rgba(0, 0, 0, 0.15));
 }
 
-/* ── Thông tin sản phẩm bên dưới slider ── */
 .bestseller-info-wrapper {
   margin-top: 25px;
-  transition: opacity 0.3s ease; /* Mờ dần mượt khi chuyển slide */
+  transition: opacity 0.3s ease;
 }
-
 .bestseller-active-name {
-  font-size: 26px;
+  font-size: 23px;
   font-weight: 800;
   color: var(--text-dark);
-  margin-bottom: 5px; /* Khoảng cách với giá tiền */
+  margin-bottom: 5px;
 }
-
 .bestseller-active-price {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--accent);
-  text-shadow: 0 4px 10px rgba(0, 156, 228, 0.2); /* Glow nhạt — tạo cảm giác sang trọng */
+  text-shadow: 0 4px 10px rgba(0, 156, 228, 0.2);
 }
 
-/* ── Nút mũi tên chuyển slide ── */
 .bestseller-slider .slick-prev,
 .bestseller-slider .slick-next {
   width: 45px;
   height: 45px;
   border-radius: 50%;
   border: 1.5px solid var(--brown);
-  background-color: #fff;
+  background: #fff;
   z-index: 20;
   transition: all 0.3s ease;
 }
-
 .bestseller-slider .slick-prev {
   left: -30px;
 }
 .bestseller-slider .slick-next {
   right: -30px;
 }
-
 .bestseller-slider .slick-prev:before,
 .bestseller-slider .slick-next:before {
-  color: var(--brown); /* Mũi tên màu nâu — đồng bộ với tiêu đề */
+  color: var(--brown);
   font-size: 20px;
-  line-height: 45px; /* Căn giữa dọc icon trong nút tròn */
+  line-height: 45px;
   opacity: 1;
 }
-
 .bestseller-slider .slick-prev:hover,
 .bestseller-slider .slick-next:hover {
-  background-color: #f7f1eb; /* Nền ấm khi hover — tone nâu cafe nhạt */
+  background: #f7f1eb;
+}
+
+/* ── FLASH SALE ── */
+.uniphin-flashsale-wrapper {
+  background: var(--accent);
+  border-radius: 15px;
+  padding: 30px;
+  margin: 60px 50px;
+  max-width: 1500px;
+}
+.flashsale-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  margin-bottom: 25px;
+}
+.flashsale-title {
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.flashsale-countdown {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.countdown-item {
+  background: #68f6a1;
+  padding: 5px 10px;
+  border-radius: 5px;
+  text-align: center;
+  min-width: 45px;
+}
+.countdown-item span {
+  display: block;
+  font-weight: 800;
+  font-size: 18px;
+}
+.countdown-item small {
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.countdown-sep {
+  font-weight: 800;
+  font-size: 20px;
+  color: #fff;
+}
+
+/* ── SALE CARD ── */
+.sale-card {
+  background: #fff;
+  margin: 10px;
+  border-radius: 12px;
+  padding: 15px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s var(--spring);
+}
+.sale-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.sale-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #e31e24;
+  color: #fff;
+  padding: 2px 8px;
+  min-height: 20px;
+  border-radius: 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.sale-img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.sale-img img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.sale-card:hover .sale-img img {
+  transform: scale(1.1);
+}
+
+.sale-img::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: none;
+}
+.sale-card:hover .sale-img::after {
+  left: 150%;
+  transition: all 0.6s ease;
+}
+
+.price-current {
+  color: #4db051;
+  font-weight: 800;
+  display: block;
+}
+.price-old {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 13px;
+}
+
+/* ── COLLECTION ── */
+.uniphin-collection-section {
+  padding: 80px 50px;
+  background: #fcf9f5;
+  margin: 60px 0;
+}
+.collection-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+}
+
+.collection-poster {
+  flex: 1;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+.collection-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+.collection-poster:hover img {
+  transform: scale(1.05);
+}
+
+.poster-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+  color: #fff;
+}
+.poster-badge {
+  background: #ff6b00;
+  color: #fff;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 800;
+  border-radius: 30px;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+.poster-content h2 {
+  font-size: 40px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.btn-discover {
+  display: inline-block;
+  margin-top: 20px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+.btn-discover i {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+.btn-discover:hover {
+  color: var(--accent);
+}
+.btn-discover:hover i {
+  transform: translateX(5px);
+}
+
+.collection-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.collection-item {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.collection-item:hover {
+  transform: translateX(-10px);
+  box-shadow: 0 10px 25px rgba(0, 156, 228, 0.1);
+  border-left: 4px solid var(--accent);
+}
+
+.item-img {
+  width: 90px;
+  height: 90px;
+  background: #f7f7f7;
+  border-radius: 50%;
+  padding: 10px;
+  margin-right: 20px;
+}
+.item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.item-info {
+  flex: 1;
+}
+.item-info h3 {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 5px;
+  color: #222;
+}
+.item-desc {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 8px;
+}
+.item-price {
+  font-weight: 800;
+  color: var(--accent);
+  font-size: 16px;
+}
+
+.item-add-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f0f4f8;
+  color: var(--accent);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.collection-item:hover .item-add-btn {
+  background: var(--accent);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* ── 3D FLIP CARD ── */
+.collection-list-3d {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.uniphin-flip-card {
+  background: transparent;
+  width: 100%;
+  height: 260px;
+  perspective: 1500px;
+  cursor: pointer;
+}
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+.uniphin-flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.flip-card-front {
+  background: linear-gradient(145deg, #fff, #f5f8fc);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+.front-glow {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  background: var(--accent);
+  filter: blur(40px);
+  opacity: 0.15;
+  z-index: 1;
+}
+.floating-cup {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  z-index: 2;
+  filter: drop-shadow(0 15px 15px rgba(0, 0, 0, 0.15));
+  animation: floatCup 3s ease-in-out infinite;
+}
+@keyframes floatCup {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+.front-teaser {
+  position: absolute;
+  bottom: 20px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #444;
+  letter-spacing: 1px;
+  z-index: 2;
+}
+
+.flip-card-back {
+  background: var(--accent);
+  color: #fff;
+  transform: rotateY(180deg);
+  padding: 30px 20px;
+  text-align: center;
+}
+.back-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+.back-divider {
+  width: 40px;
+  height: 3px;
+  background: #ffeb3b;
+  margin: 10px auto 15px;
+  border-radius: 2px;
+}
+.back-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffeb3b;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+.back-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: 0.9;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.btn-flip-add {
+  background: #fff;
+  color: var(--accent);
+  border: none;
+  padding: 10px 25px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.btn-flip-add:hover {
+  background: #222;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1200px) {
+  .collection-list-3d {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 992px) {
+  .collection-container {
+    flex-direction: column;
+  }
 }

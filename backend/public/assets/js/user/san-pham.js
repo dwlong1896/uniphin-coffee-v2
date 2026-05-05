@@ -76,6 +76,38 @@ $(document).ready(function () {
     $activePrice.text($current.data("price"));
     $infoWrapper.css("opacity", 1);
   });
+
+  $(".flashsale-slider").slick({
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    arrows: true,
+    infinite: false,
+    responsive: [
+      { breakpoint: 1200, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
+    ],
+  });
+
+  // --- 4. CODE CHO ĐỒNG HỒ ĐẾM NGƯỢC ---
+  function startCountdown(durationInSeconds) {
+    let timer = durationInSeconds;
+    setInterval(function () {
+      let days = Math.floor(timer / (24 * 3600));
+      let hours = Math.floor((timer % (24 * 3600)) / 3600);
+      let mins = Math.floor((timer % 3600) / 60);
+      let secs = Math.floor(timer % 60);
+
+      $("#days").text(days < 10 ? "0" + days : days);
+      $("#hours").text(hours < 10 ? "0" + hours : hours);
+      $("#mins").text(mins < 10 ? "0" + mins : mins);
+      $("#secs").text(secs < 10 ? "0" + secs : secs);
+
+      if (--timer < 0) timer = 0;
+    }, 1000);
+  }
+
+  // Gọi hàm chạy (Ví dụ đặt là 1 ngày rưỡi: 125000 giây)
+  startCountdown(125000);
 });
 
 document.addEventListener("DOMContentLoaded", function () {

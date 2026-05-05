@@ -17,7 +17,7 @@ $categories = [
     ['ID' => 1, 'Name' => 'EXPRESSO'],
     ['ID' => 2, 'Name' => 'AMERICANO'],
     ['ID' => 3, 'Name' => 'LATTE'],
-    ['ID' => 4, 'Name' => 'FPRAPE'],
+    ['ID' => 4, 'Name' => 'FRAPPE'],
     ['ID' => 5, 'Name' => 'PHIN'],
     ['ID' => 6, 'Name' => 'COLD BREW'],
 ];
@@ -149,18 +149,26 @@ $bestseller_items = array_slice($products_db, 0, 5);
             <ul>
                 <?php
                 $isFirst = true;
-                // Dùng array_keys để chỉ lấy tên danh mục, không cần value
+                $delaySidebar = 0; // Khởi tạo biến trễ cho AOS
+                
                 foreach (array_keys($grouped_products) as $categoryName):
-                    // Chuyển tên danh mục thành ID hợp lệ cho HTML anchor (ví dụ: "COLD BREW" → "COLD_BREW")
+                    // 1. Sửa lỗi chính tả từ FPRAPE thành FRAPPE nếu có
+                    if (strtoupper($categoryName) === 'FPRAPE') {
+                        $categoryName = 'FRAPPE';
+                    }
+
+                    // 2. Chuyển tên danh mục thành ID hợp lệ cho HTML anchor
                     $anchorId = htmlspecialchars(str_replace(' ', '_', $categoryName));
                 ?>
-                <li>
+                <!-- Thêm hiệu ứng trượt từ trái sang và tăng dần độ trễ -->
+                <li data-aos="fade-right" data-aos-delay="<?= $delaySidebar ?>">
                     <a href="#<?= $anchorId ?>" <?= $isFirst ? 'class="menu-active"' : '' ?>>
                         <?= htmlspecialchars($categoryName) ?>
                     </a>
                 </li>
                 <?php
                     $isFirst = false;
+                    $delaySidebar += 100; // Mỗi danh mục hiện ra sau mục trước 0.1 giây
                 endforeach;
                 ?>
             </ul>
@@ -202,7 +210,7 @@ $bestseller_items = array_slice($products_db, 0, 5);
     </div><!-- /.uniphin-menu-body -->
 
     <!-- ── BEST SELLER ── -->
-    <div class="uniphin-bestseller-section" data-aos="zoom-in" data-aos-duration="1000">
+    <div class="uniphin-bestseller-section" data-aos="zoom-in-up" data-aos-duration="1000">
         <div class="bestseller-header">
             <h2>BEST SELLER</h2>
             <div class="bestseller-line"></div>
@@ -234,5 +242,100 @@ $bestseller_items = array_slice($products_db, 0, 5);
             </div>
         </div>
     </div><!-- /.uniphin-bestseller-section -->
+    <div class="uniphin-flashsale-wrapper" data-aos="fade-up">
+        <div class="flashsale-header">
+            <div class="flashsale-title">
+                Khuyến mãi hấp dẫn
+            </div>
+            <div class="flashsale-countdown">
+                <div class="countdown-item"><span id="days">01</span><small>Ngày</small></div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-item"><span id="hours">00</span><small>Giờ</small></div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-item"><span id="mins">00</span><small>Phút</small></div>
+                <div class="countdown-sep">:</div>
+                <div class="countdown-item"><span id="secs">00</span><small>Giây</small></div>
+            </div>
+        </div>
 
+        <div class="flashsale-slider">
+            <?php foreach ($bestseller_items as $item): ?>
+            <div class="sale-card">
+                <div class="sale-img">
+                    <span class="sale-badge">-10%</span>
+                    <img src="<?= $asset('images/products/'.$item['image']) ?>" alt=""
+                        onerror="this.src='https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png'">
+                </div>
+                <div class="sale-info">
+                    <h3 class="sale-name"><?= $item['name'] ?></h3>
+                    <div class="sale-price">
+                        <span class="price-current"><?= number_format($item['price'] * 0.9 , 0, ',', '.') ?> đ</span>
+                        <span class="price-old"><?= number_format($item['price'], 0, ',', '.') ?> đ</span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- ==========================================
+     MỤC: BỘ SƯU TẬP MỚI (EDITORIAL LAYOUT)
+     ========================================== -->
+    <div class="uniphin-collection-section">
+        <div class="collection-container">
+
+            <!-- NỬA BÊN TRÁI: POSTER LỚN -->
+            <div class="collection-poster" data-aos="fade-right" data-aos-duration="800">
+                <!-- Thay đường dẫn ảnh poster của bạn vào đây -->
+                <img src="https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png"
+                    alt="Summer Collection">
+                <div class="poster-content">
+                    <span class="poster-badge">MỚI RA MẮT</span>
+                    <h2>Mùa Hè Rực Rỡ</h2>
+                    <p>Khám phá bộ sưu tập trái cây nhiệt đới tươi mát, đánh bay cái nóng mùa hè cùng Uniphin.</p>
+                    <a href="#" class="btn-discover">Khám phá ngay <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- NỬA BÊN PHẢI: DANH SÁCH MÓN XẾP DỌC -->
+            <!-- NỬA BÊN PHẢI: DANH SÁCH MÓN LẬT 3D -->
+            <!-- NỬA BÊN PHẢI: DANH SÁCH MÓN LẬT 180 ĐỘ (TRUE 3D FLIP) -->
+            <div class="collection-list-3d">
+                <?php 
+            $new_collection = array_slice($products_db, 0, 4); // Lấy 4 món
+            $delay = 0;
+            foreach ($new_collection as $item): 
+            ?>
+                <div class="uniphin-flip-card" data-aos="zoom-in" data-aos-delay="<?= $delay ?>">
+                    <div class="flip-card-inner">
+
+                        <!-- Mặt trước: Ly nước lơ lửng và tên món mờ ảo -->
+                        <div class="flip-card-front">
+                            <div class="front-glow"></div> <!-- Quầng sáng phía sau ly -->
+                            <img class="floating-cup" src="<?= $asset('images/products/' . $item['image']) ?>"
+                                alt="<?= htmlspecialchars($item['name']) ?>"
+                                onerror="this.src='https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png'">
+                            <h3 class="front-teaser"><?= htmlspecialchars($item['name']) ?></h3>
+                        </div>
+
+                        <!-- Mặt sau: Lật ra thông tin chốt đơn -->
+                        <div class="flip-card-back">
+                            <h3 class="back-title"><?= htmlspecialchars($item['name']) ?></h3>
+                            <div class="back-divider"></div>
+                            <p class="back-price"><?= number_format($item['price'], 0, ',', '.') ?> đ</p>
+                            <p class="back-desc">Tuyệt tác giải nhiệt mùa hè, đậm đà khó cưỡng. Công thức độc bản từ
+                                Uniphin.</p>
+                            <button class="btn-flip-add"><i class="fas fa-shopping-cart"></i> Đặt ngay</button>
+                        </div>
+
+                    </div>
+                </div>
+                <?php 
+            $delay += 150; 
+            endforeach; 
+            ?>
+            </div>
+
+        </div>
+    </div>
 </div><!-- /.uniphin-menu-wrapper -->
