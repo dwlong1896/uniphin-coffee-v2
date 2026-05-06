@@ -6,32 +6,31 @@ $userController = new UserController();
 $authController = new AuthController();
 $adminController = new AdminController();
 
-// show(ten-file-trong-view, Tittle)
+// show(ten-file-trong-view, title)
 
-// user
-$router->get('/chi-tiet', static function () use ($pageController): void {$pageController->show('chi-tiet', 'Chi tiết sản phẩm');});
-$router->get('/', static function () use ($pageController): void {$pageController->show('trang-chu', 'Trang chủ');});
-$router->get('/gioi-thieu', static function () use ($pageController): void {$pageController->show('gioi-thieu', 'Giới thiệu');});
-$router->get('/tin-tuc', static function () use ($pageController): void {$pageController->show('tin-tuc', 'Tin tức');});
-$router->get('/san-pham', static function () use ($pageController): void {$pageController->show('san-pham', 'Sản phẩm');});
-$router->get('/lien-he', static function () use ($pageController): void {$pageController->show('lien-he', 'Liên hệ');});
+// User routes
+$router->get('/chi-tiet', static function () use ($pageController): void {$pageController->show('chi-tiet', 'Chi tiet san pham');});
+$router->get('/', static function () use ($pageController): void {$pageController->show('trang-chu', 'Trang chu');});
+$router->get('/gioi-thieu', static function () use ($pageController): void {$pageController->show('gioi-thieu', 'Gioi thieu');});
+$router->get('/tin-tuc', static function () use ($pageController): void {$pageController->show('tin-tuc', 'Tin tuc');});
+$router->get('/san-pham', static function () use ($pageController): void {$pageController->show('san-pham', 'San pham');});
+$router->get('/lien-he', static function () use ($pageController): void {$pageController->show('lien-he', 'Lien he');});
 $router->get('/faqs', static function () use ($pageController): void {$pageController->show('faqs', 'FAQs');});
 $router->get('/tai-khoan', static function () use ($userController): void {$userController->profile();});
 $router->post('/tai-khoan', static function () use ($userController): void {$userController->updateProfile();});
 
-// Trang auth hien thuc rieng theo giao dien yeu cau.
+// Auth routes
 $router->get('/login', static function () use ($authController): void {$authController->login();});
 $router->get('/register', static function () use ($authController): void {$authController->register();});
-
-// Auth - xử lý form
 $router->post('/login', static function () use ($authController): void {$authController->handleLogin();});
 $router->post('/register', static function () use ($authController): void {$authController->handleRegister();});
 $router->post('/logout', static function () use ($authController): void {$authController->handleLogout();});
 
-// Admin routes - chỉ admin mới vào được
+// Admin routes
 $router->get('/admin/dashboard', static function () use ($adminController): void {$adminController->dashboard();});
 $router->get('/admin/users', static function () use ($adminController): void {$adminController->users();});
 $router->get('/admin/products', static function () use ($adminController): void {$adminController->products();});
+$router->get('/admin/viewdetail', static function () use ($adminController): void {$adminController->viewdetail();});
 $router->get('/admin/orders', static function () use ($adminController): void {$adminController->orders();});
 $router->get('/admin/posts', static function () use ($adminController): void {$adminController->posts();});
 $router->get('/admin/comments', static function () use ($adminController): void {$adminController->comments();});
@@ -42,5 +41,4 @@ $router->get('/admin/homepage', static function () use ($adminController): void 
 $router->get('/admin/faqpage', static function () use ($adminController): void {$adminController->faqspage();});
 $router->get('/admin/contactpage', static function () use ($adminController): void {$adminController->contactpage();});
 $router->get('/admin/aboutpage', static function () use ($adminController): void {$adminController->aboutpage();});
-
 $router->post('/admin/profile', static function () use ($adminController): void {$adminController->updateProfile();});

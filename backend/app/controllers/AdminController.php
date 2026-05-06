@@ -9,7 +9,6 @@ class AdminController extends Controller
         $this->userModel = new UserModel();
     }
 
-
     public function dashboard(): void
     {
         AuthMiddleware::requireAdmin();
@@ -19,43 +18,66 @@ class AdminController extends Controller
     public function users(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/users', ['title' => 'Quản lý tài khoản'], 'admin/layouts/main');
+        $this->view('admin/pages/users', ['title' => 'Quan ly tai khoan'], 'admin/layouts/main');
     }
 
     public function products(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/products', ['title' => 'Quản lý sản phẩm'], 'admin/layouts/main');
+        $this->view('admin/pages/products', ['title' => 'Quan ly san pham'], 'admin/layouts/main');
+    }
+
+    public function viewdetail(): void
+    {
+        AuthMiddleware::requireAdmin();
+
+        $product = [
+            'id' => 1,
+            'name' => 'Tra sua matcha kem trung',
+            'description' => 'Tra sua matcha ket hop kem trung beo min, huong vi dam va de uong.',
+            'image' => 'https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png',
+            'status' => 'active',
+            'price' => '49000.00',
+            'stock_quantity' => '120',
+            'P_Cate_ID' => '3',
+            'updated_at' => '2026-05-05',
+            'slug' => 'tra-sua-matcha-kem-trung',
+        ];
+
+        $this->view('admin/pages/viewdetail', [
+            'title' => 'Chi tiet san pham',
+            'product' => $product,
+        ], 'admin/layouts/main');
     }
 
     public function orders(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/orders', ['title' => 'Quản lý đơn hàng'], 'admin/layouts/main');
+        $this->view('admin/pages/orders', ['title' => 'Quan ly don hang'], 'admin/layouts/main');
     }
 
     public function posts(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/posts', ['title' => 'Quản lý tin tức'], 'admin/layouts/main');
+        $this->view('admin/pages/posts', ['title' => 'Quan ly tin tuc'], 'admin/layouts/main');
     }
 
     public function comments(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/comments', ['title' => 'Quản lý bình luận'], 'admin/layouts/main');
+        $this->view('admin/pages/comments', ['title' => 'Quan ly binh luan'], 'admin/layouts/main');
     }
 
     public function contacts(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/contacts', ['title' => 'Quản lý liên hệ'], 'admin/layouts/main');
+        $this->view('admin/pages/contacts', ['title' => 'Quan ly lien he'], 'admin/layouts/main');
     }
 
     public function qa(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/qa', ['title' => 'Quản lý hỏi đáp'], 'admin/layouts/main');
+        $this->view('admin/pages/qa', ['title' => 'Quan ly hoi dap'], 'admin/layouts/main');
     }
 
     public function profile(): void
@@ -63,13 +85,12 @@ class AdminController extends Controller
         AuthMiddleware::requireAdmin();
 
         $user = $this->userModel->findById($_SESSION['user_id']);
-        
-        $this->view('admin/pages/profile', [
-        'title' => 'My Profile',
-        'user'  => $user,
-    ], 'admin/layouts/main');
-    }
 
+        $this->view('admin/pages/profile', [
+            'title' => 'My Profile',
+            'user' => $user,
+        ], 'admin/layouts/main');
+    }
 
     public function updateProfile(): void
     {
@@ -79,33 +100,30 @@ class AdminController extends Controller
 
         $data = [
             'first_name' => trim($_POST['first_name'] ?? ''),
-            'last_name'  => trim($_POST['last_name']  ?? ''),
-            'email'      => trim($_POST['email']      ?? ''),
-            'phone'      => trim($_POST['phone']      ?? ''),
-            'address'    => trim($_POST['address']    ?? ''),
-            'gender'     => trim($_POST['gender']     ?? ''),
+            'last_name' => trim($_POST['last_name'] ?? ''),
+            'email' => trim($_POST['email'] ?? ''),
+            'phone' => trim($_POST['phone'] ?? ''),
+            'address' => trim($_POST['address'] ?? ''),
+            'gender' => trim($_POST['gender'] ?? ''),
             'birth_date' => trim($_POST['birth_date'] ?? ''),
         ];
 
         $file = $_FILES['avatar'] ?? null;
         $imageName = null;
 
-        // lấy user hiện tại
         $currentUser = $this->userModel->findById($userId);
         $oldImage = $currentUser['image'] ?? null;
 
         if ($file && $file['error'] === UPLOAD_ERR_OK) {
-
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg', 'jpeg', 'png', 'webp'];
 
-            if (!in_array($ext, $allowed)) {
-                $this->setFlash('error', 'File không hợp lệ');
+            if (!in_array($ext, $allowed, true)) {
+                $this->setFlash('error', 'File khong hop le');
                 $this->redirect($this->baseUrl('admin/profile'));
             }
 
             $fileName = 'avatar_' . $userId . '_' . time() . '.' . $ext;
-
             $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uniphin2/backend/public/uploads/';
 
             if (!is_dir($uploadDir)) {
@@ -113,7 +131,6 @@ class AdminController extends Controller
             }
 
             if (move_uploaded_file($file['tmp_name'], $uploadDir . $fileName)) {
-
                 $imageName = $fileName;
 
                 if ($oldImage) {
@@ -125,15 +142,14 @@ class AdminController extends Controller
             }
         }
 
-        // 👉 Gọi model
         $this->userModel->updateProfile($userId, $data, $imageName);
 
         $_SESSION['name'] = $data['first_name'] . ' ' . $data['last_name'];
 
-        $this->setFlash('success', 'Cập nhật hồ sơ thành công!');
+        $this->setFlash('success', 'Cap nhat ho so thanh cong!');
         $this->redirect($this->baseUrl('admin/profile'));
     }
-    
+
     public function homepage(): void
     {
         AuthMiddleware::requireAdmin();
