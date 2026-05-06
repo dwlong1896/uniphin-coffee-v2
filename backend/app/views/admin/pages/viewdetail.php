@@ -16,6 +16,7 @@ $productCategoryId = htmlspecialchars((string) ($product['P_Cate_ID'] ?? ''), EN
 $productCategoryName = htmlspecialchars($product['category_name'] ?? ($product['P_Cate_ID'] ?? ''), ENT_QUOTES, 'UTF-8');
 $productUpdatedAt = htmlspecialchars($product['updated_at'] ?? '', ENT_QUOTES, 'UTF-8');
 $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
+$categories = is_array($categories ?? null) ? $categories : [];
 ?>
 
 <div class="row mt-4">
@@ -105,6 +106,14 @@ $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
                 <h4 class="header-title mb-0">Chinh sua san pham</h4>
             </div>
             <div class="card-body">
+                <?php if (!empty($flashSuccess)): ?>
+                    <div class="alert alert-success"><?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php endif; ?>
+
+                <?php if (!empty($flashError)): ?>
+                    <div class="alert alert-danger"><?php echo htmlspecialchars($flashError, ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php endif; ?>
+
                 <form action="<?php echo $toUrl('admin/products/update?id=' . $productId); ?>" method="post"
                     enctype="multipart/form-data">
                     <div class="row mb-3">
@@ -116,9 +125,20 @@ $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">P_Cate_ID</label>
-                            <input type="number" name="P_Cate_ID" class="form-control"
-                                value="<?php echo $productCategoryId; ?>">
+                            <label class="form-label">Danh muc</label>
+                            <select name="P_Cate_ID" class="form-control">
+                                <option value="">-- Chon danh muc --</option>
+                                <?php foreach ($categories as $category): ?>
+                                    <?php
+                                    $categoryId = (string) ($category['ID'] ?? '');
+                                    $categoryName = (string) ($category['name'] ?? '');
+                                    ?>
+                                    <option value="<?php echo htmlspecialchars($categoryId, ENT_QUOTES, 'UTF-8'); ?>"
+                                        <?php echo $productCategoryId === $categoryId ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Status</label>

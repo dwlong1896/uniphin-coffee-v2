@@ -32,6 +32,7 @@ $router->get('/admin/dashboard', static function () use ($adminController): void
 $router->get('/admin/users', static function () use ($adminController): void {$adminController->users();});
 $router->get('/admin/products/viewdetail', static function () use ($productController): void {$productController->viewdetail();});
 $router->get('/admin/products', static function () use ($productController): void {$productController->index();});
+$router->post('/admin/products/update', static function () use ($productController): void {$productController->update();});
 
 $router->get('/admin/orders', static function () use ($adminController): void {$adminController->orders();});
 $router->get('/admin/posts', static function () use ($adminController): void {$adminController->posts();});
