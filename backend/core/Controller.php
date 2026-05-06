@@ -37,6 +37,8 @@ class Controller
 
         $data['flashSuccess'] ??= $this->getFlash('success');
         $data['flashError']   ??= $this->getFlash('error');
+        $data['flashPopupSuccess'] ??= $this->getFlash('popup_success');
+        $data['flashPopupError']   ??= $this->getFlash('popup_error');
 
         extract($data, EXTR_SKIP);
 

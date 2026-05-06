@@ -156,8 +156,8 @@ $productImage = $productImageRaw !== ''
                                 <option value="out_of_stock"
                                     <?php echo $productStatus === 'out_of_stock' ? 'selected' : ''; ?>>out_of_stock
                                 </option>
-                                <option value="archive" <?php echo $productStatus === 'archive' ? 'selected' : ''; ?>>
-                                    archive</option>
+                                <option value="archived" <?php echo $productStatus === 'archived' ? 'selected' : ''; ?>>
+                                    archived</option>
                             </select>
                         </div>
                     </div>

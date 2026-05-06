@@ -3,10 +3,12 @@
 class ProductController extends Controller
 {
     private ProductModel $productModel;
+    private CategoryModel $categoryModel;
 
     public function __construct()
     {
         $this->productModel = new ProductModel();
+        $this->categoryModel = new CategoryModel();
     }
 
     public function viewdetail(): void
@@ -39,11 +41,247 @@ class ProductController extends Controller
         AuthMiddleware::requireAdmin();
 
         $products = $this->productModel->getAll();
+        $categories = $this->categoryModel->getAllWithProductCount();
 
         $this->view('admin/pages/products', [
             'title' => 'Danh sach san pham',
             'products' => $products,
+            'categories' => $categories,
         ], 'admin/layouts/main');
+    }
+
+    public function createCategory(): void
+    {
+        AuthMiddleware::requireAdmin();
+
+        $name = trim($_POST['name'] ?? '');
+
+        if ($name === '') {
+            $this->setFlash('error', 'Vui long nhap ten danh muc');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($this->categoryModel->nameExists($name)) {
+            $this->setFlash('error', 'Ten danh muc da ton tai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        try {
+            $createdId = $this->categoryModel->create($name);
+        } catch (mysqli_sql_exception $e) {
+            $this->setFlash('error', 'Them danh muc that bai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($createdId <= 0) {
+            $this->setFlash('error', 'Them danh muc that bai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $this->setFlash('success', 'Them danh muc thanh cong');
+        $this->redirect($this->baseUrl('admin/products'));
+    }
+
+    public function updateCategory(): void
+    {
+        AuthMiddleware::requireAdmin();
+
+        $categoryId = (int) ($_GET['id'] ?? 0);
+        $name = trim($_POST['name'] ?? '');
+
+        if ($categoryId <= 0) {
+            $this->setFlash('popup_error', 'Danh mục không hợp lệ');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $category = $this->categoryModel->findById($categoryId);
+        if (!$category) {
+            $this->setFlash('error', 'Danh muc khong ton tai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($name === '') {
+            $this->setFlash('error', 'Vui long nhap ten danh muc');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($this->categoryModel->nameExists($name, $categoryId)) {
+            $this->setFlash('error', 'Ten danh muc da ton tai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if (!$this->categoryModel->updateName($categoryId, $name)) {
+            $this->setFlash('error', 'Cap nhat danh muc that bai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $this->setFlash('success', 'Cap nhat danh muc thanh cong');
+        $this->redirect($this->baseUrl('admin/products'));
+    }
+
+    public function deleteCategory(): void
+    {
+        AuthMiddleware::requireAdmin();
+
+        $categoryId = (int) ($_GET['id'] ?? 0);
+
+        if ($categoryId <= 0) {
+            $this->setFlash('error', 'Danh muc khong hop le');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $category = $this->categoryModel->findById($categoryId);
+        if (!$category) {
+            $this->setFlash('popup_error', 'Danh mục không tồn tại');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($this->categoryModel->hasProducts($categoryId)) {
+            $this->setFlash('popup_error', 'Không thể xóa danh mục đang được sử dụng');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        try {
+            $deleted = $this->categoryModel->deleteById($categoryId);
+        } catch (mysqli_sql_exception $e) {
+            $this->setFlash('popup_error', 'Xóa danh mục thất bại');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if (!$deleted) {
+            $this->setFlash('popup_error', 'Xóa danh mục thất bại');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $this->setFlash('popup_success', 'Xóa danh mục thành công');
+        $this->redirect($this->baseUrl('admin/products'));
+    }
+
+    public function create(): void
+    {
+        AuthMiddleware::requireAdmin();
+
+        $data = [
+            'name' => trim($_POST['name'] ?? ''),
+            'description' => trim($_POST['description'] ?? ''),
+            'status' => trim($_POST['status'] ?? ''),
+            'price' => trim($_POST['price'] ?? ''),
+            'P_Cate_ID' => (int) ($_POST['P_Cate_ID'] ?? 0),
+            'slug' => trim($_POST['slug'] ?? ''),
+        ];
+
+        if ($data['status'] === 'archive') {
+            $data['status'] = 'archived';
+        }
+
+        if ($data['name'] === '' || $data['slug'] === '' || $data['description'] === '' || $data['price'] === '') {
+            $this->setFlash('error', 'Vui long dien day du thong tin san pham');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($data['P_Cate_ID'] <= 0 || !$this->productModel->categoryExists($data['P_Cate_ID'])) {
+            $this->setFlash('error', 'Danh muc khong hop le');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if (!in_array($data['status'], ['active', 'inactive', 'out_of_stock', 'archived'], true)) {
+            $this->setFlash('error', 'Trang thai khong hop le');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if (!is_numeric($data['price']) || (float) $data['price'] < 0) {
+            $this->setFlash('error', 'Gia khong hop le');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($this->productModel->slugExists($data['slug'])) {
+            $this->setFlash('error', 'Slug da ton tai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if (!isset($_FILES['image']) || $_FILES['image']['error'] === UPLOAD_ERR_NO_FILE) {
+            $this->setFlash('error', 'Vui long chon anh san pham');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+            $this->setFlash('error', 'Upload anh that bai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $tmpFile = $_FILES['image']['tmp_name'];
+        $mime = mime_content_type($tmpFile);
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+        if (!in_array($mime, $allowedMimes, true)) {
+            $this->setFlash('error', 'File anh khong hop le');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($_FILES['image']['size'] > 2 * 1024 * 1024) {
+            $this->setFlash('error', 'Anh vuot qua 2MB');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $data['price'] = (float) $data['price'];
+
+        $extensionMap = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'image/gif' => 'gif',
+        ];
+
+        $uploadDir = ROOT_PATH . '/public/uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $extension = $extensionMap[$mime];
+        $imageName = 'product-new-' . time() . '-' . bin2hex(random_bytes(4)) . '.' . $extension;
+        $targetPath = $uploadDir . $imageName;
+
+        if (!move_uploaded_file($tmpFile, $targetPath)) {
+            $this->setFlash('error', 'Khong the luu file anh');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        try {
+            $createdId = $this->productModel->createProduct($data, $imageName);
+        } catch (mysqli_sql_exception $e) {
+            if (is_file($targetPath)) {
+                unlink($targetPath);
+            }
+
+            $this->setFlash('error', 'Them san pham that bai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($createdId <= 0) {
+            if (is_file($targetPath)) {
+                unlink($targetPath);
+            }
+
+            $this->setFlash('error', 'Them san pham that bai');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $finalImageName = 'product-' . $createdId . '-' . time() . '.' . $extension;
+        $finalPath = $uploadDir . $finalImageName;
+
+        if ($finalImageName !== $imageName && rename($targetPath, $finalPath)) {
+            $this->productModel->updateProduct($createdId, [
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'status' => $data['status'],
+                'price' => $data['price'],
+                'P_Cate_ID' => $data['P_Cate_ID'],
+                'slug' => $data['slug'],
+            ], $finalImageName);
+        }
+
+        $this->setFlash('success', 'Them san pham thanh cong');
+        $this->redirect($this->baseUrl('admin/products'));
     }
 
     public function update(): void
@@ -53,7 +291,7 @@ class ProductController extends Controller
         $productId = (int) ($_GET['id'] ?? 0);
 
         if ($productId <= 0) {
-            $this->setFlash('error', 'San pham khong hop le');
+            $this->setFlash('popup_error', 'Sản phẩm không hợp lệ');
             $this->redirect($this->baseUrl('admin/products'));
         }
 
@@ -73,6 +311,10 @@ class ProductController extends Controller
             'slug' => trim($_POST['slug'] ?? ''),
         ];
 
+        if ($data['status'] === 'archive') {
+            $data['status'] = 'archived';
+        }
+
         if ($data['name'] === '' || $data['slug'] === '' || $data['description'] === '' || $data['price'] === '') {
             $this->setFlash('error', 'Vui long dien day du thong tin san pham');
             $this->redirect($this->baseUrl('admin/products/viewdetail?id=' . $productId));
@@ -83,8 +325,13 @@ class ProductController extends Controller
             $this->redirect($this->baseUrl('admin/products/viewdetail?id=' . $productId));
         }
 
-        if (!in_array($data['status'], ['active', 'out_of_stock', 'archive', 'inactive'], true)) {
+        if (!in_array($data['status'], ['active', 'out_of_stock', 'archived', 'inactive'], true)) {
             $this->setFlash('error', 'Trang thai khong hop le');
+            $this->redirect($this->baseUrl('admin/products/viewdetail?id=' . $productId));
+        }
+
+        if ($this->productModel->slugExists($data['slug'], $productId)) {
+            $this->setFlash('error', 'Slug da ton tai');
             $this->redirect($this->baseUrl('admin/products/viewdetail?id=' . $productId));
         }
 
@@ -166,5 +413,58 @@ class ProductController extends Controller
 
         $this->setFlash('success', 'Cap nhat san pham thanh cong');
         $this->redirect($this->baseUrl('admin/products/viewdetail?id=' . $productId));
+    }
+
+    // Xóa sản phẩm
+    public function delete(): void
+    {
+        AuthMiddleware::requireAdmin();
+
+        $productId = (int) ($_GET['id'] ?? 0);
+
+        if ($productId <= 0) {
+            $this->setFlash('error', 'San pham khong hop le');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $currentProduct = $this->productModel->findById($productId);
+
+        if (!$currentProduct) {
+            $this->setFlash('popup_error', 'Sản phẩm không tồn tại');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if ($this->productModel->hasOrderItems($productId)) {
+            $this->setFlash('popup_error', 'Không thể xóa sản phẩm đã có trong đơn hàng');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        try {
+            if (!$this->productModel->deleteCartItemsByProductId($productId)) {
+                $this->setFlash('popup_error', 'Xóa sản phẩm thất bại');
+                $this->redirect($this->baseUrl('admin/products'));
+            }
+
+            $deleted = $this->productModel->deleteById($productId);
+        } catch (mysqli_sql_exception $e) {
+            $this->setFlash('popup_error', 'Không thể xóa sản phẩm do dữ liệu liên quan');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        if (!$deleted) {
+            $this->setFlash('popup_error', 'Xóa sản phẩm thất bại');
+            $this->redirect($this->baseUrl('admin/products'));
+        }
+
+        $imageName = trim((string) ($currentProduct['image'] ?? ''));
+        if ($imageName !== '') {
+            $imagePath = ROOT_PATH . '/public/uploads/' . $imageName;
+            if (is_file($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+
+        $this->setFlash('popup_success', 'Xóa sản phẩm thành công');
+        $this->redirect($this->baseUrl('admin/products'));
     }
 }

@@ -5,33 +5,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const addProductTrigger = document.getElementById('addProductTrigger');
     const addProductModalElement = document.getElementById('addProductModal');
-    const addSuccessModalElement = document.getElementById('addSuccessModal');
     const addProductForm = document.getElementById('addProductForm');
     const saveProductBtn = document.getElementById('saveProductBtn');
 
     const confirmModalElement = document.getElementById('deleteConfirmModal');
-    const deleteSuccessModalElement = document.getElementById('deleteSuccessModal');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    const deleteProductForm = document.getElementById('deleteProductForm');
 
     if (
         !addProductTrigger ||
         !addProductModalElement ||
-        !addSuccessModalElement ||
         !addProductForm ||
         !saveProductBtn ||
         !confirmModalElement ||
-        !deleteSuccessModalElement ||
-        !confirmDeleteBtn
+        !confirmDeleteBtn ||
+        !deleteProductForm
     ) {
         return;
     }
 
     const addProductModal = new bootstrap.Modal(addProductModalElement);
-    const addSuccessModal = new bootstrap.Modal(addSuccessModalElement);
     const confirmModal = new bootstrap.Modal(confirmModalElement);
-    const deleteSuccessModal = new bootstrap.Modal(deleteSuccessModalElement);
 
-    let selectedRow = null;
+    let deleteUrl = '';
 
     addProductTrigger.addEventListener('click', function() {
         addProductModal.show();
@@ -43,13 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        addProductModal.hide();
-
-        addProductModalElement.addEventListener('hidden.bs.modal', function handleHidden() {
-            addProductForm.reset();
-            addSuccessModal.show();
-            addProductModalElement.removeEventListener('hidden.bs.modal', handleHidden);
-        });
+        saveProductBtn.disabled = true;
+        addProductForm.submit();
     });
 
     document.addEventListener('click', function(event) {
@@ -59,21 +50,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         event.preventDefault();
-        selectedRow = deleteButton.closest('tr');
+        deleteUrl = deleteButton.getAttribute('data-delete-url') || '';
         confirmModal.show();
     });
 
     confirmDeleteBtn.addEventListener('click', function() {
-        if (selectedRow) {
-            selectedRow.remove();
-            selectedRow = null;
+        if (!deleteUrl) {
+            confirmModal.hide();
+            return;
         }
 
-        confirmModal.hide();
-
-        confirmModalElement.addEventListener('hidden.bs.modal', function handleHidden() {
-            deleteSuccessModal.show();
-            confirmModalElement.removeEventListener('hidden.bs.modal', handleHidden);
-        });
+        confirmDeleteBtn.disabled = true;
+        deleteProductForm.setAttribute('action', deleteUrl);
+        deleteProductForm.submit();
     });
 });
