@@ -8,7 +8,6 @@ $toUrl = static function (string $path) use ($publicBase): string {
 $productId = htmlspecialchars((string) ($product['ID'] ?? ''), ENT_QUOTES, 'UTF-8');
 $productName = htmlspecialchars($product['name'] ?? '', ENT_QUOTES, 'UTF-8');
 $productDescription = htmlspecialchars($product['description'] ?? '', ENT_QUOTES, 'UTF-8');
-$productImage = htmlspecialchars($product['image'] ?? '', ENT_QUOTES, 'UTF-8');
 $productStatus = htmlspecialchars($product['status'] ?? '', ENT_QUOTES, 'UTF-8');
 $productPrice = htmlspecialchars($product['price'] ?? '', ENT_QUOTES, 'UTF-8');
 $productStockQuantity = htmlspecialchars((string) ($product['stock_quantity'] ?? ''), ENT_QUOTES, 'UTF-8');
@@ -17,6 +16,12 @@ $productCategoryName = htmlspecialchars($product['category_name'] ?? ($product['
 $productUpdatedAt = htmlspecialchars($product['updated_at'] ?? '', ENT_QUOTES, 'UTF-8');
 $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
 $categories = is_array($categories ?? null) ? $categories : [];
+
+
+$productImageRaw = (string) ($product['image'] ?? '');
+$productImage = $productImageRaw !== ''
+    ? $toUrl('uploads/' . $productImageRaw)
+    : $toUrl('assets/image/default-product.png');
 ?>
 
 <div class="row mt-4">
@@ -107,11 +112,12 @@ $categories = is_array($categories ?? null) ? $categories : [];
             </div>
             <div class="card-body">
                 <?php if (!empty($flashSuccess)): ?>
-                    <div class="alert alert-success"><?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="alert alert-success"><?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?>
+                </div>
                 <?php endif; ?>
 
                 <?php if (!empty($flashError)): ?>
-                    <div class="alert alert-danger"><?php echo htmlspecialchars($flashError, ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="alert alert-danger"><?php echo htmlspecialchars($flashError, ENT_QUOTES, 'UTF-8'); ?></div>
                 <?php endif; ?>
 
                 <form action="<?php echo $toUrl('admin/products/update?id=' . $productId); ?>" method="post"
@@ -129,14 +135,14 @@ $categories = is_array($categories ?? null) ? $categories : [];
                             <select name="P_Cate_ID" class="form-control">
                                 <option value="">-- Chon danh muc --</option>
                                 <?php foreach ($categories as $category): ?>
-                                    <?php
+                                <?php
                                     $categoryId = (string) ($category['ID'] ?? '');
                                     $categoryName = (string) ($category['name'] ?? '');
                                     ?>
-                                    <option value="<?php echo htmlspecialchars($categoryId, ENT_QUOTES, 'UTF-8'); ?>"
-                                        <?php echo $productCategoryId === $categoryId ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>
-                                    </option>
+                                <option value="<?php echo htmlspecialchars($categoryId, ENT_QUOTES, 'UTF-8'); ?>"
+                                    <?php echo $productCategoryId === $categoryId ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>
+                                </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -181,11 +187,7 @@ $categories = is_array($categories ?? null) ? $categories : [];
                             <label class="form-label">Image</label>
                             <input type="file" name="image" class="form-control">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Image URL</label>
-                            <input type="text" name="image_url" class="form-control"
-                                value="<?php echo $productImage; ?>">
-                        </div>
+
                     </div>
 
                     <div class="d-flex flex-wrap gap-2">
