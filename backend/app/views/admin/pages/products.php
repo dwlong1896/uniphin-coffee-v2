@@ -14,7 +14,8 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
         <div class="card">
             <div class="card-body">
                 <?php if (!empty($flashSuccess)): ?>
-                <div class="alert alert-success"><?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="alert alert-success"><?php echo htmlspecialchars($flashSuccess, ENT_QUOTES, 'UTF-8'); ?>
+                </div>
                 <?php endif; ?>
 
                 <?php if (!empty($flashError)): ?>
@@ -24,7 +25,8 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                 <div class="d-sm-flex justify-content-between align-items-center">
                     <h4 class="header-title">Danh sách sản phẩm</h4>
                     <div class="d-md-flex justify-content-between align-items-center gap-2">
-                        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="modal"
+                            data-bs-target="#addProductModal">
                             <i class="fa-solid fa-plus"></i> Thêm sản phẩm
                         </button>
                     </div>
@@ -58,32 +60,38 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                                 };
                             ?>
                             <tr>
-                                <td><?php echo htmlspecialchars((string) ($product['ID'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars((string) ($product['ID'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+                                </td>
                                 <td><?php echo htmlspecialchars($product['name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td><?php echo htmlspecialchars($product['category_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td><?php echo htmlspecialchars($product['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars($product['category_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                </td>
                                 <td>
-                                    <span class="status-p <?php echo htmlspecialchars($statusClass, ENT_QUOTES, 'UTF-8'); ?>">
+                                    <div style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                        title="<?php echo htmlspecialchars($product['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                        <?php echo htmlspecialchars($product['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span
+                                        class="status-p <?php echo htmlspecialchars($statusClass, ENT_QUOTES, 'UTF-8'); ?>">
                                         <?php echo htmlspecialchars($statusValue, ENT_QUOTES, 'UTF-8'); ?>
                                     </span>
                                 </td>
-                                <td><?php echo htmlspecialchars((string) ($product['price'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
-                                <td><?php echo htmlspecialchars($product['updated_at'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars((string) ($product['price'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
+                                </td>
+                                <td><?php echo htmlspecialchars($product['updated_at'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                </td>
                                 <td>
                                     <div class="d-inline-flex align-items-center justify-content-center gap-2">
-                                        <a
-                                            href="<?php echo $toUrl('admin/products/viewdetail?id=' . urlencode((string) ($product['ID'] ?? ''))); ?>"
-                                            class="text-primary text-decoration-none fw-bold"
-                                            title="Xem chi tiết">
+                                        <a href="<?php echo $toUrl('admin/products/viewdetail?id=' . urlencode((string) ($product['ID'] ?? ''))); ?>"
+                                            class="text-primary text-decoration-none fw-bold" title="Xem chi tiết">
                                             <i class="ti-eye"></i>
                                         </a>
                                         <form
                                             action="<?php echo $toUrl('admin/products/delete?id=' . urlencode((string) ($product['ID'] ?? ''))); ?>"
-                                            method="post"
-                                            style="display:inline;"
+                                            method="post" style="display:inline;"
                                             onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?');">
-                                            <button
-                                                type="submit"
+                                            <button type="submit"
                                                 class="btn btn-link text-danger text-decoration-none fw-bold p-0 border-0"
                                                 title="Xóa">
                                                 <i class="ti-trash"></i>
@@ -114,7 +122,8 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                     <h4 class="header-title mb-0">Danh sách danh mục</h4>
                 </div>
 
-                <form action="<?php echo $toUrl('admin/categories/create'); ?>" method="post" class="row g-3 align-items-end mb-4">
+                <form action="<?php echo $toUrl('admin/categories/create'); ?>" method="post"
+                    class="row g-3 align-items-end mb-4">
                     <div class="col-md-9">
                         <label class="form-label">Tên danh mục mới</label>
                         <input type="text" name="name" class="form-control" placeholder="Nhập tên danh mục" required>
@@ -146,13 +155,9 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                                 <td>
                                     <form
                                         action="<?php echo $toUrl('admin/categories/update?id=' . urlencode((string) ($category['ID'] ?? ''))); ?>"
-                                        method="post"
-                                        class="d-flex justify-content-center mb-0">
+                                        method="post" class="d-flex justify-content-center mb-0">
                                         <div class="input-group" style="max-width: 520px;">
-                                            <input
-                                                type="text"
-                                                name="name"
-                                                class="form-control"
+                                            <input type="text" name="name" class="form-control"
                                                 value="<?php echo htmlspecialchars((string) ($category['name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"
                                                 required>
                                             <button type="submit" class="btn btn-primary px-4">Lưu</button>
@@ -165,11 +170,9 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                                 <td class="text-center">
                                     <form
                                         action="<?php echo $toUrl('admin/categories/delete?id=' . urlencode((string) ($category['ID'] ?? ''))); ?>"
-                                        method="post"
-                                        class="d-inline-block mb-0"
+                                        method="post" class="d-inline-block mb-0"
                                         onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?');">
-                                        <button
-                                            type="submit"
+                                        <button type="submit"
                                             class="btn btn-link text-danger p-0 border-0 text-decoration-none"
                                             title="Xóa danh mục">
                                             <i class="ti-trash"></i>
@@ -199,18 +202,21 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addProductForm" action="<?php echo $toUrl('admin/products/create'); ?>" method="post" enctype="multipart/form-data" novalidate>
+                <form id="addProductForm" action="<?php echo $toUrl('admin/products/create'); ?>" method="post"
+                    enctype="multipart/form-data" novalidate>
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label class="form-label">Tên sản phẩm</label>
-                            <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm" required>
+                            <input type="text" name="name" class="form-control" placeholder="Nhập tên sản phẩm"
+                                required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Loại</label>
                             <select name="P_Cate_ID" class="form-control" required>
                                 <option value="">-- Chọn danh mục --</option>
                                 <?php foreach ($categories as $category): ?>
-                                <option value="<?php echo htmlspecialchars((string) ($category['ID'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                                <option
+                                    value="<?php echo htmlspecialchars((string) ($category['ID'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars((string) ($category['name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
                                 </option>
                                 <?php endforeach; ?>
@@ -221,7 +227,8 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                     <div class="row mb-3">
                         <div class="col-12">
                             <label class="form-label">Mô tả</label>
-                            <textarea name="description" class="form-control" rows="5" placeholder="Nhập mô tả sản phẩm" required></textarea>
+                            <textarea name="description" class="form-control" rows="5" placeholder="Nhập mô tả sản phẩm"
+                                required></textarea>
                         </div>
                     </div>
 
@@ -238,14 +245,16 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Giá</label>
-                            <input type="number" step="0.01" name="price" class="form-control" placeholder="Nhập giá sản phẩm" required>
+                            <input type="number" step="0.01" name="price" class="form-control"
+                                placeholder="Nhập giá sản phẩm" required>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-12">
                             <label class="form-label">Slug</label>
-                            <input type="text" name="slug" class="form-control" placeholder="Nhập slug sản phẩm" required>
+                            <input type="text" name="slug" class="form-control" placeholder="Nhập slug sản phẩm"
+                                required>
                         </div>
                     </div>
 
@@ -285,7 +294,7 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
     </div>
 </div>
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     var popupElement = document.getElementById('deleteResultModal');
     if (!popupElement || typeof bootstrap === 'undefined') {
         return;

@@ -35,13 +35,13 @@ $productImage = $productImageRaw !== ''
                             style="width:96px;height:96px;border-radius:18px;object-fit:cover;border:3px solid rgba(255,255,255,0.25);" />
                         <div class="ms-lg-4 ms-0 mt-3 mt-lg-0">
                             <h3 class="mb-1"><?php echo $productName; ?></h3>
-                            <p class="mb-1" style="opacity:0.9;">Product ID: <?php echo $productId; ?></p>
+                            <p class="mb-1" style="opacity:0.9;">Mã sản phẩm: <?php echo $productId; ?></p>
                             <span class="badge bg-light text-dark"><?php echo $productStatus; ?></span>
                         </div>
                     </div>
                     <div class="mt-3 mt-lg-0">
                         <a href="<?php echo $toUrl('admin/products'); ?>" class="btn btn-light">
-                            <i class="ti-arrow-left"></i> Quay lai danh sach
+                            <i class="ti-arrow-left"></i> Quay lại danh sách
                         </a>
                     </div>
                 </div>
@@ -54,7 +54,7 @@ $productImage = $productImageRaw !== ''
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                <h4 class="header-title mb-0">Thong tin hien tai</h4>
+                <h4 class="header-title mb-0">Thông tin sản phẩm</h4>
             </div>
             <div class="card-body">
                 <div class="text-center mb-4">
@@ -68,11 +68,11 @@ $productImage = $productImageRaw !== ''
                         <strong><?php echo $productId; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="fa-solid fa-box me-2 text-muted"></i> Name</span>
+                        <span><i class="fa-solid fa-box me-2 text-muted"></i> Tên sản phẩm</span>
                         <strong><?php echo $productName; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="fa-solid fa-layer-group me-2 text-muted"></i> Loai</span>
+                        <span><i class="fa-solid fa-layer-group me-2 text-muted"></i> Danh mục</span>
                         <strong><?php echo $productCategoryName; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -80,25 +80,21 @@ $productImage = $productImageRaw !== ''
                         <strong><?php echo $productStatus; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="fa-solid fa-money-bill me-2 text-muted"></i> Price</span>
+                        <span><i class="fa-solid fa-money-bill me-2 text-muted"></i> Giá</span>
                         <strong><?php echo $productPrice; ?></strong>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="fa-solid fa-warehouse me-2 text-muted"></i> Stock Quantity</span>
-                        <strong><?php echo $productStockQuantity; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="fa-solid fa-link me-2 text-muted"></i> Slug</span>
                         <strong><?php echo $productSlug; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="fa-solid fa-clock-rotate-left me-2 text-muted"></i> Updated At</span>
+                        <span><i class="fa-solid fa-clock-rotate-left me-2 text-muted"></i> Cập nhận lần cuối</span>
                         <strong><?php echo $productUpdatedAt; ?></strong>
                     </li>
                 </ul>
 
                 <div class="mt-4">
-                    <h6 class="mb-2">Description</h6>
+                    <h6 class="mb-2">Mô tả sản phẩm</h6>
                     <p class="mb-0 text-muted"><?php echo $productDescription; ?></p>
                 </div>
             </div>
@@ -108,7 +104,7 @@ $productImage = $productImageRaw !== ''
     <div class="col-lg-8">
         <div class="card">
             <div class="card-header">
-                <h4 class="header-title mb-0">Chinh sua san pham</h4>
+                <h4 class="header-title mb-0">Cập nhật sản phẩm</h4>
             </div>
             <div class="card-body">
                 <?php if (!empty($flashSuccess)): ?>
@@ -124,16 +120,16 @@ $productImage = $productImageRaw !== ''
                     enctype="multipart/form-data">
                     <div class="row mb-3">
                         <div class="col-md-12">
-                            <label class="form-label">Name</label>
+                            <label class="form-label">Tên sản phẩm</label>
                             <input type="text" name="name" class="form-control" value="<?php echo $productName; ?>">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">Danh muc</label>
+                            <label class="form-label">Danh mục</label>
                             <select name="P_Cate_ID" class="form-control">
-                                <option value="">-- Chon danh muc --</option>
+                                <option value="">-- Chọn danh mục --</option>
                                 <?php foreach ($categories as $category): ?>
                                 <?php
                                     $categoryId = (string) ($category['ID'] ?? '');
@@ -164,7 +160,7 @@ $productImage = $productImageRaw !== ''
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label class="form-label">Price</label>
+                            <label class="form-label">Giá</label>
                             <input type="number" step="0.01" name="price" class="form-control"
                                 value="<?php echo $productPrice; ?>">
                         </div>
@@ -176,7 +172,7 @@ $productImage = $productImageRaw !== ''
 
                     <div class="row mb-3">
                         <div class="col-12">
-                            <label class="form-label">Description</label>
+                            <label class="form-label">Mô tả sản phẩm</label>
                             <textarea name="description" class="form-control"
                                 rows="6"><?php echo $productDescription; ?></textarea>
                         </div>
@@ -184,15 +180,15 @@ $productImage = $productImageRaw !== ''
 
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <label class="form-label">Image</label>
+                            <label class="form-label">Hình ảnh</label>
                             <input type="file" name="image" class="form-control">
                         </div>
 
                     </div>
 
                     <div class="d-flex flex-wrap gap-2">
-                        <button type="submit" class="btn btn-primary">Luu thay doi</button>
-                        <button type="button" class="btn btn-outline-secondary">Xem truoc</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+
                     </div>
                 </form>
             </div>
