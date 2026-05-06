@@ -104,6 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalTriggerSelector =
     ".uniphin-product-card, .bestseller-item, .sale-card";
   const modalTriggers = document.querySelectorAll(modalTriggerSelector);
+  const collectionAddButtons = document.querySelectorAll(
+    ".btn-flip-add[data-product-id]"
+  );
   const searchInput = document.querySelector(".uniphin-menu-search input");
   const productsContainer = document.querySelector(".uniphin-menu-products");
   const productModal = document.getElementById("uniphinProductModal");
@@ -192,6 +195,38 @@ document.addEventListener("DOMContentLoaded", function () {
     modalFeedback.removeAttribute("hidden");
   }
 
+  function addToCartRequest(productId, quantity) {
+    return fetch(cartAddUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        "X-Requested-With": "XMLHttpRequest",
+      },
+      body: new URLSearchParams({
+        product_id: String(productId),
+        quantity: String(quantity),
+      }),
+    }).then(async function (response) {
+      const data = await response.json().catch(function () {
+        return null;
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          const redirectUrl = (data && data.redirect_url) || loginUrl || "/login";
+          window.location.href = redirectUrl;
+          return null;
+        }
+
+        throw new Error(
+          (data && data.message) || "Khong the them san pham vao gio hang."
+        );
+      }
+
+      return data;
+    });
+  }
+
   function openProductModal(card) {
     if (
       !productModal ||
@@ -209,20 +244,24 @@ document.addEventListener("DOMContentLoaded", function () {
     modalPrice.textContent = card.dataset.price || "";
     modalDescription.textContent = card.dataset.description || "";
     modalCategory.textContent = card.dataset.category || "";
+
     if (modalAddToCartButton) {
       modalAddToCartButton.dataset.productId = card.dataset.productId || "0";
       modalAddToCartButton.disabled = false;
-      modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
+      modalAddToCartButton.textContent = "THEM VAO GIO";
     }
+
     modalImage.onerror = function () {
       this.onerror = null;
       this.src = productFallbackImage;
     };
     modalImage.src = card.dataset.image || productFallbackImage;
     modalImage.alt = card.dataset.name || "";
+
     if (modalQtyInput) {
       modalQtyInput.value = "1";
     }
+
     setModalFeedback("", "error");
 
     productModal.removeAttribute("hidden");
@@ -301,73 +340,72 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
         if (productId <= 0) {
-          setModalFeedback("Không xác định được sản phẩm để thêm vào giỏ.", "error");
+          setModalFeedback("Khong xac dinh duoc san pham de them vao gio.", "error");
           return;
         }
 
         if (!cartAddUrl) {
-          setModalFeedback("Thiếu cấu hình đường dẫn thêm giỏ hàng.", "error");
+          setModalFeedback("Thieu duong dan them gio hang.", "error");
           return;
         }
 
         modalAddToCartButton.disabled = true;
-        modalAddToCartButton.textContent = "ĐANG THÊM...";
+        modalAddToCartButton.textContent = "DANG THEM...";
         setModalFeedback("", "error");
 
-        fetch(cartAddUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "X-Requested-With": "XMLHttpRequest",
-          },
-          body: new URLSearchParams({
-            product_id: String(productId),
-            quantity: String(quantity),
-          }),
-        })
-          .then(async function (response) {
-            const data = await response.json().catch(function () {
-              return null;
-            });
-
-            if (!response.ok) {
-              if (response.status === 401) {
-                const redirectUrl =
-                  (data && data.redirect_url) || loginUrl || "/login";
-                window.location.href = redirectUrl;
-                return null;
-              }
-
-              throw new Error(
-                (data && data.message) ||
-                  "Không thể thêm sản phẩm vào giỏ hàng."
-              );
-            }
-
-            return data;
-          })
+        addToCartRequest(productId, quantity)
           .then(function (data) {
             if (!data) {
               return;
             }
 
             modalAddToCartButton.disabled = false;
-            modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
+            modalAddToCartButton.textContent = "THEM VAO GIO";
             setModalFeedback(
-              data.message || "Đã thêm sản phẩm vào giỏ hàng.",
+              data.message || "Da them san pham vao gio hang.",
               "success"
             );
           })
           .catch(function (error) {
             setModalFeedback(
-              error.message || "Không thể thêm sản phẩm vào giỏ hàng.",
+              error.message || "Khong the them san pham vao gio hang.",
               "error"
             );
             modalAddToCartButton.disabled = false;
-            modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
+            modalAddToCartButton.textContent = "THEM VAO GIO";
           });
       });
     }
+  }
+
+  if (collectionAddButtons.length > 0 && cartAddUrl) {
+    collectionAddButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const productId = parseInt(button.dataset.productId || "0", 10);
+
+        if (productId <= 0) {
+          return;
+        }
+
+        const originalHtml = button.innerHTML;
+        button.disabled = true;
+        button.textContent = "Dang them...";
+
+        addToCartRequest(productId, 1)
+          .then(function () {
+            button.textContent = "Da them";
+            window.setTimeout(function () {
+              button.disabled = false;
+              button.innerHTML = originalHtml;
+            }, 1200);
+          })
+          .catch(function () {
+            button.disabled = false;
+            button.innerHTML = originalHtml;
+            window.alert("Khong the them san pham vao gio hang.");
+          });
+      });
+    });
   }
 
   if (!searchInput || !productsContainer) {
@@ -386,10 +424,10 @@ document.addEventListener("DOMContentLoaded", function () {
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
       <h3 style="font-size:18px; font-weight:700; color:#222; margin-bottom:5px;">
-        Không tìm thấy sản phẩm
+        Khong tim thay san pham
       </h3>
       <p style="font-size:14px;">
-        Rất tiếc, chúng tôi không có thức uống nào khớp với từ khóa của bạn.
+        Rat tiec, chung toi khong co thuc uong nao khop voi tu khoa cua ban.
       </p>
     </div>
   `;

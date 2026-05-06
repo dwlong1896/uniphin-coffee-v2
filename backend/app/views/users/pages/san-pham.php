@@ -314,7 +314,10 @@ $bestseller_items = array_slice($products, 0, 5);
                             <p class="back-price"><?= number_format($item['price'], 0, ',', '.') ?> đ</p>
                             <p class="back-desc">Tuyệt tác giải nhiệt mùa hè, đậm đà khó cưỡng. Công thức độc bản từ
                                 Uniphin.</p>
-                            <button class="btn-flip-add"><i class="fas fa-shopping-cart"></i> Đặt ngay</button>
+                            <button class="btn-flip-add" type="button"
+                                data-product-id="<?= (int) ($item['ID'] ?? 0) ?>">
+                                <i class="fas fa-shopping-cart"></i> Đặt ngay
+                            </button>
                         </div>
 
                     </div>
