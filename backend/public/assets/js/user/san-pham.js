@@ -115,9 +115,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalCategory = document.getElementById("uniphinProductModalCategory");
   const modalImage = document.getElementById("uniphinProductModalImage");
   const modalQtyInput = document.getElementById("uniphinProductModalQty");
+  const modalAddToCartButton = document.getElementById(
+    "uniphinProductModalAddToCart"
+  );
+  const modalFeedback = document.getElementById("uniphinProductModalFeedback");
   const modalCloseButton = productModal
     ? productModal.querySelector("[data-modal-close]")
     : null;
+  const cartAddUrl = productModal ? productModal.dataset.cartAddUrl || "" : "";
+  const loginUrl = productModal ? productModal.dataset.loginUrl || "" : "";
   const productFallbackImage =
     "https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png";
   let lastFocusedCard = null;
@@ -169,6 +175,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function setModalFeedback(message, type) {
+    if (!modalFeedback) {
+      return;
+    }
+
+    modalFeedback.textContent = message || "";
+    modalFeedback.classList.remove("is-success", "is-error");
+
+    if (!message) {
+      modalFeedback.setAttribute("hidden", "");
+      return;
+    }
+
+    modalFeedback.classList.add(type === "success" ? "is-success" : "is-error");
+    modalFeedback.removeAttribute("hidden");
+  }
+
   function openProductModal(card) {
     if (
       !productModal ||
@@ -186,6 +209,11 @@ document.addEventListener("DOMContentLoaded", function () {
     modalPrice.textContent = card.dataset.price || "";
     modalDescription.textContent = card.dataset.description || "";
     modalCategory.textContent = card.dataset.category || "";
+    if (modalAddToCartButton) {
+      modalAddToCartButton.dataset.productId = card.dataset.productId || "0";
+      modalAddToCartButton.disabled = false;
+      modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
+    }
     modalImage.onerror = function () {
       this.onerror = null;
       this.src = productFallbackImage;
@@ -195,6 +223,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (modalQtyInput) {
       modalQtyInput.value = "1";
     }
+    setModalFeedback("", "error");
 
     productModal.removeAttribute("hidden");
     productModal.setAttribute("aria-hidden", "false");
@@ -259,6 +288,86 @@ document.addEventListener("DOMContentLoaded", function () {
         closeProductModal();
       }
     });
+
+    if (modalAddToCartButton) {
+      modalAddToCartButton.addEventListener("click", function () {
+        const productId = parseInt(
+          modalAddToCartButton.dataset.productId || "0",
+          10
+        );
+        const quantity = Math.max(
+          1,
+          parseInt(modalQtyInput ? modalQtyInput.value : "1", 10) || 1
+        );
+
+        if (productId <= 0) {
+          setModalFeedback("Không xác định được sản phẩm để thêm vào giỏ.", "error");
+          return;
+        }
+
+        if (!cartAddUrl) {
+          setModalFeedback("Thiếu cấu hình đường dẫn thêm giỏ hàng.", "error");
+          return;
+        }
+
+        modalAddToCartButton.disabled = true;
+        modalAddToCartButton.textContent = "ĐANG THÊM...";
+        setModalFeedback("", "error");
+
+        fetch(cartAddUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: new URLSearchParams({
+            product_id: String(productId),
+            quantity: String(quantity),
+          }),
+        })
+          .then(async function (response) {
+            const data = await response.json().catch(function () {
+              return null;
+            });
+
+            if (!response.ok) {
+              if (response.status === 401) {
+                const redirectUrl =
+                  (data && data.redirect_url) || loginUrl || "/login";
+                window.location.href = redirectUrl;
+                return null;
+              }
+
+              throw new Error(
+                (data && data.message) ||
+                  "Không thể thêm sản phẩm vào giỏ hàng."
+              );
+            }
+
+            return data;
+          })
+          .then(function (data) {
+            if (!data) {
+              return;
+            }
+
+            modalAddToCartButton.disabled = false;
+            modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
+            setModalFeedback(
+              data.message || "Đã thêm sản phẩm vào giỏ hàng.",
+              "success"
+            );
+          })
+          .catch(function (error) {
+            setModalFeedback(
+              error.message || "Không thể thêm sản phẩm vào giỏ hàng.",
+              "error"
+            );
+            modalAddToCartButton.disabled = false;
+            modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
+          });
+      });
+    }
   }
 
   if (!searchInput || !productsContainer) {

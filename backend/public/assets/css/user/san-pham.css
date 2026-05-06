@@ -640,6 +640,29 @@ body.uniphin-modal-open {
   filter: brightness(1.04);
 }
 
+.uniphin-product-modal__cta:disabled {
+  cursor: wait;
+  opacity: 0.88;
+  transform: none;
+  box-shadow: 0 12px 20px rgba(11, 146, 216, 0.2);
+}
+
+.uniphin-product-modal__feedback {
+  min-height: 20px;
+  margin: 14px 0 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.uniphin-product-modal__feedback.is-success {
+  color: #168a45;
+}
+
+.uniphin-product-modal__feedback.is-error {
+  color: #cf2f45;
+}
+
 /* ── BEST SELLER ── */
 .uniphin-bestseller-section {
   margin: 40px auto;

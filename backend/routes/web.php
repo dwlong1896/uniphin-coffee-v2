@@ -6,6 +6,7 @@ $userController = new UserController();
 $authController = new AuthController();
 $adminController = new AdminController();
 $productController = new ProductController();
+$cartController = new CartController();
 
 // show(ten-file-trong-view, title)
 
@@ -14,10 +15,22 @@ $router->get('/', static function () use ($pageController): void {$pageControlle
 $router->get('/gioi-thieu', static function () use ($pageController): void {$pageController->show('gioi-thieu', 'Gioi thieu');});
 $router->get('/tin-tuc', static function () use ($pageController): void {$pageController->show('tin-tuc', 'Tin tuc');});
 $router->get('/san-pham', static function () use ($productController): void {$productController->menu();});
+$router->get('/cart', static function () use ($cartController): void {$cartController->index();});
+$router->get('/gio-hang', static function () use ($cartController): void {$cartController->index();});
+$router->get('/checkout', static function () use ($cartController): void {$cartController->checkout();});
+$router->get('/thanh-toan', static function () use ($cartController): void {$cartController->checkout();});
 $router->get('/lien-he', static function () use ($pageController): void {$pageController->show('lien-he', 'Lien he');});
 $router->get('/faqs', static function () use ($pageController): void {$pageController->show('faqs', 'FAQs');});
 $router->get('/tai-khoan', static function () use ($userController): void {$userController->profile();});
 $router->post('/tai-khoan', static function () use ($userController): void {$userController->updateProfile();});
+$router->post('/cart/add', static function () use ($cartController): void {$cartController->add();});
+$router->post('/cart/update', static function () use ($cartController): void {$cartController->update();});
+$router->post('/cart/remove', static function () use ($cartController): void {$cartController->remove();});
+$router->post('/checkout', static function () use ($cartController): void {$cartController->placeOrder();});
+$router->post('/thanh-toan', static function () use ($cartController): void {$cartController->placeOrder();});
+$router->post('/gio-hang/them', static function () use ($cartController): void {$cartController->add();});
+$router->post('/gio-hang/cap-nhat', static function () use ($cartController): void {$cartController->update();});
+$router->post('/gio-hang/xoa', static function () use ($cartController): void {$cartController->remove();});
 
 // Auth routes
 $router->get('/login', static function () use ($authController): void {$authController->login();});

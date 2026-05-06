@@ -135,6 +135,7 @@ $bestseller_items = array_slice($products, 0, 5);
                     ?>
                     <!-- Thêm data-aos="fade-up" và gài biến delay vào đây -->
                     <article class="uniphin-product-card" data-aos="fade-up" data-aos-delay="<?= $delay ?>"
+                        data-product-id="<?= (int) ($product['id'] ?? 0) ?>"
                         data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>"
                         data-price="<?= htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8') ?>"
                         data-description="<?= htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8') ?>"
@@ -184,7 +185,8 @@ $bestseller_items = array_slice($products, 0, 5);
                 );
                 $formattedPrice = number_format($item['price'], 0, ',', '.') . ' đ';
             ?>
-            <div class="bestseller-item" data-name="<?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>"
+            <div class="bestseller-item" data-product-id="<?= (int) ($item['ID'] ?? 0) ?>"
+                data-name="<?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>"
                 data-price="<?= htmlspecialchars($formattedPrice, ENT_QUOTES, 'UTF-8') ?>"
                 data-description="<?= htmlspecialchars($itemDescription, ENT_QUOTES, 'UTF-8') ?>"
                 data-image="<?= htmlspecialchars($upload((string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8') ?>"
@@ -239,7 +241,8 @@ $bestseller_items = array_slice($products, 0, 5);
                 );
                 $saleCurrentPrice = number_format($item['price'] * 0.9, 0, ',', '.') . ' Ä‘';
             ?>
-            <div class="sale-card" data-name="<?= htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+            <div class="sale-card" data-product-id="<?= (int) ($item['ID'] ?? 0) ?>"
+                data-name="<?= htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
                 data-price="<?= htmlspecialchars($saleCurrentPrice, ENT_QUOTES, 'UTF-8') ?>"
                 data-description="<?= htmlspecialchars($saleDescription, ENT_QUOTES, 'UTF-8') ?>"
                 data-image="<?= htmlspecialchars($upload((string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8') ?>"
@@ -329,7 +332,9 @@ $bestseller_items = array_slice($products, 0, 5);
 
 </div><!-- /.uniphin-menu-wrapper -->
 
-<div class="uniphin-product-modal" id="uniphinProductModal" hidden aria-hidden="true">
+<div class="uniphin-product-modal" id="uniphinProductModal" hidden aria-hidden="true"
+    data-cart-add-url="<?= htmlspecialchars($publicBase . '/cart/add', ENT_QUOTES, 'UTF-8') ?>"
+    data-login-url="<?= htmlspecialchars($publicBase . '/login', ENT_QUOTES, 'UTF-8') ?>">
     <div class="uniphin-product-modal__dialog" role="dialog" aria-modal="true"
         aria-labelledby="uniphinProductModalTitle">
         <button type="button" class="uniphin-product-modal__close" data-modal-close
@@ -361,8 +366,10 @@ $bestseller_items = array_slice($products, 0, 5);
                     <button type="button" class="uniphin-product-modal__qty-btn" data-qty-action="increase"
                         aria-label="Tăng số lượng">+</button>
                 </div>
-                <button type="button" class="uniphin-product-modal__cta">THÊM VÀO GIỎ</button>
+                <button type="button" class="uniphin-product-modal__cta" id="uniphinProductModalAddToCart"
+                    data-product-id="0">THÊM VÀO GIỎ</button>
             </div>
+            <p class="uniphin-product-modal__feedback" id="uniphinProductModalFeedback" hidden></p>
         </div>
     </div>
 </div>
