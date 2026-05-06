@@ -5,6 +5,7 @@ $pageController = new PageController();
 $userController = new UserController();
 $authController = new AuthController();
 $adminController = new AdminController();
+$productController = new ProductController();
 
 // show(ten-file-trong-view, title)
 
@@ -29,8 +30,9 @@ $router->post('/logout', static function () use ($authController): void {$authCo
 // Admin routes
 $router->get('/admin/dashboard', static function () use ($adminController): void {$adminController->dashboard();});
 $router->get('/admin/users', static function () use ($adminController): void {$adminController->users();});
-$router->get('/admin/products', static function () use ($adminController): void {$adminController->products();});
-$router->get('/admin/viewdetail', static function () use ($adminController): void {$adminController->viewdetail();});
+$router->get('/admin/products/viewdetail', static function () use ($productController): void {$productController->viewdetail();});
+$router->get('/admin/products', static function () use ($productController): void {$productController->index();});
+
 $router->get('/admin/orders', static function () use ($adminController): void {$adminController->orders();});
 $router->get('/admin/posts', static function () use ($adminController): void {$adminController->posts();});
 $router->get('/admin/comments', static function () use ($adminController): void {$adminController->comments();});

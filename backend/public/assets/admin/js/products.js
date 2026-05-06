@@ -3,53 +3,56 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    const detailModalElement = document.getElementById('productDetailModal');
+    const addProductTrigger = document.getElementById('addProductTrigger');
+    const addProductModalElement = document.getElementById('addProductModal');
+    const addSuccessModalElement = document.getElementById('addSuccessModal');
+    const addProductForm = document.getElementById('addProductForm');
+    const saveProductBtn = document.getElementById('saveProductBtn');
+
     const confirmModalElement = document.getElementById('deleteConfirmModal');
-    const successModalElement = document.getElementById('deleteSuccessModal');
+    const deleteSuccessModalElement = document.getElementById('deleteSuccessModal');
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
-    if (!detailModalElement || !confirmModalElement || !successModalElement || !confirmDeleteBtn) {
+    if (
+        !addProductTrigger ||
+        !addProductModalElement ||
+        !addSuccessModalElement ||
+        !addProductForm ||
+        !saveProductBtn ||
+        !confirmModalElement ||
+        !deleteSuccessModalElement ||
+        !confirmDeleteBtn
+    ) {
         return;
     }
 
-    const detailModal = new bootstrap.Modal(detailModalElement);
+    const addProductModal = new bootstrap.Modal(addProductModalElement);
+    const addSuccessModal = new bootstrap.Modal(addSuccessModalElement);
     const confirmModal = new bootstrap.Modal(confirmModalElement);
-    const successModal = new bootstrap.Modal(successModalElement);
-
-    const detailFields = {
-        name: document.getElementById('detailName'),
-        category: document.getElementById('detailCategory'),
-        description: document.getElementById('detailDescription'),
-        status: document.getElementById('detailStatus'),
-        price: document.getElementById('detailPrice'),
-        image: document.getElementById('detailImage')
-    };
+    const deleteSuccessModal = new bootstrap.Modal(deleteSuccessModalElement);
 
     let selectedRow = null;
 
-    document.addEventListener('click', function(event) {
-        const detailButton = event.target.closest('#dataTable tbody a.product-detail-trigger');
-        if (detailButton) {
-            event.preventDefault();
-            const row = detailButton.closest('tr');
-            if (!row) {
-                return;
-            }
+    addProductTrigger.addEventListener('click', function() {
+        addProductModal.show();
+    });
 
-            const cells = row.querySelectorAll('td');
-            if (cells.length >= 6) {
-                detailFields.name.textContent = cells[0].textContent.trim();
-                detailFields.category.textContent = cells[1].textContent.trim();
-                detailFields.description.textContent = cells[2].textContent.trim();
-                detailFields.status.textContent = cells[3].textContent.trim();
-                detailFields.price.textContent = cells[4].textContent.trim();
-                detailFields.image.textContent = cells[5].textContent.trim();
-            }
-
-            detailModal.show();
+    saveProductBtn.addEventListener('click', function() {
+        if (!addProductForm.checkValidity()) {
+            addProductForm.reportValidity();
             return;
         }
 
+        addProductModal.hide();
+
+        addProductModalElement.addEventListener('hidden.bs.modal', function handleHidden() {
+            addProductForm.reset();
+            addSuccessModal.show();
+            addProductModalElement.removeEventListener('hidden.bs.modal', handleHidden);
+        });
+    });
+
+    document.addEventListener('click', function(event) {
         const deleteButton = event.target.closest('#dataTable tbody a.product-delete-trigger');
         if (!deleteButton) {
             return;
@@ -57,9 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         event.preventDefault();
         selectedRow = deleteButton.closest('tr');
-        if (selectedRow) {
-            confirmModal.show();
-        }
+        confirmModal.show();
     });
 
     confirmDeleteBtn.addEventListener('click', function() {
@@ -71,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmModal.hide();
 
         confirmModalElement.addEventListener('hidden.bs.modal', function handleHidden() {
-            successModal.show();
+            deleteSuccessModal.show();
             confirmModalElement.removeEventListener('hidden.bs.modal', handleHidden);
         });
     });

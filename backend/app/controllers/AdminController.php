@@ -27,29 +27,6 @@ class AdminController extends Controller
         $this->view('admin/pages/products', ['title' => 'Quan ly san pham'], 'admin/layouts/main');
     }
 
-    public function viewdetail(): void
-    {
-        AuthMiddleware::requireAdmin();
-
-        $product = [
-            'id' => 1,
-            'name' => 'Tra sua matcha kem trung',
-            'description' => 'Tra sua matcha ket hop kem trung beo min, huong vi dam va de uong.',
-            'image' => 'https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png',
-            'status' => 'active',
-            'price' => '49000.00',
-            'stock_quantity' => '120',
-            'P_Cate_ID' => '3',
-            'updated_at' => '2026-05-05',
-            'slug' => 'tra-sua-matcha-kem-trung',
-        ];
-
-        $this->view('admin/pages/viewdetail', [
-            'title' => 'Chi tiet san pham',
-            'product' => $product,
-        ], 'admin/layouts/main');
-    }
-
     public function orders(): void
     {
         AuthMiddleware::requireAdmin();

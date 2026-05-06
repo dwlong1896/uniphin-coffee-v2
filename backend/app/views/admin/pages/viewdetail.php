@@ -5,7 +5,7 @@ $toUrl = static function (string $path) use ($publicBase): string {
     return ($publicBase === '' ? '' : $publicBase) . '/' . ltrim($path, '/');
 };
 
-$productId = htmlspecialchars((string) ($product['id'] ?? ''), ENT_QUOTES, 'UTF-8');
+$productId = htmlspecialchars((string) ($product['ID'] ?? ''), ENT_QUOTES, 'UTF-8');
 $productName = htmlspecialchars($product['name'] ?? '', ENT_QUOTES, 'UTF-8');
 $productDescription = htmlspecialchars($product['description'] ?? '', ENT_QUOTES, 'UTF-8');
 $productImage = htmlspecialchars($product['image'] ?? '', ENT_QUOTES, 'UTF-8');
@@ -13,6 +13,7 @@ $productStatus = htmlspecialchars($product['status'] ?? '', ENT_QUOTES, 'UTF-8')
 $productPrice = htmlspecialchars($product['price'] ?? '', ENT_QUOTES, 'UTF-8');
 $productStockQuantity = htmlspecialchars((string) ($product['stock_quantity'] ?? ''), ENT_QUOTES, 'UTF-8');
 $productCategoryId = htmlspecialchars((string) ($product['P_Cate_ID'] ?? ''), ENT_QUOTES, 'UTF-8');
+$productCategoryName = htmlspecialchars($product['category_name'] ?? ($product['P_Cate_ID'] ?? ''), ENT_QUOTES, 'UTF-8');
 $productUpdatedAt = htmlspecialchars($product['updated_at'] ?? '', ENT_QUOTES, 'UTF-8');
 $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
 ?>
@@ -65,8 +66,8 @@ $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
                         <strong><?php echo $productName; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span><i class="fa-solid fa-layer-group me-2 text-muted"></i> P_Cate_ID</span>
-                        <strong><?php echo $productCategoryId; ?></strong>
+                        <span><i class="fa-solid fa-layer-group me-2 text-muted"></i> Loai</span>
+                        <strong><?php echo $productCategoryName; ?></strong>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <span><i class="fa-solid fa-signal me-2 text-muted"></i> Status</span>
@@ -104,13 +105,10 @@ $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
                 <h4 class="header-title mb-0">Chinh sua san pham</h4>
             </div>
             <div class="card-body">
-                <form action="#" method="post" enctype="multipart/form-data">
+                <form action="<?php echo $toUrl('admin/products/update?id=' . $productId); ?>" method="post"
+                    enctype="multipart/form-data">
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">ID</label>
-                            <input type="text" name="id" class="form-control" value="<?php echo $productId; ?>">
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="form-label">Name</label>
                             <input type="text" name="name" class="form-control" value="<?php echo $productName; ?>">
                         </div>
@@ -125,10 +123,15 @@ $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
                         <div class="col-md-6">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-control">
-                                <option value="active" <?php echo $productStatus === 'active' ? 'selected' : ''; ?>>active</option>
-                                <option value="inactive" <?php echo $productStatus === 'inactive' ? 'selected' : ''; ?>>inactive</option>
-                                <option value="out_of_stock" <?php echo $productStatus === 'out_of_stock' ? 'selected' : ''; ?>>out_of_stock</option>
-                                <option value="archive" <?php echo $productStatus === 'archive' ? 'selected' : ''; ?>>archive</option>
+                                <option value="active" <?php echo $productStatus === 'active' ? 'selected' : ''; ?>>
+                                    active</option>
+                                <option value="inactive" <?php echo $productStatus === 'inactive' ? 'selected' : ''; ?>>
+                                    inactive</option>
+                                <option value="out_of_stock"
+                                    <?php echo $productStatus === 'out_of_stock' ? 'selected' : ''; ?>>out_of_stock
+                                </option>
+                                <option value="archive" <?php echo $productStatus === 'archive' ? 'selected' : ''; ?>>
+                                    archive</option>
                             </select>
                         </div>
                     </div>
@@ -140,28 +143,16 @@ $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
                                 value="<?php echo $productPrice; ?>">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Stock Quantity</label>
-                            <input type="number" name="stock_quantity" class="form-control"
-                                value="<?php echo $productStockQuantity; ?>">
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
                             <label class="form-label">Slug</label>
                             <input type="text" name="slug" class="form-control" value="<?php echo $productSlug; ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Updated At</label>
-                            <input type="text" name="updated_at" class="form-control"
-                                value="<?php echo $productUpdatedAt; ?>">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-12">
                             <label class="form-label">Description</label>
-                            <textarea name="description" class="form-control" rows="6"><?php echo $productDescription; ?></textarea>
+                            <textarea name="description" class="form-control"
+                                rows="6"><?php echo $productDescription; ?></textarea>
                         </div>
                     </div>
 
@@ -172,7 +163,8 @@ $productSlug = htmlspecialchars($product['slug'] ?? '', ENT_QUOTES, 'UTF-8');
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Image URL</label>
-                            <input type="text" name="image_url" class="form-control" value="<?php echo $productImage; ?>">
+                            <input type="text" name="image_url" class="form-control"
+                                value="<?php echo $productImage; ?>">
                         </div>
                     </div>
 
