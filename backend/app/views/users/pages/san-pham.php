@@ -117,8 +117,7 @@ $bestseller_items = array_slice($products, 0, 5);
                     foreach ($items as $product): 
                     ?>
                     <!-- Thêm data-aos="fade-up" và gài biến delay vào đây -->
-                    <a href="/uniphin2/backend/public/chi-tiet?name=<?= urlencode($product['name']) ?>"
-                        class="uniphin-product-card" data-aos="fade-up" data-aos-delay="<?= $delay ?>">
+                    <article class="uniphin-product-card" data-aos="fade-up" data-aos-delay="<?= $delay ?>">
                         <div class="uniphin-image-wrapper">
                             <img src="<?= htmlspecialchars($product['img']) ?>"
                                 alt="<?= htmlspecialchars($product['name']) ?>"
@@ -127,7 +126,7 @@ $bestseller_items = array_slice($products, 0, 5);
                         <div class="uniphin-product-sub"><?= htmlspecialchars($product['sub']) ?></div>
                         <div class="uniphin-product-name"><?= htmlspecialchars($product['name']) ?></div>
                         <div class="uniphin-product-price"><?= htmlspecialchars($product['price']) ?></div>
-                    </a>
+                    </article>
                     <?php 
                     // Sau mỗi ly, tăng thời gian chờ lên 200 mili-giây
                     $delay += 150; 

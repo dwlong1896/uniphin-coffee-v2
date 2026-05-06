@@ -10,7 +10,6 @@ $productController = new ProductController();
 // show(ten-file-trong-view, title)
 
 // User routes
-$router->get('/chi-tiet', static function () use ($pageController): void {$pageController->show('chi-tiet', 'Chi tiet san pham');});
 $router->get('/', static function () use ($pageController): void {$pageController->show('trang-chu', 'Trang chu');});
 $router->get('/gioi-thieu', static function () use ($pageController): void {$pageController->show('gioi-thieu', 'Gioi thieu');});
 $router->get('/tin-tuc', static function () use ($pageController): void {$pageController->show('tin-tuc', 'Tin tuc');});
