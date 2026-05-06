@@ -9,97 +9,30 @@ if (!isset($asset) || !is_callable($asset)) {
     $publicBase = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
     $asset = static fn(string $path): string => $publicBase . '/assets/' . ltrim($path, '/');
 }
-
-// ==========================================
-// 1. BẢNG CATEGORY (Giả lập Database)
-// ==========================================
-$categories = [
-    ['ID' => 1, 'Name' => 'EXPRESSO'],
-    ['ID' => 2, 'Name' => 'AMERICANO'],
-    ['ID' => 3, 'Name' => 'LATTE'],
-    ['ID' => 4, 'Name' => 'FRAPPE'],
-    ['ID' => 5, 'Name' => 'PHIN'],
-    ['ID' => 6, 'Name' => 'COLD BREW'],
-];
-
-// ==========================================
-// 2. BẢNG PRODUCTS (Giả lập Database)
-// Cấu trúc: ID, description, image, status,
-//           price, stock_quantity, name,
-//           P_Cate_ID, updated_at, slug
-// ==========================================
-$products_db = [
-
-    // --- EXPRESSO (P_Cate_ID = 1) ---
-    ['ID' =>  1, 'P_Cate_ID' => 1, 'status' => 'active',       'price' => 30000.00, 'stock_quantity' =>  50, 'name' => 'Expresso Nóng',           'image' => 'expresso_nong.png', 'description' => 'Cà phê nguyên chất pha máy',    'slug' => 'expresso-nong',           'updated_at' => '2026-05-05 08:00:00'],
-    ['ID' =>  2, 'P_Cate_ID' => 1, 'status' => 'active',       'price' => 30000.00, 'stock_quantity' =>  45, 'name' => 'Expresso Đá',             'image' => 'expresso_da.png',   'description' => 'Expresso kết hợp đá lạnh',     'slug' => 'expresso-da',             'updated_at' => '2026-05-05 08:05:00'],
-    ['ID' =>  3, 'P_Cate_ID' => 1, 'status' => 'active',       'price' => 35000.00, 'stock_quantity' =>  30, 'name' => 'Cappuccino Đá',           'image' => 'cap_da.png',        'description' => 'Cappuccino truyền thống với đá','slug' => 'cappuccino-da',           'updated_at' => '2026-05-05 08:10:00'],
-    ['ID' =>  4, 'P_Cate_ID' => 1, 'status' => 'active',       'price' => 35000.00, 'stock_quantity' =>  25, 'name' => 'Cappuccino Nóng',         'image' => 'cap_nong.png',      'description' => 'Lớp bọt sữa mềm mịn',          'slug' => 'cappuccino-nong',         'updated_at' => '2026-05-05 08:15:00'],
-    ['ID' =>  5, 'P_Cate_ID' => 1, 'status' => 'active',       'price' => 35000.00, 'stock_quantity' =>  40, 'name' => 'Caramel Macchiato Đá',    'image' => 'car_da.png',        'description' => 'Vị ngọt ngào của Caramel',     'slug' => 'caramel-macchiato-da',    'updated_at' => '2026-05-05 08:20:00'],
-    ['ID' =>  6, 'P_Cate_ID' => 1, 'status' => 'active',       'price' => 35000.00, 'stock_quantity' =>  15, 'name' => 'Caramel Macchiato Nóng',  'image' => 'car_nong.png',      'description' => 'Macchiato nóng ấm áp',          'slug' => 'caramel-macchiato-nong',  'updated_at' => '2026-05-05 08:25:00'],
-
-    // --- AMERICANO (P_Cate_ID = 2) ---
-    ['ID' =>  7, 'P_Cate_ID' => 2, 'status' => 'active',       'price' => 28000.00, 'stock_quantity' => 100, 'name' => 'A-Mê Classic',            'image' => 'ame_classic.png',   'description' => 'Americano đậm đà chuẩn vị',    'slug' => 'ame-classic',             'updated_at' => '2026-05-05 09:00:00'],
-    ['ID' =>  8, 'P_Cate_ID' => 2, 'status' => 'active',       'price' => 28000.00, 'stock_quantity' =>  60, 'name' => 'A-Mê Đào',               'image' => 'ame_dao.png',       'description' => 'Hương đào thơm mát',            'slug' => 'ame-dao',                 'updated_at' => '2026-05-05 09:05:00'],
-    ['ID' =>  9, 'P_Cate_ID' => 2, 'status' => 'active',       'price' => 28000.00, 'stock_quantity' =>  40, 'name' => 'A-Mê Mơ',               'image' => 'ame_mo.png',        'description' => 'Vị mơ thanh chua nhẹ',          'slug' => 'ame-mo',                  'updated_at' => '2026-05-05 09:10:00'],
-    ['ID' => 10, 'P_Cate_ID' => 2, 'status' => 'out_of_stock', 'price' => 28000.00, 'stock_quantity' =>   0, 'name' => 'A-Mê Yuzu',              'image' => 'ame_yuzu.png',      'description' => 'Yuzu Nhật Bản cực fresh',       'slug' => 'ame-yuzu',                'updated_at' => '2026-05-05 09:15:00'],
-    // ^ out_of_stock — sẽ bị lọc bỏ, không hiển thị trên menu
-
-    // --- LATTE (P_Cate_ID = 3) ---
-    ['ID' => 11, 'P_Cate_ID' => 3, 'status' => 'active',       'price' => 35000.00, 'stock_quantity' =>  30, 'name' => 'Latte Đá',               'image' => 'latte_da.png',           'description' => 'Cà phê hòa quyện sữa tươi', 'slug' => 'latte-da',            'updated_at' => '2026-05-05 10:00:00'],
-    ['ID' => 12, 'P_Cate_ID' => 3, 'status' => 'active',       'price' => 35000.00, 'stock_quantity' =>  20, 'name' => 'Latte Nóng',             'image' => 'latte_nong.png',         'description' => 'Latte nóng thơm béo',        'slug' => 'latte-nong',          'updated_at' => '2026-05-05 10:05:00'],
-    ['ID' => 13, 'P_Cate_ID' => 3, 'status' => 'active',       'price' => 40000.00, 'stock_quantity' =>  50, 'name' => 'Matcha Latte Đá',         'image' => 'matcha_latte_da.png',    'description' => 'Bột Matcha Nhật Bản',        'slug' => 'matcha-latte-da',     'updated_at' => '2026-05-05 10:10:00'],
-    ['ID' => 14, 'P_Cate_ID' => 3, 'status' => 'active',       'price' => 40000.00, 'stock_quantity' =>  25, 'name' => 'Matcha Latte Nóng',       'image' => 'matcha_latte_nong.png',  'description' => 'Trà xanh ấm áp',             'slug' => 'matcha-latte-nong',   'updated_at' => '2026-05-05 10:15:00'],
-
-    // --- FPRAPE (P_Cate_ID = 4) ---
-    ['ID' => 15, 'P_Cate_ID' => 4, 'status' => 'active',       'price' => 45000.00, 'stock_quantity' =>  40, 'name' => 'Frappe Chocolate',        'image' => 'frappe_choc.png',    'description' => 'Chocolate xay viên đá mát lạnh', 'slug' => 'frappe-chocolate', 'updated_at' => '2026-05-05 11:00:00'],
-    ['ID' => 16, 'P_Cate_ID' => 4, 'status' => 'active',       'price' => 45000.00, 'stock_quantity' =>  35, 'name' => 'Frappe Caramel',          'image' => 'frappe_caramel.png', 'description' => 'Đá xay phủ Caramel',             'slug' => 'frappe-caramel',   'updated_at' => '2026-05-05 11:05:00'],
-    ['ID' => 17, 'P_Cate_ID' => 4, 'status' => 'active',       'price' => 45000.00, 'stock_quantity' =>  20, 'name' => 'Frappe Matcha',           'image' => 'frappe_matcha.png',  'description' => 'Matcha đá xay phủ kem',          'slug' => 'frappe-matcha',    'updated_at' => '2026-05-05 11:10:00'],
-    ['ID' => 18, 'P_Cate_ID' => 4, 'status' => 'inactive',     'price' => 45000.00, 'stock_quantity' =>   0, 'name' => 'Frappe Vanilla',          'image' => 'frappe_vanilla.png', 'description' => 'Đá xay hương Vani',              'slug' => 'frappe-vanilla',   'updated_at' => '2026-05-05 11:15:00'],
-    // ^ inactive — ngừng bán, bị lọc bỏ
-
-    // --- PHIN (P_Cate_ID = 5) ---
-    ['ID' => 19, 'P_Cate_ID' => 5, 'status' => 'active',       'price' => 25000.00, 'stock_quantity' => 100, 'name' => 'Cà Phê Đen Đá',          'image' => 'phin_den_da.png',  'description' => 'Cà phê đen truyền thống',  'slug' => 'ca-phe-den-da',   'updated_at' => '2026-05-05 12:00:00'],
-    ['ID' => 20, 'P_Cate_ID' => 5, 'status' => 'active',       'price' => 25000.00, 'stock_quantity' =>  80, 'name' => 'Cà Phê Đen Nóng',        'image' => 'phin_den_nong.png','description' => 'Đen nóng đậm đà',           'slug' => 'ca-phe-den-nong', 'updated_at' => '2026-05-05 12:05:00'],
-    ['ID' => 21, 'P_Cate_ID' => 5, 'status' => 'active',       'price' => 29000.00, 'stock_quantity' => 150, 'name' => 'Cà Phê Sữa Đá',          'image' => 'phin_sua_da.png',  'description' => 'Cà phê sữa thân quen',     'slug' => 'ca-phe-sua-da',   'updated_at' => '2026-05-05 12:10:00'],
-    ['ID' => 22, 'P_Cate_ID' => 5, 'status' => 'active',       'price' => 29000.00, 'stock_quantity' =>  90, 'name' => 'Bạc Xỉu Đá',             'image' => 'bac_xiu.png',      'description' => 'Nhiều sữa ít cà phê',      'slug' => 'bac-xiu-da',      'updated_at' => '2026-05-05 12:15:00'],
-
-    // --- COLD BREW (P_Cate_ID = 6) ---
-    ['ID' => 23, 'P_Cate_ID' => 6, 'status' => 'active',       'price' => 40000.00, 'stock_quantity' =>  15, 'name' => 'Cold Brew Truyền Thống',  'image' => 'coldbrew_truyenthong.png', 'description' => 'Ủ lạnh 24h tinh khiết',      'slug' => 'coldbrew-truyenthong', 'updated_at' => '2026-05-05 13:00:00'],
-    ['ID' => 24, 'P_Cate_ID' => 6, 'status' => 'active',       'price' => 45000.00, 'stock_quantity' =>  20, 'name' => 'Cold Brew Sữa Tươi',      'image' => 'coldbrew_sua.png',         'description' => 'Cold Brew thêm chút sữa',     'slug' => 'coldbrew-sua',         'updated_at' => '2026-05-05 13:05:00'],
-    ['ID' => 25, 'P_Cate_ID' => 6, 'status' => 'active',       'price' => 45000.00, 'stock_quantity' =>  25, 'name' => 'Cold Brew Cam Sả',        'image' => 'coldbrew_camsa.png',       'description' => 'Thanh mát vị cam sả',         'slug' => 'coldbrew-cam-sa',      'updated_at' => '2026-05-05 13:10:00'],
-    ['ID' => 26, 'P_Cate_ID' => 6, 'status' => 'active',       'price' => 45000.00, 'stock_quantity' =>  10, 'name' => 'Cold Brew Tonic',         'image' => 'coldbrew_tonic.png',       'description' => 'Nước Tonic và Cold Brew',     'slug' => 'coldbrew-tonic',       'updated_at' => '2026-05-05 13:15:00'],
-];
-
-// ==========================================
-// 3. LOGIC XỬ LÝ: Ghép dữ liệu & Nhóm theo Category
-// ==========================================
-
-// Tạo map ID => Name để tra cứu tên danh mục trong O(1) thay vì lặp lồng nhau
-$category_map = array_column($categories, 'Name', 'ID');
+$products = is_array($products ?? null) ? $products : [];
+$upload = static fn(?string $file): string => $publicBase . '/uploads/' . ltrim((string) $file, '/');
 
 $grouped_products = [];
+foreach ($products as $product) {
+    $categoryName = (string) ($product['category_name'] ?? 'KHÁC');
 
-foreach ($products_db as $product) {
-    // Chỉ hiển thị sản phẩm đang bán (status = 'active')
-    // out_of_stock và inactive đều bị bỏ qua
-    if ($product['status'] !== 'active') {
-        continue;
+    if (strtoupper($categoryName) === 'FPRAPE') {
+        $categoryName = 'FRAPPE';
     }
 
-    $categoryName = $category_map[$product['P_Cate_ID']] ?? 'KHÁC';
-
-    // Format dữ liệu cho UI — tách riêng khỏi raw data
     $grouped_products[$categoryName][] = [
-        'name'  => $product['name'],
-        'sub'   => ucfirst(strtolower($categoryName)),
-        'price' => number_format($product['price'], 0, ',', '.') . ' đ', // 30000.00 → "30.000 đ"
-        'img'   => $asset('images/products/' . $product['image']),        // Ghép đường dẫn tuyệt đối
+        'id' => (int) ($product['ID'] ?? 0),
+        'name' => (string) ($product['name'] ?? ''),
+        'sub' => ucfirst(strtolower($categoryName)),
+        'price' => number_format((float) ($product['price'] ?? 0), 0, ',', '.') . ' đ',
+        'img' => $upload((string) ($product['image'] ?? '')),
+        'image' => (string) ($product['image'] ?? ''),
+        'description' => (string) ($product['description'] ?? ''),
+        'slug' => (string) ($product['slug'] ?? ''),
     ];
 }
 
-// Lấy 5 sản phẩm đầu làm Best Seller (hoặc thay bằng query riêng sau)
-$bestseller_items = array_slice($products_db, 0, 5);
+$bestseller_items = array_slice($products, 0, 5);
 ?>
 
 <div class="uniphin-menu-wrapper">
@@ -153,9 +86,6 @@ $bestseller_items = array_slice($products_db, 0, 5);
                 
                 foreach (array_keys($grouped_products) as $categoryName):
                     // 1. Sửa lỗi chính tả từ FPRAPE thành FRAPPE nếu có
-                    if (strtoupper($categoryName) === 'FPRAPE') {
-                        $categoryName = 'FRAPPE';
-                    }
 
                     // 2. Chuyển tên danh mục thành ID hợp lệ cho HTML anchor
                     $anchorId = htmlspecialchars(str_replace(' ', '_', $categoryName));
@@ -163,7 +93,7 @@ $bestseller_items = array_slice($products_db, 0, 5);
                 <!-- Thêm hiệu ứng trượt từ trái sang và tăng dần độ trễ -->
                 <li data-aos="fade-right" data-aos-delay="<?= $delaySidebar ?>">
                     <a href="#<?= $anchorId ?>" <?= $isFirst ? 'class="menu-active"' : '' ?>>
-                        <?= htmlspecialchars($categoryName) ?>
+                        <?= strtoupper(htmlspecialchars($categoryName)) ?>
                     </a>
                 </li>
                 <?php
@@ -225,7 +155,7 @@ $bestseller_items = array_slice($products_db, 0, 5);
             <div class="bestseller-item" data-name="<?= htmlspecialchars($item['name']) ?>"
                 data-price="<?= htmlspecialchars($formattedPrice) ?>">
                 <div class="bestseller-img-wrapper">
-                    <img src="<?= $asset('images/products/' . $item['image']) ?>"
+                    <img src="<?= htmlspecialchars($upload((string) ($item['image'] ?? ''))) ?>"
                         alt="<?= htmlspecialchars($item['name']) ?>"
                         onerror="this.src='https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png'">
                 </div>
@@ -264,7 +194,7 @@ $bestseller_items = array_slice($products_db, 0, 5);
             <div class="sale-card">
                 <div class="sale-img">
                     <span class="sale-badge">-10%</span>
-                    <img src="<?= $asset('images/products/'.$item['image']) ?>" alt=""
+                    <img src="<?= htmlspecialchars($upload((string) ($item['image'] ?? ''))) ?>" alt=""
                         onerror="this.src='https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png'">
                 </div>
                 <div class="sale-info">
@@ -303,7 +233,7 @@ $bestseller_items = array_slice($products_db, 0, 5);
             <!-- NỬA BÊN PHẢI: DANH SÁCH MÓN LẬT 180 ĐỘ (TRUE 3D FLIP) -->
             <div class="collection-list-3d">
                 <?php 
-            $new_collection = array_slice($products_db, 0, 4); // Lấy 4 món
+            $new_collection = array_slice($products, 0, 4); // Lấy 4 món
             $delay = 0;
             foreach ($new_collection as $item): 
             ?>
@@ -313,7 +243,8 @@ $bestseller_items = array_slice($products_db, 0, 5);
                         <!-- Mặt trước: Ly nước lơ lửng và tên món mờ ảo -->
                         <div class="flip-card-front">
                             <div class="front-glow"></div> <!-- Quầng sáng phía sau ly -->
-                            <img class="floating-cup" src="<?= $asset('images/products/' . $item['image']) ?>"
+                            <img class="floating-cup"
+                                src="<?= htmlspecialchars($upload((string) ($item['image'] ?? ''))) ?>"
                                 alt="<?= htmlspecialchars($item['name']) ?>"
                                 onerror="this.src='https://minio.thecoffeehouse.com/image/admin/1751598833_matcha-latte-tay-bac-nong_400x400.png'">
                             <h3 class="front-teaser"><?= htmlspecialchars($item['name']) ?></h3>

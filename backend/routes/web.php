@@ -14,7 +14,7 @@ $router->get('/chi-tiet', static function () use ($pageController): void {$pageC
 $router->get('/', static function () use ($pageController): void {$pageController->show('trang-chu', 'Trang chu');});
 $router->get('/gioi-thieu', static function () use ($pageController): void {$pageController->show('gioi-thieu', 'Gioi thieu');});
 $router->get('/tin-tuc', static function () use ($pageController): void {$pageController->show('tin-tuc', 'Tin tuc');});
-$router->get('/san-pham', static function () use ($pageController): void {$pageController->show('san-pham', 'San pham');});
+$router->get('/san-pham', static function () use ($productController): void {$productController->menu();});
 $router->get('/lien-he', static function () use ($pageController): void {$pageController->show('lien-he', 'Lien he');});
 $router->get('/faqs', static function () use ($pageController): void {$pageController->show('faqs', 'FAQs');});
 $router->get('/tai-khoan', static function () use ($userController): void {$userController->profile();});

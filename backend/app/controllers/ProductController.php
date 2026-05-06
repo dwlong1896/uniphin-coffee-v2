@@ -36,6 +36,17 @@ class ProductController extends Controller
         ], 'admin/layouts/main');
     }
 
+    public function menu(): void
+    {
+        $products = $this->productModel->getPublicProducts();
+
+        $this->view('users/pages/san-pham', [
+            'products' => $products,
+            'pageTitle' => 'Sản phẩm',
+            'pageName' => 'Sản phẩm',
+        ], 'users/layouts/main');
+    }
+
     public function index(): void
     {
         AuthMiddleware::requireAdmin();

@@ -42,6 +42,24 @@ class ProductModel extends Model
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 
+    public function getPublicProducts(): array
+    {
+        $sql = '
+                SELECT
+                    p.*,
+                    c.name AS category_name
+                FROM products p
+                JOIN product_categories c
+                    ON p.P_Cate_ID = c.ID
+                WHERE p.status = "active"
+                ORDER BY c.name ASC, p.updated_at DESC
+            ';
+
+        $result = $this->db->query($sql);
+
+        return $result->fetch_all(MYSQLI_ASSOC);
+    }
+
     // Lấy danh sách tất cả danh mục sản phẩm
     public function getCategories(): array
     {
