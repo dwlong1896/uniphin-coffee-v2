@@ -15,6 +15,11 @@
     $asset = static function (string $path) use ($publicBase): string {
         return ($publicBase === '' ? '' : $publicBase) . '/assets/' . ltrim($path, '/');
     };
+    $assetVersion = static function (string $relativePath): string {
+        $fullPath = dirname(__DIR__, 4) . '/public/assets/' . ltrim($relativePath, '/');
+
+        return is_file($fullPath) ? (string) filemtime($fullPath) : (string) time();
+    };
     ?>
     <!-- CSS nội bộ của bạn -->
     <link rel="stylesheet"
@@ -25,7 +30,8 @@
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/footer.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet"
         href="<?php echo htmlspecialchars($asset('css/user/tai-khoan.css'), ENT_QUOTES, 'UTF-8'); ?>">
-    <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/san-pham.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo htmlspecialchars($asset('css/user/san-pham.css') . '?v=' . $assetVersion('css/user/san-pham.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <!-- CSS của Slick Slider (ĐÃ SỬA THÀNH LINK CDN TRỰC TIẾP) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <link rel="stylesheet" type="text/css"

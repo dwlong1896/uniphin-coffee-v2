@@ -11,6 +11,19 @@ if (!isset($asset) || !is_callable($asset)) {
 }
 $products = is_array($products ?? null) ? $products : [];
 $upload = static fn(?string $file): string => $publicBase . '/uploads/' . ltrim((string) $file, '/');
+$buildDescription = static function (string $name, string $categoryName, string $description): string {
+    $description = trim($description);
+
+    if ($description !== '') {
+        return $description;
+    }
+
+    return sprintf(
+        '%s thuộc dòng %s với hương vị cân bằng, dễ uống và phù hợp để thưởng thức bất kỳ lúc nào trong ngày.',
+        $name,
+        strtolower($categoryName)
+    );
+};
 
 $grouped_products = [];
 foreach ($products as $product) {
@@ -27,7 +40,11 @@ foreach ($products as $product) {
         'price' => number_format((float) ($product['price'] ?? 0), 0, ',', '.') . ' đ',
         'img' => $upload((string) ($product['image'] ?? '')),
         'image' => (string) ($product['image'] ?? ''),
-        'description' => (string) ($product['description'] ?? ''),
+        'description' => $buildDescription(
+            (string) ($product['name'] ?? ''),
+            $categoryName,
+            (string) ($product['description'] ?? '')
+        ),
         'slug' => (string) ($product['slug'] ?? ''),
     ];
 }
@@ -117,7 +134,14 @@ $bestseller_items = array_slice($products, 0, 5);
                     foreach ($items as $product): 
                     ?>
                     <!-- Thêm data-aos="fade-up" và gài biến delay vào đây -->
-                    <article class="uniphin-product-card" data-aos="fade-up" data-aos-delay="<?= $delay ?>">
+                    <article class="uniphin-product-card" data-aos="fade-up" data-aos-delay="<?= $delay ?>"
+                        data-name="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>"
+                        data-price="<?= htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8') ?>"
+                        data-description="<?= htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8') ?>"
+                        data-image="<?= htmlspecialchars($product['img'], ENT_QUOTES, 'UTF-8') ?>"
+                        data-category="<?= htmlspecialchars($product['sub'], ENT_QUOTES, 'UTF-8') ?>" tabindex="0"
+                        role="button" aria-haspopup="dialog"
+                        aria-label="Xem chi tiết sản phẩm <?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>">
                         <div class="uniphin-image-wrapper">
                             <img src="<?= htmlspecialchars($product['img']) ?>"
                                 alt="<?= htmlspecialchars($product['name']) ?>"
@@ -149,10 +173,24 @@ $bestseller_items = array_slice($products, 0, 5);
         <!-- Slider — tên và giá truyền qua data-* để JS cập nhật info-wrapper khi đổi slide -->
         <div class="bestseller-slider">
             <?php foreach ($bestseller_items as $item):
+                $itemCategoryName = (string) ($item['category_name'] ?? 'BEST SELLER');
+                if (strtoupper($itemCategoryName) === 'FPRAPE') {
+                    $itemCategoryName = 'FRAPPE';
+                }
+                $itemDescription = $buildDescription(
+                    (string) ($item['name'] ?? ''),
+                    $itemCategoryName,
+                    (string) ($item['description'] ?? '')
+                );
                 $formattedPrice = number_format($item['price'], 0, ',', '.') . ' đ';
             ?>
-            <div class="bestseller-item" data-name="<?= htmlspecialchars($item['name']) ?>"
-                data-price="<?= htmlspecialchars($formattedPrice) ?>">
+            <div class="bestseller-item" data-name="<?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>"
+                data-price="<?= htmlspecialchars($formattedPrice, ENT_QUOTES, 'UTF-8') ?>"
+                data-description="<?= htmlspecialchars($itemDescription, ENT_QUOTES, 'UTF-8') ?>"
+                data-image="<?= htmlspecialchars($upload((string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8') ?>"
+                data-category="<?= htmlspecialchars(ucfirst(strtolower($itemCategoryName)), ENT_QUOTES, 'UTF-8') ?>"
+                tabindex="0" role="button" aria-haspopup="dialog"
+                aria-label="Xem chi tiết best seller <?= htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
                 <div class="bestseller-img-wrapper">
                     <img src="<?= htmlspecialchars($upload((string) ($item['image'] ?? ''))) ?>"
                         alt="<?= htmlspecialchars($item['name']) ?>"
@@ -189,8 +227,25 @@ $bestseller_items = array_slice($products, 0, 5);
         </div>
 
         <div class="flashsale-slider">
-            <?php foreach ($bestseller_items as $item): ?>
-            <div class="sale-card">
+            <?php foreach ($bestseller_items as $item):
+                $saleCategoryName = (string) ($item['category_name'] ?? 'FLASH SALE');
+                if (strtoupper($saleCategoryName) === 'FPRAPE') {
+                    $saleCategoryName = 'FRAPPE';
+                }
+                $saleDescription = $buildDescription(
+                    (string) ($item['name'] ?? ''),
+                    $saleCategoryName,
+                    (string) ($item['description'] ?? '')
+                );
+                $saleCurrentPrice = number_format($item['price'] * 0.9, 0, ',', '.') . ' Ä‘';
+            ?>
+            <div class="sale-card" data-name="<?= htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                data-price="<?= htmlspecialchars($saleCurrentPrice, ENT_QUOTES, 'UTF-8') ?>"
+                data-description="<?= htmlspecialchars($saleDescription, ENT_QUOTES, 'UTF-8') ?>"
+                data-image="<?= htmlspecialchars($upload((string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8') ?>"
+                data-category="<?= htmlspecialchars('Flash Sale', ENT_QUOTES, 'UTF-8') ?>" tabindex="0" role="button"
+                aria-haspopup="dialog"
+                aria-label="Xem chi tiết flash sale <?= htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?>">
                 <div class="sale-img">
                     <span class="sale-badge">-10%</span>
                     <img src="<?= htmlspecialchars($upload((string) ($item['image'] ?? ''))) ?>" alt=""
@@ -273,3 +328,41 @@ $bestseller_items = array_slice($products, 0, 5);
 
 
 </div><!-- /.uniphin-menu-wrapper -->
+
+<div class="uniphin-product-modal" id="uniphinProductModal" hidden aria-hidden="true">
+    <div class="uniphin-product-modal__dialog" role="dialog" aria-modal="true"
+        aria-labelledby="uniphinProductModalTitle">
+        <button type="button" class="uniphin-product-modal__close" data-modal-close
+            aria-label="Đóng chi tiết sản phẩm">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6L18 18M18 6L6 18"></path>
+            </svg>
+        </button>
+
+        <div class="uniphin-product-modal__media">
+            <span class="uniphin-product-modal__bean bean-one" aria-hidden="true"></span>
+            <span class="uniphin-product-modal__bean bean-two" aria-hidden="true"></span>
+            <span class="uniphin-product-modal__bean bean-three" aria-hidden="true"></span>
+            <div class="uniphin-product-modal__halo"></div>
+            <img id="uniphinProductModalImage" src="" alt="">
+        </div>
+
+        <div class="uniphin-product-modal__content">
+            <div class="uniphin-product-modal__eyebrow" id="uniphinProductModalCategory"></div>
+            <h3 class="uniphin-product-modal__title" id="uniphinProductModalTitle"></h3>
+            <div class="uniphin-product-modal__price" id="uniphinProductModalPrice"></div>
+            <p class="uniphin-product-modal__description" id="uniphinProductModalDescription"></p>
+            <div class="uniphin-product-modal__actions">
+                <div class="uniphin-product-modal__quantity" aria-label="Chọn số lượng">
+                    <button type="button" class="uniphin-product-modal__qty-btn" data-qty-action="decrease"
+                        aria-label="Giảm số lượng">-</button>
+                    <input type="text" class="uniphin-product-modal__qty-value" id="uniphinProductModalQty" value="1"
+                        inputmode="numeric" readonly aria-label="Số lượng sản phẩm">
+                    <button type="button" class="uniphin-product-modal__qty-btn" data-qty-action="increase"
+                        aria-label="Tăng số lượng">+</button>
+                </div>
+                <button type="button" class="uniphin-product-modal__cta">THÊM VÀO GIỎ</button>
+            </div>
+        </div>
+    </div>
+</div>
