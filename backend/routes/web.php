@@ -9,6 +9,7 @@ $adminController = new AdminController();
 // show(ten-file-trong-view, Tittle)
 
 // user
+$router->get('/chi-tiet', static function () use ($pageController): void {$pageController->show('chi-tiet', 'Chi tiết sản phẩm');});
 $router->get('/', static function () use ($pageController): void {$pageController->show('trang-chu', 'Trang chủ');});
 $router->get('/gioi-thieu', static function () use ($pageController): void {$pageController->show('gioi-thieu', 'Giới thiệu');});
 $router->get('/tin-tuc', static function () use ($pageController): void {$pageController->show('tin-tuc', 'Tin tức');});

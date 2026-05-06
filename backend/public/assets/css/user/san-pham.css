@@ -256,6 +256,8 @@ html {
   border-radius: 16px;
   background: transparent;
   transition: background-color 0.3s ease;
+  text-decoration: none;
+  color: inherit;
 }
 .uniphin-product-card:hover {
   background: #fbfbfb;

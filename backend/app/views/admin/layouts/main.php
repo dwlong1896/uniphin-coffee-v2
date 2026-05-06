@@ -29,6 +29,7 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
     <link rel="stylesheet" href="<?php echo $assetUrl('css/themify-icons.css'); ?>" />
     <link rel="stylesheet" href="<?php echo $assetUrl('css/metismenujs.min.css'); ?>" />
     <link rel="stylesheet" href="<?php echo $assetUrl('css/swiper-bundle.min.css'); ?>" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@10/dist/style.min.css" />
     <link rel="stylesheet" href="<?php echo $assetUrl('css/typography.css'); ?>" />
     <link rel="stylesheet" href="<?php echo $assetUrl('css/default-css.css'); ?>" />
     <link rel="stylesheet" href="<?php echo $assetUrl('css/styles.css'); ?>" />
@@ -165,10 +166,24 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
     <script src="<?php echo $assetUrl('js/bootstrap.bundle.min.js'); ?>"></script>
     <script src="<?php echo $assetUrl('js/swiper-bundle.min.js'); ?>"></script>
     <script src="<?php echo $assetUrl('js/metismenujs.min.js'); ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@10/dist/umd/simple-datatables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
     <script src="<?php echo $assetUrl('js/line-chart.js'); ?>"></script>
     <script src="<?php echo $assetUrl('js/pie-chart.js'); ?>"></script>
     <script src="<?php echo $assetUrl('js/scripts.js'); ?>"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        ['dataTable', 'dataTable2', 'dataTable3'].forEach(function(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                new simpleDatatables.DataTable(element, {
+                    perPage: 10
+                });
+            }
+        });
+    });
+    </script>
 
     <script>
     // Highlight menu item đang active

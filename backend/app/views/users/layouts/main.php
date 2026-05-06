@@ -26,7 +26,7 @@
     <link rel="stylesheet"
         href="<?php echo htmlspecialchars($asset('css/user/tai-khoan.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/san-pham.css'), ENT_QUOTES, 'UTF-8'); ?>">
-
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/chi-tiet.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <!-- CSS của Slick Slider (ĐÃ SỬA THÀNH LINK CDN TRỰC TIẾP) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <link rel="stylesheet" type="text/css"

@@ -77,51 +77,100 @@ define('DB_CHARSET', 'utf8mb4');
 ## Folder Structure
 
 ```
-backend/
-├─ app/
-│  ├─ controllers/
-│  │  ├─ AdminController.php
-│  │  ├─ AuthController.php
-│  │  ├─ PageController.php
-│  │  └─ UserController.php
-│  ├─ middleware/
-│  │  └─ AuthMiddleware.php
-│  ├─ models/
-│  │  └─ UserModel.php
-│  └─ views/
-│     ├─ admin/
-│     │  ├─ layouts/
-│     │  │  └─ main.php
-│     │  └─ pages/
-│     ├─ auth/
-│     │  ├─ signin.php
-│     │  └─ signup.php
-│     └─ users/
-│        ├─ layouts/
-│        │  ├─ main.php
-│        │  └─ partials/
-│        │     ├─ header.php
-│        │     ├─ footer.php
-│        │     └─ sidebar.php
-│        └─ pages/
-├─ config/
-│  ├─ config.php
-│  └─ database.php
-├─ core/
-│  ├─ Controller.php
-│  ├─ Database.php
-│  ├─ Model.php
-│  └─ Router.php
-├─ public/
-│  ├─ .htaccess
-│  ├─ index.php
-│  └─ assets/
-│     ├─ admin/
-│     ├─ css/
-│     ├─ image/
-│     └─ js/
-└─ routes/
-   └─ web.php
+uniphin2/
+├── README.md
+├── database/
+│   └── shop_db.sql
+└── backend/
+    ├── app/
+    │   ├── controllers/
+    │   │   ├── AdminController.php
+    │   │   ├── AuthController.php
+    │   │   ├── PageController.php
+    │   │   └── UserController.php
+    │   ├── middleware/
+    │   │   └── AuthMiddleware.php
+    │   ├── models/
+    │   │   └── UserModel.php
+    │   └── views/
+    │       ├── admin/
+    │       │   ├── layouts/
+    │       │   │   └── main.php
+    │       │   ├── pages/
+    │       │       ├── aboutpage.php
+    │       │       ├── comments.php
+    │       │       ├── contactpage.php
+    │       │       ├── contacts.php
+    │       │       ├── faqpage.php
+    │       │       ├── homepage.php
+    │       │       ├── index.php
+    │       │       ├── orders.php
+    │       │       ├── posts.php
+    │       │       ├── products.php
+    │       │       ├── profile.php
+    │       │       ├── qa.php
+    │       │       └── users.php
+    │       ├── auth/
+    │       │   ├── signin.php
+    │       │   └── signup.php
+    │       └── users/
+    │           ├── layouts/
+    │           │   ├── main.php
+    │           │   └── partials/
+    │           │       ├── footer.php
+    │           │       ├── header.php
+    │           │       └── sidebar.php
+    │           └── pages/
+    │               ├── dieu-khoan.php
+    │               ├── faqs.php
+    │               ├── gioi-thieu.php
+    │               ├── lien-he.php
+    │               ├── san-pham.php
+    │               ├── tai-khoan.php
+    │               ├── tin-tuc.php
+    │               └── trang-chu.php
+    ├── config/
+    │   ├── config.php
+    │   └── database.php
+    ├── core/
+    │   ├── Controller.php
+    │   ├── Database.php
+    │   ├── Model.php
+    │   └── Router.php
+    ├── public/
+    │   ├── .htaccess
+    │   ├── index.php
+    │   ├── uploads/
+    │   │   ├── avatar_1_1777136667.jpg
+    │   │   ├── avatar_2_1777136548.jpg
+    │   │   └── user.png
+    │   └── assets/
+    │       ├── css/
+    │       │   ├── auth/
+    │       │   │   ├── signin.css
+    │       │   │   └── signup.css
+    │       │   └── user/
+    │       │       ├── footer.css
+    │       │       ├── header.css
+    │       │       ├── main-layout.css
+    │       │       ├── pages.css
+    │       │       ├── sidebar.css
+    │       │       └── tai-khoan.css
+    │       ├── js/
+    │       │   └── user/
+    │       │       ├── auth.js
+    │       │       └── sidebar.js
+    │       ├── image/
+    │           ├── facebook.png
+    │           ├── instargram.png
+    │           ├── rmbgblack1.png
+    │           ├── rmbgwhite.png
+    │           ├── shopping-bag.png
+    │           ├── twiter.png
+    │           └── user.png
+    └── routes/
+        └── web.php
+
 ```
 
 ### Ý nghĩa từng thư mục
