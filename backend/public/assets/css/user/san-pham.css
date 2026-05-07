@@ -379,7 +379,12 @@ body.uniphin-modal-open {
   overflow: hidden;
   overflow-y: auto;
   background:
-    radial-gradient(circle at 18% 32%, rgba(255, 243, 226, 0.92) 0, rgba(255, 243, 226, 0.92) 18%, rgba(255, 243, 226, 0) 19%),
+    radial-gradient(
+      circle at 18% 32%,
+      rgba(255, 243, 226, 0.92) 0,
+      rgba(255, 243, 226, 0.92) 18%,
+      rgba(255, 243, 226, 0) 19%
+    ),
     linear-gradient(180deg, #bfefff 0%, #eefbff 34%, #ffffff 100%);
   box-shadow: 0 35px 70px rgba(0, 0, 0, 0.24);
 }
@@ -1303,16 +1308,32 @@ body.uniphin-modal-open {
 
   .uniphin-menu-categories {
     width: 100%;
+    position: sticky;
+    top: 70px;
+    z-index: 30;
+    margin: 0 -32px;
+    padding: 10px 32px 12px;
+    background: transparent;
   }
 
   .uniphin-menu-categories ul {
     position: static;
     display: flex;
+    align-items: center;
     flex-wrap: nowrap;
-    gap: 12px 18px;
+    gap: 10px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    padding: 2px 0 8px;
     scrollbar-width: thin;
+  }
+
+  .uniphin-menu-categories ul::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .uniphin-menu-categories ul::-webkit-scrollbar-thumb {
+    background: rgba(0, 156, 228, 0.28);
+    border-radius: 999px;
   }
 
   .uniphin-menu-categories li {
@@ -1321,8 +1342,30 @@ body.uniphin-modal-open {
   }
 
   .uniphin-menu-categories a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     white-space: nowrap;
-    font-size: 18px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    padding: 8px 14px;
+    border: 1.5px solid var(--accent);
+    border-radius: 999px;
+    background: #ffffff;
+    color: var(--accent);
+    box-shadow: 0 6px 14px rgba(0, 156, 228, 0.08);
+  }
+
+  .uniphin-menu-categories a::after {
+    display: none;
+  }
+
+  .uniphin-menu-categories a:hover,
+  .uniphin-menu-categories a.menu-active {
+    background: var(--accent);
+    color: #ffffff;
+    transform: translateY(-2px);
   }
 
   .uniphin-product-grid {
@@ -1408,6 +1451,12 @@ body.uniphin-modal-open {
   .uniphin-menu-header,
   .uniphin-menu-body {
     padding: 0 20px;
+  }
+
+  .uniphin-menu-categories {
+    top: 78px;
+    margin: 0 -20px;
+    padding: 10px 20px 12px;
   }
 
   .uniphin-menu-header {
@@ -1530,12 +1579,19 @@ body.uniphin-modal-open {
     padding: 0 16px;
   }
 
+  .uniphin-menu-categories {
+    top: 72px;
+    margin: 0 -16px;
+    padding: 8px 16px 10px;
+  }
+
   .uniphin-banner-slider .banner-item img {
     height: 260px;
   }
 
   .uniphin-menu-categories a {
-    font-size: 16px;
+    font-size: 14px;
+    padding: 7px 12px;
   }
 
   .uniphin-category-title {

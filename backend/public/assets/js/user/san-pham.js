@@ -31,6 +31,12 @@ $(document).ready(function () {
     centerMode: true,
     centerPadding: "60px",
     slidesToShow: 3,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 3200,
+    speed: 700,
+    pauseOnHover: true,
+    pauseOnFocus: true,
     responsive: [
       {
         breakpoint: 768,
@@ -101,11 +107,12 @@ $(document).ready(function () {
 document.addEventListener("DOMContentLoaded", function () {
   const sections = document.querySelectorAll(".uniphin-category-section");
   const navLinks = document.querySelectorAll(".uniphin-menu-categories a");
+  const sidebarScrollOffset = 145;
   const modalTriggerSelector =
     ".uniphin-product-card, .bestseller-item, .sale-card";
   const modalTriggers = document.querySelectorAll(modalTriggerSelector);
   const collectionAddButtons = document.querySelectorAll(
-    ".btn-flip-add[data-product-id]"
+    ".btn-flip-add[data-product-id]",
   );
   const searchInput = document.querySelector(".uniphin-menu-search input");
   const productsContainer = document.querySelector(".uniphin-menu-products");
@@ -113,13 +120,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const modalTitle = document.getElementById("uniphinProductModalTitle");
   const modalPrice = document.getElementById("uniphinProductModalPrice");
   const modalDescription = document.getElementById(
-    "uniphinProductModalDescription"
+    "uniphinProductModalDescription",
   );
   const modalCategory = document.getElementById("uniphinProductModalCategory");
   const modalImage = document.getElementById("uniphinProductModalImage");
   const modalQtyInput = document.getElementById("uniphinProductModalQty");
   const modalAddToCartButton = document.getElementById(
-    "uniphinProductModalAddToCart"
+    "uniphinProductModalAddToCart",
   );
   const modalFeedback = document.getElementById("uniphinProductModalFeedback");
   const modalCloseButton = productModal
@@ -213,13 +220,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!response.ok) {
         if (response.status === 401) {
-          const redirectUrl = (data && data.redirect_url) || loginUrl || "/login";
+          const redirectUrl =
+            (data && data.redirect_url) || loginUrl || "/login";
           window.location.href = redirectUrl;
           return null;
         }
 
         throw new Error(
-          (data && data.message) || "Khong the them san pham vao gio hang."
+          (data && data.message) || "Khong the them san pham vao gio hang.",
         );
       }
 
@@ -276,6 +284,36 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("scroll", updateSidebar);
   updateSidebar();
 
+  if (navLinks.length > 0) {
+    navLinks.forEach(function (link) {
+      link.addEventListener("click", function (event) {
+        const targetSelector = link.getAttribute("href") || "";
+
+        if (!targetSelector.startsWith("#")) {
+          return;
+        }
+
+        const targetSection = document.querySelector(targetSelector);
+
+        if (!targetSection) {
+          return;
+        }
+
+        event.preventDefault();
+
+        const targetTop =
+          targetSection.getBoundingClientRect().top +
+          window.scrollY -
+          sidebarScrollOffset;
+
+        window.scrollTo({
+          top: Math.max(0, targetTop),
+          behavior: "smooth",
+        });
+      });
+    });
+  }
+
   if (productModal && modalTriggers.length > 0) {
     document.addEventListener("click", function (event) {
       const modalTrigger = event.target.closest(modalTriggerSelector);
@@ -309,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (qtyButton && modalQtyInput) {
         const currentValue = Math.max(
           1,
-          parseInt(modalQtyInput.value || "1", 10) || 1
+          parseInt(modalQtyInput.value || "1", 10) || 1,
         );
         const nextValue =
           qtyButton.dataset.qtyAction === "increase"
@@ -332,15 +370,18 @@ document.addEventListener("DOMContentLoaded", function () {
       modalAddToCartButton.addEventListener("click", function () {
         const productId = parseInt(
           modalAddToCartButton.dataset.productId || "0",
-          10
+          10,
         );
         const quantity = Math.max(
           1,
-          parseInt(modalQtyInput ? modalQtyInput.value : "1", 10) || 1
+          parseInt(modalQtyInput ? modalQtyInput.value : "1", 10) || 1,
         );
 
         if (productId <= 0) {
-          setModalFeedback("Khong xac dinh duoc san pham de them vao gio.", "error");
+          setModalFeedback(
+            "Khong xac dinh duoc san pham de them vao gio.",
+            "error",
+          );
           return;
         }
 
@@ -363,13 +404,13 @@ document.addEventListener("DOMContentLoaded", function () {
             modalAddToCartButton.textContent = "THEM VAO GIO";
             setModalFeedback(
               data.message || "Da them san pham vao gio hang.",
-              "success"
+              "success",
             );
           })
           .catch(function (error) {
             setModalFeedback(
               error.message || "Khong the them san pham vao gio hang.",
-              "error"
+              "error",
             );
             modalAddToCartButton.disabled = false;
             modalAddToCartButton.textContent = "THEM VAO GIO";
