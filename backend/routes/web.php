@@ -43,3 +43,8 @@ $router->get('/admin/contactpage', static function () use ($adminController): vo
 $router->get('/admin/aboutpage', static function () use ($adminController): void {$adminController->aboutpage();});
 
 $router->post('/admin/profile', static function () use ($adminController): void {$adminController->updateProfile();});
+
+// FAQ & About management
+$router->post('/admin/faq/save', static function () use ($adminController): void {$adminController->faqSave();});
+$router->post('/admin/faq/delete', static function () use ($adminController): void {$adminController->faqDelete();});
+$router->post('/admin/about/save', static function () use ($adminController): void {$adminController->aboutSave();});
