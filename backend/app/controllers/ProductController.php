@@ -55,7 +55,7 @@ class ProductController extends Controller
         $categories = $this->categoryModel->getAllWithProductCount();
 
         $this->view('admin/pages/products', [
-            'title' => 'Danh sách sản phẩm',
+            'title' => 'Quản lý sản phẩm',
             'products' => $products,
             'categories' => $categories,
         ], 'admin/layouts/main');

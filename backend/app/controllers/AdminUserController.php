@@ -20,7 +20,7 @@ class AdminUserController extends Controller
         ];
 
         $this->view('admin/pages/users', [
-            'title' => 'Quản lý tài khoản người dùng',
+            'title' => 'Quản lý tài khoản',
             'users' => $this->userModel->getAdminUsers($filters),
             'userFilters' => $filters,
         ], 'admin/layouts/main');
@@ -50,7 +50,7 @@ class AdminUserController extends Controller
         }
 
         $this->view('admin/pages/user-detail', [
-            'title' => 'Quản trị tài khoản người dùng',
+            'title' => 'Quản lý tài khoản',
             'user' => $user,
             'userFilters' => $filters,
         ], 'admin/layouts/main');

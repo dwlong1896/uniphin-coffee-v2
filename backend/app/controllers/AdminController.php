@@ -18,37 +18,37 @@ class AdminController extends Controller
     public function users(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/users', ['title' => 'Quan ly tai khoan'], 'admin/layouts/main');
+        $this->view('admin/pages/users', ['title' => 'Quản lý người dùng'], 'admin/layouts/main');
     }
 
     public function products(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/products', ['title' => 'Quan ly san pham'], 'admin/layouts/main');
+        $this->view('admin/pages/products', ['title' => 'Quản lý sản phẩm'], 'admin/layouts/main');
     }
 
     public function posts(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/posts', ['title' => 'Quan ly tin tuc'], 'admin/layouts/main');
+        $this->view('admin/pages/posts', ['title' => 'Quản lý tin tức'], 'admin/layouts/main');
     }
 
     public function comments(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/comments', ['title' => 'Quan ly binh luan'], 'admin/layouts/main');
+        $this->view('admin/pages/comments', ['title' => 'Quản lý bình luận'], 'admin/layouts/main');
     }
 
     public function contacts(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/contacts', ['title' => 'Quan ly lien he'], 'admin/layouts/main');
+        $this->view('admin/pages/contacts', ['title' => 'Quản lý liên hệ'], 'admin/layouts/main');
     }
 
     public function qa(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/qa', ['title' => 'Quan ly hoi dap'], 'admin/layouts/main');
+        $this->view('admin/pages/qa', ['title' => 'Quản lý hỏi đáp'], 'admin/layouts/main');
     }
 
     public function profile(): void
