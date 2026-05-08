@@ -46,7 +46,6 @@ $router->get('/admin/dashboard', static function () use ($adminController): void
 $router->get('/admin/users', static function () use ($adminUserController): void {$adminUserController->index();});
 $router->get('/admin/users/viewdetail', static function () use ($adminUserController): void {$adminUserController->viewDetail();});
 $router->post('/admin/users/update', static function () use ($adminUserController): void {$adminUserController->update();});
-$router->post('/admin/users/delete', static function () use ($adminUserController): void {$adminUserController->delete();});
 $router->get('/admin/products/viewdetail', static function () use ($productController): void {$productController->viewdetail();});
 $router->get('/admin/products', static function () use ($productController): void {$productController->index();});
 $router->post('/admin/categories/create', static function () use ($productController): void {$productController->createCategory();});

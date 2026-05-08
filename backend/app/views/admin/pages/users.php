@@ -73,24 +73,19 @@ $statusClasses = [
             <div class="card-body">
                 <div class="d-lg-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h4 class="header-title mb-1">Quản lý tài khoản</h4>
-                        <p class="text-muted mb-0">Theo dõi danh sách người dùng và chỉnh sửa hồ sơ khi cần.</p>
+                        <h4 class="header-title mb-1">Quản lý tài khoản người dùng</h4>
                     </div>
-                    <a href="<?php echo htmlspecialchars($toUrl('admin/profile'), ENT_QUOTES, 'UTF-8'); ?>"
-                        class="btn btn-outline-primary mt-3 mt-lg-0">
-                        <i class="ti-user"></i> Hồ sơ của tôi
-                    </a>
                 </div>
 
                 <form action="<?php echo htmlspecialchars($toUrl('admin/users'), ENT_QUOTES, 'UTF-8'); ?>" method="get"
                     class="row g-3 align-items-end">
-                    <div class="col-lg-5">
+                    <div class="col-lg-6">
                         <label class="form-label">Tìm kiếm</label>
                         <input type="text" name="keyword" class="form-control"
                             placeholder="Họ tên, email hoặc số điện thoại"
                             value="<?php echo htmlspecialchars((string) ($userFilters['keyword'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <label class="form-label">Vai trò</label>
                         <select name="role" class="form-control">
                             <option value="">Tất cả</option>
@@ -132,7 +127,7 @@ $statusClasses = [
         <div class="card">
             <div class="card-body">
                 <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                    <h4 class="header-title mb-0">Danh sách tài khoản</h4>
+                    <h4 class="header-title mb-0">Danh sách khách hàng</h4>
                     <span class="text-muted">Tổng cộng: <?php echo htmlspecialchars((string) count($users), ENT_QUOTES, 'UTF-8'); ?> tài khoản</span>
                 </div>
 
@@ -141,7 +136,7 @@ $statusClasses = [
                         <thead class="bg-light text-capitalize">
                             <tr>
                                 <th class="text-center">Mã</th>
-                                <th class="text-center">Người dùng</th>
+                                <th class="text-center">Khách hàng</th>
                                 <th class="text-center">Liên hệ</th>
                                 <th class="text-center">Vai trò</th>
                                 <th class="text-center">Trạng thái</th>
@@ -195,7 +190,7 @@ $statusClasses = [
                                 <td>
                                     <a href="<?php echo htmlspecialchars($buildUserDetailUrl($userId), ENT_QUOTES, 'UTF-8'); ?>"
                                         class="btn btn-sm btn-primary">
-                                        <i class="ti-pencil-alt"></i> Chỉnh sửa
+                                        <i class="ti-settings"></i> Quản trị
                                     </a>
                                 </td>
                             </tr>

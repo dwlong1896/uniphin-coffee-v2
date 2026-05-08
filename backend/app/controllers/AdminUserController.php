@@ -20,7 +20,7 @@ class AdminUserController extends Controller
         ];
 
         $this->view('admin/pages/users', [
-            'title' => 'Quản lý tài khoản',
+            'title' => 'Quản lý tài khoản người dùng',
             'users' => $this->userModel->getAdminUsers($filters),
             'userFilters' => $filters,
         ], 'admin/layouts/main');
@@ -45,12 +45,12 @@ class AdminUserController extends Controller
         $user = $this->userModel->findById($userId);
 
         if ($user === null) {
-            $this->setFlash('error', 'Không tìm thấy tài khoản.');
+            $this->setFlash('error', 'Không tìm thấy tài khoản người dùng.');
             $this->redirect($this->buildUsersRedirectUrl($filters));
         }
 
         $this->view('admin/pages/user-detail', [
-            'title' => 'Chỉnh sửa tài khoản',
+            'title' => 'Quản trị tài khoản người dùng',
             'user' => $user,
             'userFilters' => $filters,
         ], 'admin/layouts/main');
@@ -72,167 +72,54 @@ class AdminUserController extends Controller
             $this->redirect($this->buildUsersRedirectUrl($filters));
         }
 
-        $currentUser = $this->userModel->findById($userId);
+        $user = $this->userModel->findById($userId);
 
-        if ($currentUser === null) {
-            $this->setFlash('error', 'Không tìm thấy tài khoản.');
+        if ($user === null) {
+            $this->setFlash('error', 'Không tìm thấy tài khoản người dùng.');
             $this->redirect($this->buildUsersRedirectUrl($filters));
         }
 
-        $data = [
-            'first_name' => trim((string) ($_POST['first_name'] ?? '')),
-            'last_name' => trim((string) ($_POST['last_name'] ?? '')),
-            'email' => trim((string) ($_POST['email'] ?? '')),
-            'phone' => trim((string) ($_POST['phone'] ?? '')),
-            'address' => trim((string) ($_POST['address'] ?? '')),
-            'gender' => trim((string) ($_POST['gender'] ?? '')),
-            'birth_date' => trim((string) ($_POST['birth_date'] ?? '')),
-            'role' => trim((string) ($_POST['role'] ?? 'customer')),
-            'status' => trim((string) ($_POST['status'] ?? 'active')),
-        ];
+        $status = trim((string) ($_POST['status'] ?? 'active'));
+        $newPassword = trim((string) ($_POST['new_password'] ?? ''));
+        $confirmPassword = trim((string) ($_POST['confirm_password'] ?? ''));
 
-        if ($data['first_name'] === '' || $data['last_name'] === '' || $data['email'] === '') {
-            $this->setFlash('error', 'Vui lòng nhập đầy đủ họ, tên và email.');
-            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-        }
-
-        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->setFlash('error', 'Email không hợp lệ.');
-            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-        }
-
-        if ($this->userModel->emailExists($data['email'], $userId)) {
-            $this->setFlash('error', 'Email đã được sử dụng bởi tài khoản khác.');
-            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-        }
-
-        if (!in_array($data['role'], ['admin', 'customer'], true)) {
-            $this->setFlash('error', 'Vai trò không hợp lệ.');
-            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-        }
-
-        if (!in_array($data['status'], ['active', 'banned', 'pending', 'inactive'], true)) {
+        if (!in_array($status, ['active', 'banned', 'pending', 'inactive'], true)) {
             $this->setFlash('error', 'Trạng thái không hợp lệ.');
             $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
         }
 
-        if ($userId === (int) ($_SESSION['user_id'] ?? 0)) {
-            if ($data['role'] !== 'admin') {
-                $this->setFlash('error', 'Bạn không thể tự thay đổi vai trò của chính mình.');
-                $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-            }
-
-            if ($data['status'] !== 'active') {
-                $this->setFlash('error', 'Bạn không thể tự chuyển trạng thái tài khoản hiện tại khỏi hoạt động.');
-                $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-            }
-        }
-
-        $imageName = null;
-        $file = $_FILES['avatar'] ?? null;
-        $oldImage = $currentUser['image'] ?? null;
-
-        if ($file && $file['error'] !== UPLOAD_ERR_NO_FILE) {
-            if ($file['error'] !== UPLOAD_ERR_OK) {
-                $this->setFlash('error', 'Tải ảnh đại diện thất bại.');
-                $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-            }
-
-            $ext = strtolower(pathinfo((string) $file['name'], PATHINFO_EXTENSION));
-            $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-
-            if (!in_array($ext, $allowed, true)) {
-                $this->setFlash('error', 'Chỉ chấp nhận file jpg, jpeg, png hoặc webp.');
-                $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-            }
-
-            $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uniphin2/backend/public/uploads/';
-
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
-            }
-
-            $imageName = 'user_' . $userId . '_' . time() . '.' . $ext;
-
-            if (!move_uploaded_file($file['tmp_name'], $uploadDir . $imageName)) {
-                $this->setFlash('error', 'Không thể lưu ảnh đại diện.');
-                $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-            }
-
-            if ($oldImage && $oldImage !== $imageName) {
-                $oldFile = $uploadDir . $oldImage;
-                if (is_file($oldFile)) {
-                    unlink($oldFile);
-                }
-            }
-        }
-
-        if (!$this->userModel->updateUserByAdmin($userId, $data, $imageName)) {
-            $this->setFlash('error', 'Không thể cập nhật tài khoản. Vui lòng thử lại.');
+        if ($userId === (int) ($_SESSION['user_id'] ?? 0) && $status !== 'active') {
+            $this->setFlash('error', 'Bạn không thể tự chuyển trạng thái tài khoản hiện tại khỏi hoạt động.');
             $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
         }
 
-        if ($userId === (int) ($_SESSION['user_id'] ?? 0)) {
-            $_SESSION['name'] = trim($data['first_name'] . ' ' . $data['last_name']);
-            $_SESSION['email'] = $data['email'];
+        $passwordHash = null;
+
+        if ($newPassword !== '' || $confirmPassword !== '') {
+            if (strlen($newPassword) < 6) {
+                $this->setFlash('error', 'Mật khẩu mới phải có ít nhất 6 ký tự.');
+                $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
+            }
+
+            if ($newPassword !== $confirmPassword) {
+                $this->setFlash('error', 'Xác nhận mật khẩu mới không khớp.');
+                $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
+            }
+
+            $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
         }
 
-        $this->setFlash('success', 'Cập nhật tài khoản thành công.');
+        if (!$this->userModel->updateAdminControls($userId, $status, $passwordHash)) {
+            $this->setFlash('error', 'Không thể cập nhật tài khoản người dùng. Vui lòng thử lại.');
+            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
+        }
+
+        $successMessage = $passwordHash !== null
+            ? 'Đã cập nhật trạng thái và cấp mật khẩu mới cho tài khoản người dùng.'
+            : 'Đã cập nhật trạng thái tài khoản người dùng.';
+
+        $this->setFlash('success', $successMessage);
         $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-    }
-
-    public function delete(): void
-    {
-        AuthMiddleware::requireAdmin();
-
-        $userId = (int) ($_GET['id'] ?? 0);
-        $filters = [
-            'keyword' => trim((string) ($_POST['filter_keyword'] ?? '')),
-            'role' => trim((string) ($_POST['filter_role'] ?? '')),
-            'status' => trim((string) ($_POST['filter_status'] ?? '')),
-        ];
-
-        if ($userId <= 0) {
-            $this->setFlash('error', 'Tài khoản không hợp lệ.');
-            $this->redirect($this->buildUsersRedirectUrl($filters));
-        }
-
-        if ($userId === (int) ($_SESSION['user_id'] ?? 0)) {
-            $this->setFlash('error', 'Bạn không thể tự xóa tài khoản đang đăng nhập.');
-            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-        }
-
-        $user = $this->userModel->findById($userId);
-
-        if ($user === null) {
-            $this->setFlash('error', 'Không tìm thấy tài khoản.');
-            $this->redirect($this->buildUsersRedirectUrl($filters));
-        }
-
-        $blockReason = $this->userModel->getDeletionBlockReason($userId, (string) ($user['role'] ?? ''));
-
-        if ($blockReason !== null) {
-            $this->setFlash('error', $blockReason);
-            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-        }
-
-        $oldImage = (string) ($user['image'] ?? '');
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/uniphin2/backend/public/uploads/';
-
-        if (!$this->userModel->deleteUserByAdmin($userId)) {
-            $this->setFlash('error', 'Không thể xóa tài khoản. Vui lòng thử lại.');
-            $this->redirect($this->buildUserDetailRedirectUrl($userId, $filters));
-        }
-
-        if ($oldImage !== '') {
-            $oldFile = $uploadDir . $oldImage;
-            if (is_file($oldFile)) {
-                unlink($oldFile);
-            }
-        }
-
-        $this->setFlash('success', 'Đã xóa tài khoản thành công.');
-        $this->redirect($this->buildUsersRedirectUrl($filters));
     }
 
     private function buildUsersRedirectUrl(array $filters = []): string
