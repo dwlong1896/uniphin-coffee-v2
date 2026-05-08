@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const checkoutUrl = root.dataset.checkoutUrl || "";
 
   function formatCurrency(value) {
-    return new Intl.NumberFormat("vi-VN").format(value) + " d";
+    return new Intl.NumberFormat("vi-VN").format(value) + " đ";
   }
 
   function checkedItems() {
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (summaryNote) {
       summaryNote.textContent =
-        String(items.length) + " mon dang co trong gio hang cua ban.";
+        String(items.length) + " món đang có trong giỏ hàng của bạn.";
     }
   }
 
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
           return null;
         }
 
-        throw new Error((data && data.message) || "Khong the xu ly gio hang.");
+        throw new Error((data && data.message) || "Không thể xử lý giỏ hàng.");
       }
 
       return data;
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
       })
       .catch(function (error) {
         input.value = previousValue;
-        window.alert(error.message || "Khong the cap nhat so luong.");
+        window.alert(error.message || "Không thể cập nhật số lượng.");
       })
       .finally(function () {
         input.disabled = false;
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       })
       .catch(function (error) {
-        window.alert(error.message || "Khong the xoa san pham.");
+        window.alert(error.message || "Không thể xóa sản phẩm.");
         removeButton.disabled = false;
       });
   });
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .filter(Boolean);
 
       if (selectedIds.length === 0) {
-        window.alert("Vui long chon it nhat 1 mon de thanh toan.");
+        window.alert("Vui lòng chọn ít nhất 1 món để thanh toán.");
         return;
       }
 

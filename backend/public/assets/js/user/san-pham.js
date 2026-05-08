@@ -227,7 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         throw new Error(
-          (data && data.message) || "Khong the them san pham vao gio hang.",
+          (data && data.message) || "Không thể thêm sản phẩm vào giỏ hàng.",
         );
       }
 
@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (modalAddToCartButton) {
       modalAddToCartButton.dataset.productId = card.dataset.productId || "0";
       modalAddToCartButton.disabled = false;
-      modalAddToCartButton.textContent = "THEM VAO GIO";
+      modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
     }
 
     modalImage.onerror = function () {
@@ -379,19 +379,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (productId <= 0) {
           setModalFeedback(
-            "Khong xac dinh duoc san pham de them vao gio.",
+            "Không xác định được sản phẩm để thêm vào giỏ.",
             "error",
           );
           return;
         }
 
         if (!cartAddUrl) {
-          setModalFeedback("Thieu duong dan them gio hang.", "error");
+          setModalFeedback("Thiếu đường dẫn thêm giỏ hàng.", "error");
           return;
         }
 
         modalAddToCartButton.disabled = true;
-        modalAddToCartButton.textContent = "DANG THEM...";
+        modalAddToCartButton.textContent = "ĐANG THÊM...";
         setModalFeedback("", "error");
 
         addToCartRequest(productId, quantity)
@@ -401,19 +401,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             modalAddToCartButton.disabled = false;
-            modalAddToCartButton.textContent = "THEM VAO GIO";
+            modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
             setModalFeedback(
-              data.message || "Da them san pham vao gio hang.",
+              data.message || "Đã thêm sản phẩm vào giỏ hàng.",
               "success",
             );
           })
           .catch(function (error) {
             setModalFeedback(
-              error.message || "Khong the them san pham vao gio hang.",
+              error.message || "Không thể thêm sản phẩm vào giỏ hàng.",
               "error",
             );
             modalAddToCartButton.disabled = false;
-            modalAddToCartButton.textContent = "THEM VAO GIO";
+            modalAddToCartButton.textContent = "THÊM VÀO GIỎ";
           });
       });
     }
@@ -430,11 +430,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const originalHtml = button.innerHTML;
         button.disabled = true;
-        button.textContent = "Dang them...";
+        button.textContent = "Đang thêm...";
 
         addToCartRequest(productId, 1)
           .then(function () {
-            button.textContent = "Da them";
+            button.textContent = "Đã thêm";
             window.setTimeout(function () {
               button.disabled = false;
               button.innerHTML = originalHtml;
@@ -443,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .catch(function () {
             button.disabled = false;
             button.innerHTML = originalHtml;
-            window.alert("Khong the them san pham vao gio hang.");
+            window.alert("Không thể thêm sản phẩm vào giỏ hàng.");
           });
       });
     });
@@ -465,10 +465,10 @@ document.addEventListener("DOMContentLoaded", function () {
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
       </svg>
       <h3 style="font-size:18px; font-weight:700; color:#222; margin-bottom:5px;">
-        Khong tim thay san pham
+        Không tìm thấy sản phẩm
       </h3>
       <p style="font-size:14px;">
-        Rat tiec, chung toi khong co thuc uong nao khop voi tu khoa cua ban.
+        Rất tiếc, chúng tôi không có thức uống nào khớp với từ khóa của bạn.
       </p>
     </div>
   `;

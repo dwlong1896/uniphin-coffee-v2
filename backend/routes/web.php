@@ -5,6 +5,8 @@ $pageController = new PageController();
 $userController = new UserController();
 $authController = new AuthController();
 $adminController = new AdminController();
+$adminUserController = new AdminUserController();
+$orderController = new OrderController();
 $productController = new ProductController();
 $cartController = new CartController();
 
@@ -41,7 +43,10 @@ $router->post('/logout', static function () use ($authController): void {$authCo
 
 // Admin routes
 $router->get('/admin/dashboard', static function () use ($adminController): void {$adminController->dashboard();});
-$router->get('/admin/users', static function () use ($adminController): void {$adminController->users();});
+$router->get('/admin/users', static function () use ($adminUserController): void {$adminUserController->index();});
+$router->get('/admin/users/viewdetail', static function () use ($adminUserController): void {$adminUserController->viewDetail();});
+$router->post('/admin/users/update', static function () use ($adminUserController): void {$adminUserController->update();});
+$router->post('/admin/users/delete', static function () use ($adminUserController): void {$adminUserController->delete();});
 $router->get('/admin/products/viewdetail', static function () use ($productController): void {$productController->viewdetail();});
 $router->get('/admin/products', static function () use ($productController): void {$productController->index();});
 $router->post('/admin/categories/create', static function () use ($productController): void {$productController->createCategory();});
@@ -51,7 +56,9 @@ $router->post('/admin/products/create', static function () use ($productControll
 $router->post('/admin/products/update', static function () use ($productController): void {$productController->update();});
 $router->post('/admin/products/delete', static function () use ($productController): void {$productController->delete();});
 
-$router->get('/admin/orders', static function () use ($adminController): void {$adminController->orders();});
+$router->get('/admin/orders', static function () use ($orderController): void {$orderController->index();});
+$router->get('/admin/orders/viewdetail', static function () use ($orderController): void {$orderController->viewDetail();});
+$router->post('/admin/orders/update', static function () use ($orderController): void {$orderController->update();});
 $router->get('/admin/posts', static function () use ($adminController): void {$adminController->posts();});
 $router->get('/admin/comments', static function () use ($adminController): void {$adminController->comments();});
 $router->get('/admin/contacts', static function () use ($adminController): void {$adminController->contacts();});

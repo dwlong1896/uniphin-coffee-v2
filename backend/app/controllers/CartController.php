@@ -16,7 +16,7 @@ class CartController extends Controller
     public function index(): void
     {
         if (!$this->isLoggedInCustomer()) {
-            $this->setFlash('error', 'Vui long dang nhap de xem gio hang.');
+            $this->setFlash('error', 'Vui lòng đăng nhập để xem giỏ hàng.');
             $this->redirect($this->baseUrl('login'));
         }
 
@@ -31,8 +31,8 @@ class CartController extends Controller
         $this->view('users/pages/cart', [
             'cartItems' => $cartItems,
             'cartTotal' => $cartTotal,
-            'pageTitle' => 'Gio hang',
-            'pageName' => 'Gio hang',
+            'pageTitle' => 'Giỏ hàng',
+            'pageName' => 'Giỏ hàng',
         ], 'users/layouts/main');
     }
 
@@ -41,7 +41,7 @@ class CartController extends Controller
         if (!$this->isLoggedInCustomer()) {
             $this->json([
                 'success' => false,
-                'message' => 'Vui long dang nhap de them san pham vao gio hang.',
+                'message' => 'Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.',
                 'redirect_url' => $this->baseUrl('login'),
             ], 401);
             return;
@@ -54,7 +54,7 @@ class CartController extends Controller
         if ($productId <= 0) {
             $this->json([
                 'success' => false,
-                'message' => 'San pham khong hop le.',
+                'message' => 'Sản phẩm không hợp lệ.',
             ], 422);
             return;
         }
@@ -64,7 +64,7 @@ class CartController extends Controller
         if ($product === null) {
             $this->json([
                 'success' => false,
-                'message' => 'San pham khong ton tai.',
+                'message' => 'Sản phẩm không tồn tại.',
             ], 404);
             return;
         }
@@ -74,7 +74,7 @@ class CartController extends Controller
         if ($productStatus !== 'active') {
             $this->json([
                 'success' => false,
-                'message' => 'San pham hien khong the them vao gio hang.',
+                'message' => 'Sản phẩm hiện không thể thêm vào giỏ hàng.',
             ], 422);
             return;
         }
@@ -82,21 +82,21 @@ class CartController extends Controller
         if (!$this->cartModel->addItem($customerId, $productId, $quantity)) {
             $this->json([
                 'success' => false,
-                'message' => 'Khong the them san pham vao gio hang.',
+                'message' => 'Không thể thêm sản phẩm vào giỏ hàng.',
             ], 500);
             return;
         }
 
         $this->json([
             'success' => true,
-            'message' => 'Da them san pham vao gio hang.',
+            'message' => 'Đã thêm sản phẩm vào giỏ hàng.',
         ]);
     }
 
     public function checkout(): void
     {
         if (!$this->isLoggedInCustomer()) {
-            $this->setFlash('error', 'Vui long dang nhap de thanh toan.');
+            $this->setFlash('error', 'Vui lòng đăng nhập để thanh toán.');
             $this->redirect($this->baseUrl('login'));
         }
 
@@ -105,7 +105,7 @@ class CartController extends Controller
         $checkoutItems = $this->orderModel->getCheckoutItems($customerId, $selectedItems);
 
         if ($checkoutItems === []) {
-            $this->setFlash('error', 'Khong co san pham hop le de thanh toan.');
+            $this->setFlash('error', 'Không có sản phẩm hợp lệ để thanh toán.');
             $this->redirect($this->baseUrl('cart'));
         }
 
@@ -124,7 +124,7 @@ class CartController extends Controller
     public function placeOrder(): void
     {
         if (!$this->isLoggedInCustomer()) {
-            $this->setFlash('error', 'Vui long dang nhap de thanh toan.');
+            $this->setFlash('error', 'Vui lòng đăng nhập để thanh toán.');
             $this->redirect($this->baseUrl('login'));
         }
 
@@ -133,7 +133,7 @@ class CartController extends Controller
         $checkoutItems = $this->orderModel->getCheckoutItems($customerId, $selectedItems);
 
         if ($checkoutItems === []) {
-            $this->setFlash('error', 'Khong co san pham hop le de thanh toan.');
+            $this->setFlash('error', 'Không có sản phẩm hợp lệ để thanh toán.');
             $this->redirect($this->baseUrl('cart'));
         }
 
@@ -146,12 +146,12 @@ class CartController extends Controller
         ];
 
         if ($formData['address'] === '' || $formData['full_name'] === '' || $formData['phone'] === '') {
-            $this->renderCheckoutPage($checkoutItems, $formData, 'Vui long nhap day du thong tin giao hang.');
+            $this->renderCheckoutPage($checkoutItems, $formData, 'Vui lòng nhập đầy đủ thông tin giao hàng.');
             return;
         }
 
         if (!in_array($formData['payment_method'], ['COD', 'Bank_Transfer'], true)) {
-            $this->renderCheckoutPage($checkoutItems, $formData, 'Phuong thuc thanh toan khong hop le.');
+            $this->renderCheckoutPage($checkoutItems, $formData, 'Phương thức thanh toán không hợp lệ.');
             return;
         }
 
@@ -166,7 +166,7 @@ class CartController extends Controller
         ]);
 
         if ($orderId <= 0) {
-            $this->renderCheckoutPage($checkoutItems, $formData, 'Khong the hoan tat don hang. Vui long thu lai.');
+            $this->renderCheckoutPage($checkoutItems, $formData, 'Không thể hoàn tất đơn hàng. Vui lòng thử lại.');
             return;
         }
 
@@ -176,7 +176,7 @@ class CartController extends Controller
         $_SESSION['last_name'] = $lastName;
         $_SESSION['name'] = trim($firstName . ' ' . $lastName);
 
-        $this->setFlash('success', 'Dat hang thanh cong. Ma don hang #' . $orderId . '.');
+        $this->setFlash('success', 'Đặt hàng thành công. Mã đơn hàng #' . $orderId . '.');
         $this->redirect($this->baseUrl('cart'));
     }
 
@@ -185,7 +185,7 @@ class CartController extends Controller
         if (!$this->isLoggedInCustomer()) {
             $this->json([
                 'success' => false,
-                'message' => 'Vui long dang nhap de cap nhat gio hang.',
+                'message' => 'Vui lòng đăng nhập để cập nhật giỏ hàng.',
                 'redirect_url' => $this->baseUrl('login'),
             ], 401);
             return;
@@ -198,7 +198,7 @@ class CartController extends Controller
         if ($productId <= 0) {
             $this->json([
                 'success' => false,
-                'message' => 'San pham khong hop le.',
+                'message' => 'Sản phẩm không hợp lệ.',
             ], 422);
             return;
         }
@@ -206,7 +206,7 @@ class CartController extends Controller
         if (!$this->cartModel->updateItemQuantity($customerId, $productId, $quantity)) {
             $this->json([
                 'success' => false,
-                'message' => 'Khong the cap nhat so luong.',
+                'message' => 'Không thể cập nhật số lượng.',
             ], 500);
             return;
         }
@@ -216,14 +216,14 @@ class CartController extends Controller
         if ($item === null) {
             $this->json([
                 'success' => false,
-                'message' => 'Khong tim thay san pham trong gio hang.',
+                'message' => 'Không tìm thấy sản phẩm trong giỏ hàng.',
             ], 404);
             return;
         }
 
         $this->json([
             'success' => true,
-            'message' => 'Da cap nhat so luong.',
+            'message' => 'Đã cập nhật số lượng.',
             'quantity' => (int) ($item['quantity'] ?? $quantity),
             'subtotal' => (float) ($item['subtotal'] ?? 0),
         ]);
@@ -234,7 +234,7 @@ class CartController extends Controller
         if (!$this->isLoggedInCustomer()) {
             $this->json([
                 'success' => false,
-                'message' => 'Vui long dang nhap de cap nhat gio hang.',
+                'message' => 'Vui lòng đăng nhập để cập nhật giỏ hàng.',
                 'redirect_url' => $this->baseUrl('login'),
             ], 401);
             return;
@@ -246,7 +246,7 @@ class CartController extends Controller
         if ($productId <= 0) {
             $this->json([
                 'success' => false,
-                'message' => 'San pham khong hop le.',
+                'message' => 'Sản phẩm không hợp lệ.',
             ], 422);
             return;
         }
@@ -254,14 +254,14 @@ class CartController extends Controller
         if (!$this->cartModel->removeItem($customerId, $productId)) {
             $this->json([
                 'success' => false,
-                'message' => 'Khong the xoa san pham khoi gio hang.',
+                'message' => 'Không thể xóa sản phẩm khỏi giỏ hàng.',
             ], 500);
             return;
         }
 
         $this->json([
             'success' => true,
-            'message' => 'Da xoa san pham khoi gio hang.',
+            'message' => 'Đã xóa sản phẩm khỏi giỏ hàng.',
         ]);
     }
 
@@ -295,8 +295,8 @@ class CartController extends Controller
             'checkoutTotal' => $checkoutTotal,
             'checkoutFormData' => $formData,
             'flashError' => $error,
-            'pageTitle' => 'Thanh toan',
-            'pageName' => 'Thanh toan',
+            'pageTitle' => 'Thanh toán',
+            'pageName' => 'Thanh toán',
         ], 'users/layouts/main');
     }
 

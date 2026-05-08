@@ -27,12 +27,6 @@ class AdminController extends Controller
         $this->view('admin/pages/products', ['title' => 'Quan ly san pham'], 'admin/layouts/main');
     }
 
-    public function orders(): void
-    {
-        AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/orders', ['title' => 'Quan ly don hang'], 'admin/layouts/main');
-    }
-
     public function posts(): void
     {
         AuthMiddleware::requireAdmin();

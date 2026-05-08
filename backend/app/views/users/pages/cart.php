@@ -10,17 +10,17 @@ $itemCount = count($cartItems);
 <div class="cart-page-shell">
     <div class="cart-page-wrap">
         <nav class="cart-breadcrumb" aria-label="Breadcrumb">
-            <a href="<?= htmlspecialchars($publicBase . '/', ENT_QUOTES, 'UTF-8') ?>">TRANG CHU</a>
+            <a href="<?= htmlspecialchars($publicBase . '/', ENT_QUOTES, 'UTF-8') ?>">TRANG CHỦ</a>
             <span>&gt;</span>
-            <strong>GIO HANG</strong>
+            <strong>GIỎ HÀNG</strong>
         </nav>
 
         <?php if (empty($cartItems)): ?>
         <section class="cart-empty-state">
-            <h1>Gio hang dang trong</h1>
-            <p>Ban chua co mon nao trong gio. Hay quay lai trang san pham de chon mon.</p>
+            <h1>Giỏ hàng đang trống</h1>
+            <p>Bạn chưa có món nào trong giỏ. Hãy quay lại trang sản phẩm để chọn món.</p>
             <a class="cart-continue-link" href="<?= htmlspecialchars($publicBase . '/san-pham', ENT_QUOTES, 'UTF-8') ?>">
-                TIEP TUC MUA HANG
+                TIẾP TỤC MUA HÀNG
             </a>
         </section>
         <?php else: ?>
@@ -32,7 +32,7 @@ $itemCount = count($cartItems);
             <section class="cart-main-panel">
                 <label class="cart-select-all">
                     <input type="checkbox" id="cartSelectAll" checked>
-                    <span>Chon tat ca</span>
+                    <span>Chọn tất cả</span>
                 </label>
 
                 <div class="cart-list-divider"></div>
@@ -49,30 +49,30 @@ $itemCount = count($cartItems);
 
                         <div class="cart-line-item__media">
                             <img src="<?= htmlspecialchars($upload((string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8') ?>"
-                                alt="<?= htmlspecialchars((string) ($item['name'] ?? 'San pham'), ENT_QUOTES, 'UTF-8') ?>"
+                                alt="<?= htmlspecialchars((string) ($item['name'] ?? 'Sản phẩm'), ENT_QUOTES, 'UTF-8') ?>"
                                 onerror="this.src='<?= htmlspecialchars($fallbackImage, ENT_QUOTES, 'UTF-8') ?>'">
                         </div>
 
                         <div class="cart-line-item__info">
                             <h2><?= htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES, 'UTF-8') ?></h2>
                             <p class="cart-line-item__category">
-                                <?= htmlspecialchars((string) ($item['category_name'] ?? 'Do uong'), ENT_QUOTES, 'UTF-8') ?>
+                                <?= htmlspecialchars((string) ($item['category_name'] ?? 'Đồ uống'), ENT_QUOTES, 'UTF-8') ?>
                             </p>
 
                             <div class="cart-line-item__qty">
-                                <span>So luong</span>
+                                <span>Số lượng</span>
                                 <input type="number" class="cart-quantity-input" min="1"
                                     value="<?= (int) ($item['quantity'] ?? 0) ?>"
-                                    aria-label="So luong san pham">
+                                    aria-label="Số lượng sản phẩm">
                             </div>
 
                             <div class="cart-line-item__price" data-item-subtotal>
-                                <?= htmlspecialchars(number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') . ' d', ENT_QUOTES, 'UTF-8') ?>
+                                <?= htmlspecialchars(number_format((float) ($item['subtotal'] ?? 0), 0, ',', '.') . ' đ', ENT_QUOTES, 'UTF-8') ?>
                             </div>
                         </div>
 
                         <div class="cart-line-item__actions">
-                            <button type="button" class="cart-remove-btn" data-remove-item>Xoa</button>
+                            <button type="button" class="cart-remove-btn" data-remove-item>Xóa</button>
                         </div>
                     </article>
                     <?php endforeach; ?>
@@ -80,36 +80,36 @@ $itemCount = count($cartItems);
 
                 <div class="cart-main-footer">
                     <a class="cart-continue-link" href="<?= htmlspecialchars($publicBase . '/san-pham', ENT_QUOTES, 'UTF-8') ?>">
-                        TIEP TUC MUA HANG
+                        TIẾP TỤC MUA HÀNG
                     </a>
                 </div>
             </section>
 
             <aside class="cart-summary-panel">
                 <div class="cart-summary-card">
-                    <h2>THONG TIN DON HANG</h2>
+                    <h2>THÔNG TIN ĐƠN HÀNG</h2>
 
                     <div class="cart-summary-row">
-                        <span>Tam tinh</span>
-                        <strong id="cartSummarySubtotal"><?= htmlspecialchars(number_format($cartTotal, 0, ',', '.') . ' d', ENT_QUOTES, 'UTF-8') ?></strong>
+                        <span>Tạm tính</span>
+                        <strong id="cartSummarySubtotal"><?= htmlspecialchars(number_format($cartTotal, 0, ',', '.') . ' đ', ENT_QUOTES, 'UTF-8') ?></strong>
                     </div>
 
                     <div class="cart-summary-row">
-                        <span>Phi van chuyen</span>
+                        <span>Phí vận chuyển</span>
                         <strong>-</strong>
                     </div>
 
                     <div class="cart-summary-divider"></div>
 
                     <div class="cart-summary-row cart-summary-row--total">
-                        <span>Tong don hang</span>
-                        <strong id="cartSummaryTotal"><?= htmlspecialchars(number_format($cartTotal, 0, ',', '.') . ' d', ENT_QUOTES, 'UTF-8') ?></strong>
+                        <span>Tổng đơn hàng</span>
+                        <strong id="cartSummaryTotal"><?= htmlspecialchars(number_format($cartTotal, 0, ',', '.') . ' đ', ENT_QUOTES, 'UTF-8') ?></strong>
                     </div>
 
-                    <button type="button" class="cart-checkout-btn" id="cartCheckoutButton">THANH TOAN</button>
+                    <button type="button" class="cart-checkout-btn" id="cartCheckoutButton">THANH TOÁN</button>
                 </div>
 
-                <p class="cart-summary-note" id="cartSummaryNote"><?= $itemCount ?> mon dang co trong gio hang cua ban.</p>
+                <p class="cart-summary-note" id="cartSummaryNote"><?= $itemCount ?> món đang có trong giỏ hàng của bạn.</p>
             </aside>
         </div>
         <?php endif; ?>

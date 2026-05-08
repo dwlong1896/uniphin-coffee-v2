@@ -1,10 +1,12 @@
-# AJAX Cart Flow
+# Tài liệu AJAX giỏ hàng
 
-## Muc tieu
+## Mục tiêu
 
-Nut `THEM VAO GIO` tren popup trang `san-pham` gui AJAX toi backend PHP thuan de them san pham vao bang `cart_items`.
+Nút `THÊM VÀO GIỎ` trên popup trang `sản phẩm` gửi AJAX tới backend PHP thuần để thêm sản phẩm vào bảng `cart_items`.
 
-## File lien quan
+---
+
+## File liên quan
 
 - `backend/app/models/CartModel.php`
 - `backend/app/controllers/CartController.php`
@@ -13,128 +15,154 @@ Nut `THEM VAO GIO` tren popup trang `san-pham` gui AJAX toi backend PHP thuan de
 - `backend/app/views/users/pages/san-pham.php`
 - `backend/public/assets/js/user/san-pham.js`
 - `backend/app/views/users/pages/cart.php`
+- `backend/public/assets/js/user/cart.js`
 
-## Route da them
+---
 
-GET:
+## Route đã dùng
+
+### GET
 
 - `/cart`
 - `/gio-hang`
 
-POST:
+### POST
 
 - `/cart/add`
 - `/gio-hang/them`
+- `/cart/update`
+- `/gio-hang/cap-nhat`
+- `/cart/remove`
+- `/gio-hang/xoa`
 
-## Luong xu ly
+---
 
-1. User mo popup san pham.
-2. JS doc `data-product-id` va `quantity` trong popup.
-3. Khi bam nut `THEM VAO GIO`, JS goi:
+## Luồng xử lý thêm vào giỏ
+
+1. Người dùng mở popup sản phẩm.
+2. JavaScript đọc `data-product-id` và `quantity`.
+3. Khi bấm `THÊM VÀO GIỎ`, frontend gọi:
 
 ```text
 POST /cart/add
 Content-Type: application/x-www-form-urlencoded
 ```
 
-4. `CartController::add()` validate:
+4. `CartController::add()` kiểm tra:
+   - người dùng đã đăng nhập
+   - role là `customer`
+   - `product_id` hợp lệ
+   - sản phẩm tồn tại
+   - sản phẩm đang ở trạng thái `active`
 
-- user da dang nhap va role = `customer`
-- `product_id` hop le
-- san pham ton tai
-- san pham dang `active`
+5. `CartModel::addItem()` ghi dữ liệu vào `cart_items`.
+6. Backend trả JSON cho frontend.
+7. Frontend hiển thị phản hồi thành công hoặc thất bại trong popup.
 
-Khong kiem tra `stock_quantity` vi day la luong do an/uong lam khi khach dat.
+---
 
-5. `CartModel::addItem()` dung:
+## JSON response
 
-```sql
-INSERT INTO cart_items (Cart_ID, Product_ID, quantity)
-VALUES (?, ?, ?)
-ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
-```
-
-6. Backend tra JSON cho frontend.
-
-## Response JSON
-
-Thanh cong:
+### Thành công
 
 ```json
 {
   "success": true,
-  "message": "Da them san pham vao gio hang."
+  "message": "Đã thêm sản phẩm vào giỏ hàng."
 }
 ```
 
-Chua dang nhap:
+### Chưa đăng nhập
 
 ```json
 {
   "success": false,
-  "message": "Vui long dang nhap de them san pham vao gio hang.",
+  "message": "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.",
   "redirect_url": "/uniphin2/backend/public/login"
 }
 ```
 
-That bai do validate:
+### Thất bại do validate
 
 ```json
 {
   "success": false,
-  "message": "San pham hien khong the them vao gio hang."
+  "message": "Sản phẩm hiện không thể thêm vào giỏ hàng."
 }
 ```
 
-## Model hien tai
+---
 
-`CartModel` dang co cac method:
+## Cập nhật và xóa trong giỏ hàng
 
-- `findOrCreateCartIdByCustomerId(int $customerId): ?int`
-- `addItem(int $customerId, int $productId, int $quantity): bool`
-- `getItems(int $customerId): array`
-- `countItems(int $customerId): int`
+Sau khi đã vào trang `/cart`, người dùng có thể:
 
-## Controller hien tai
+1. Thay đổi số lượng sản phẩm
+2. Xóa sản phẩm khỏi giỏ
+3. Chọn các món để thanh toán
 
-`CartController` dang co:
+JavaScript trong `cart.js` sẽ gọi:
 
-- `index()`: render trang `/cart`
-- `add()`: nhan AJAX them vao gio
+- `POST /cart/update` để cập nhật số lượng
+- `POST /cart/remove` để xóa sản phẩm
 
-## Frontend popup
+Nếu session hết hạn:
 
-Modal popup trong `san-pham.php` da duoc bo sung:
+1. Backend trả `401`
+2. Frontend tự chuyển hướng về trang đăng nhập
 
-- `data-cart-add-url`
-- `data-login-url`
-- `data-cart-url`
-- `data-product-id` tren tung item
+---
 
-JS trong `san-pham.js` se:
+## Model hiện tại
 
-- cap nhat `product_id` hien tai khi mo popup
-- lay `quantity`
-- goi `fetch(...)`
-- hien feedback thanh cong / that bai ngay trong popup
+`CartModel` đang có các nhóm method chính:
 
-JS giu o muc toi thieu:
+- tìm hoặc tạo giỏ hàng của khách
+- thêm sản phẩm vào giỏ
+- lấy danh sách sản phẩm trong giỏ
+- cập nhật số lượng
+- xóa sản phẩm
 
-- khong badge cart realtime
-- khong dong bo so luong len header
-- khong xu ly stock o frontend
+---
 
-## Trang gio hang
+## Controller hiện tại
 
-`/cart` hien tai doc du lieu tu database, khong con la cart tam trong session.
+`CartController` đang xử lý:
 
-## Gioi han hien tai
+- `index()`: render trang giỏ hàng
+- `add()`: thêm vào giỏ bằng AJAX
+- `update()`: cập nhật số lượng bằng AJAX
+- `remove()`: xóa sản phẩm bằng AJAX
+- `checkout()`: mở trang thanh toán
+- `placeOrder()`: hoàn tất đặt hàng
 
-1. `flashsale` dang hien gia giam tren popup, nhung khi them vao gio hang backend van luu theo gia goc trong bang `products`.
-2. Chua co API cap nhat / xoa item bang AJAX trong trang cart.
+---
 
-## Buoc tiep theo de mo rong
+## Giao diện hiện tại
 
-1. Them nut `+ -` va `xoa` trong trang `/cart`.
-2. Tao AJAX cho `/cart/update` va `/cart/remove`.
-3. Neu can gia khuyen mai that su, phai them schema discount hoac bang promotion rieng, khong nen chi doi gia o frontend.
+### Popup sản phẩm
+
+Popup trong `san-pham.php` và `san-pham.js` hiện đã có:
+
+- chọn số lượng
+- gửi AJAX thêm vào giỏ
+- thông báo lỗi/thành công bằng tiếng Việt có dấu
+
+### Trang giỏ hàng
+
+Trang `cart.php` hiện có:
+
+- chọn tất cả
+- chọn từng món
+- cập nhật số lượng
+- xóa món
+- tính lại tổng tiền bằng JavaScript
+- nút `THANH TOÁN`
+
+---
+
+## Ghi chú
+
+1. Backend hiện lưu đơn giá theo dữ liệu sản phẩm hiện tại trong lúc thêm giỏ và tạo đơn.
+2. Khi checkout, giá chốt đơn sẽ được lưu vào `order_items.price_at_purchase`.
+3. Nếu cần hỗ trợ khuyến mãi thực sự, nên bổ sung schema giảm giá riêng thay vì chỉ đổi giá ở frontend.
