@@ -38,10 +38,19 @@ class Controller
         $data['flashSuccess'] ??= $this->getFlash('success');
         $data['flashError']   ??= $this->getFlash('error');
 
-        // $asset helper – available in cả view và layout
+        // Helper variables – available in both view and layout
         $publicBase = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+        
         $asset = static function (string $path) use ($publicBase): string {
-            return ($publicBase === '' ? '' : $publicBase) . '/assets/' . ltrim($path, '/');
+            return $publicBase . '/assets/' . ltrim($path, '/');
+        };
+
+        $toUrl = static function (string $path = '/') use ($publicBase): string {
+            return $publicBase . '/' . ltrim($path, '/');
+        };
+
+        $assetUrl = static function (string $path) use ($publicBase): string {
+            return $publicBase . '/assets/admin/' . ltrim($path, '/');
         };
 
         extract($data, EXTR_SKIP);
