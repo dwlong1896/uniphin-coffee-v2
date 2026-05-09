@@ -18,14 +18,18 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
 
     <!-- Hero Banner -->
     <section class="about-hero">
-        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=80" alt="Sinh viên UniPhin Coffee">
+        <div style="width: 100%; height: 400px; background-color: #cff4fc; display: flex; align-items: center; justify-content: center; color: #055160; font-weight: bold; font-size: 1.2rem;">
+            [Hình ảnh Sinh viên UniPhin Coffee]
+        </div>
     </section>
 
     <!-- Nguồn gốc -->
     <section class="about-section">
         <div class="about-section-container">
             <div class="about-section-image">
-                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80" alt="Nguồn gốc">
+                <div style="width: 100%; height: 300px; background-color: #e2e3e5; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #41464b;">
+                    [Hình minh họa: Nguồn gốc]
+                </div>
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('origin', 'title', 'Nguồn gốc'); ?></h3>
@@ -38,7 +42,9 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
     <section class="about-section about-mission-bg reverse">
         <div class="about-section-container">
             <div class="about-section-image">
-                <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=800&q=80" alt="Sứ mệnh">
+                <div style="width: 100%; height: 300px; background-color: #f8d7da; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #842029;">
+                    [Hình minh họa: Sứ mệnh]
+                </div>
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('mission', 'title', 'Sứ mệnh'); ?></h3>
@@ -51,7 +57,9 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
     <section class="about-section">
         <div class="about-section-container">
             <div class="about-section-image">
-                <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80" alt="Chất lượng" class="image-glow">
+                <div class="image-glow" style="width: 100%; height: 300px; background-color: #d1e7dd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #0f5132;">
+                    [Hình minh họa: Chất lượng]
+                </div>
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('quality', 'title', 'Từ hạt cà phê ngon đến ly cà phê trọn vị'); ?></h3>
@@ -67,22 +75,22 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
         </button>
         <div class="feedback-container">
             <div class="feedback-card" style="background-color:#f0f9ff;">
-                <div class="feedback-avatar"><img src="https://i.pravatar.cc/150?u=pa" alt="Phương Anh"></div>
+                <div class="feedback-avatar"><div style="width:100%; height:100%; background-color:#bae6fd; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#0369a1; font-weight:bold;">PA</div></div>
                 <h4>Phương Anh</h4>
                 <p>"Cứ tới deadline là mình chạy qua UniPhin ngồi. Không gian dễ chịu, ngồi 15 phút thôi mà thấy đầu óc nhẹ hẳn."</p>
             </div>
             <div class="feedback-card" style="background-color:#fffbeb;">
-                <div class="feedback-avatar"><img src="https://i.pravatar.cc/150?u=tk" alt="Tuấn Khang"></div>
+                <div class="feedback-avatar"><div style="width:100%; height:100%; background-color:#fde68a; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#b45309; font-weight:bold;">TK</div></div>
                 <h4>Tuấn Khang</h4>
                 <p>"Mình mê vibe ở đây cực, nhạc vừa đủ nghe, không ồn ào. Cà phê không quá đắng, kiểu uống là thấy relax liền."</p>
             </div>
             <div class="feedback-card" style="background-color:#f5f3ff;">
-                <div class="feedback-avatar"><img src="https://i.pravatar.cc/150?u=ml" alt="Minh Lan"></div>
+                <div class="feedback-avatar"><div style="width:100%; height:100%; background-color:#ddd6fe; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#6d28d9; font-weight:bold;">ML</div></div>
                 <h4>Minh Lan</h4>
                 <p>"Giá cả hợp lý, không gian rộng rãi. Mình hay rủ nhóm bạn đến đây ôn thi, ngồi cả buổi cũng không bị đuổi."</p>
             </div>
             <div class="feedback-card" style="background-color:#fdf2f8;">
-                <div class="feedback-avatar"><img src="https://i.pravatar.cc/150?u=hd" alt="Hoàng Dũng"></div>
+                <div class="feedback-avatar"><div style="width:100%; height:100%; background-color:#fbcfe8; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#be185d; font-weight:bold;">HD</div></div>
                 <h4>Hoàng Dũng</h4>
                 <p>"Cà phê ở đây ngon thiệt sự, uống xong tỉnh táo hẳn. Wifi mạnh nữa, làm việc rất hiệu quả."</p>
             </div>
