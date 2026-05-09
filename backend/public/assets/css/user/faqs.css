@@ -9,8 +9,8 @@
 
 /* --- Hero Section --- */
 .faq-hero {
-    background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-        url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1400&q=80') center/cover no-repeat;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                url('../../image/faq.png') center/cover no-repeat;
     padding: 80px 20px;
     text-align: center;
     color: #fff;

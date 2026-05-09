@@ -10,7 +10,7 @@ class FaqModel extends Model
         $result = $this->db->query(
             "SELECT * FROM {$this->table} WHERE is_active = 1 ORDER BY sort_order ASC"
         );
-        return $result->fetch_all(MYSQLI_ASSOC);
+        return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
     /** Lấy tất cả FAQs (admin) */
@@ -19,7 +19,7 @@ class FaqModel extends Model
         $result = $this->db->query(
             "SELECT * FROM {$this->table} ORDER BY sort_order ASC, id ASC"
         );
-        return $result->fetch_all(MYSQLI_ASSOC);
+        return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
     /** Lấy 1 FAQ theo id */

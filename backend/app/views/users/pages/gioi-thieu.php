@@ -18,18 +18,14 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
 
     <!-- Hero Banner -->
     <section class="about-hero">
-        <div style="width: 100%; height: 400px; background-color: #cff4fc; display: flex; align-items: center; justify-content: center; color: #055160; font-weight: bold; font-size: 1.2rem;">
-            [Hình ảnh Sinh viên UniPhin Coffee]
-        </div>
+        <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-1.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Sinh viên UniPhin Coffee">
     </section>
 
     <!-- Nguồn gốc -->
     <section class="about-section">
         <div class="about-section-container">
             <div class="about-section-image">
-                <div style="width: 100%; height: 300px; background-color: #e2e3e5; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #41464b;">
-                    [Hình minh họa: Nguồn gốc]
-                </div>
+                <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-nguon-goc.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Nguồn gốc">
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('origin', 'title', 'Nguồn gốc'); ?></h3>
@@ -42,9 +38,7 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
     <section class="about-section about-mission-bg reverse">
         <div class="about-section-container">
             <div class="about-section-image">
-                <div style="width: 100%; height: 300px; background-color: #f8d7da; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #842029;">
-                    [Hình minh họa: Sứ mệnh]
-                </div>
+                <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-su-menh.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Sứ mệnh">
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('mission', 'title', 'Sứ mệnh'); ?></h3>
@@ -57,9 +51,7 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
     <section class="about-section">
         <div class="about-section-container">
             <div class="about-section-image">
-                <div class="image-glow" style="width: 100%; height: 300px; background-color: #d1e7dd; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #0f5132;">
-                    [Hình minh họa: Chất lượng]
-                </div>
+                <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-chat-luong.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Chất lượng" class="image-glow">
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('quality', 'title', 'Từ hạt cà phê ngon đến ly cà phê trọn vị'); ?></h3>
