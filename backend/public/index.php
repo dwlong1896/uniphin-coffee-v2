@@ -15,6 +15,9 @@ require_once __DIR__ . '/../app/models/UserModel.php';
 require_once __DIR__ . '/../app/models/CategoryModel.php';
 require_once __DIR__ . '/../app/models/CartModel.php';
 require_once __DIR__ . '/../app/models/OrderModel.php';
+require_once __DIR__ . '/../app/models/NewsModel.php';
+require_once __DIR__ . '/../app/models/NewsCategoryModel.php';
+require_once __DIR__ . '/../app/models/CommentModel.php';
 require_once __DIR__ . '/../app/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../app/controllers/PageController.php';
 require_once __DIR__ . '/../app/controllers/UserController.php';
@@ -25,6 +28,7 @@ require_once __DIR__ . '/../app/controllers/OrderController.php';
 require_once __DIR__ . '/../app/controllers/ProductController.php';
 require_once __DIR__ . '/../app/controllers/CartController.php';
 
+require_once __DIR__ . '/../app/controllers/NewsController.php';
 
 require_once __DIR__ . '/../routes/web.php';
 

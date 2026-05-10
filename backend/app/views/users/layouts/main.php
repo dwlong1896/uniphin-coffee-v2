@@ -21,7 +21,8 @@
         return is_file($fullPath) ? (string) filemtime($fullPath) : (string) time();
     };
     ?>
-    <!-- CSS nội bộ của bạn -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet"
         href="<?php echo htmlspecialchars($asset('css/user/main-layout.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/header.css'), ENT_QUOTES, 'UTF-8'); ?>">
@@ -43,6 +44,10 @@
 
     <!-- CSS CỦA AOS (THÊM VÀO ĐÂY) -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+
 </head>
 
 <body>

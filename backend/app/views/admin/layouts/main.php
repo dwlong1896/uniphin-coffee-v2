@@ -64,8 +64,15 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
                                         lý sản phẩm</span></a></li>
                             <li><a href="<?php echo $toUrl('admin/orders'); ?>"><i
                                         class="ti-shopping-cart"></i><span>Quản lý đơn hàng</span></a></li>
-                            <li><a href="<?php echo $toUrl('admin/posts'); ?>"><i class="ti-agenda"></i><span>Quản lý
-                                        tin tức</span></a></li>
+                            <li>
+                                <a href="javascript:void(0)" aria-expanded="true"><i class="ti-agenda"></i><span>Quản lý
+                                        tin tức</span></a>
+                                <ul class="collapse">
+                                    <li><a href="<?php echo $toUrl('admin/categories'); ?>">Danh mục</a></li>
+                                    <li><a href="<?php echo $toUrl('admin/posts'); ?>">Bài viết</a></li>
+                                </ul>
+                            </li>
+
                             <li><a href="<?php echo $toUrl('admin/comments'); ?>"><i class="ti-comments"></i><span>Quản
                                         lý bình luận</span></a></li>
                             <li><a href="<?php echo $toUrl('admin/contacts'); ?>"><i class="ti-email"></i><span>Quản lý
@@ -118,7 +125,8 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
                     <div class="col-sm-6">
                         <div class="breadcrumbs-area clearfix">
                             <h1 class="page-title float-start">
-                                <?php echo htmlspecialchars($title ?? '', ENT_QUOTES, 'UTF-8'); ?></h1>
+                                <?php echo htmlspecialchars($title ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                            </h1>
                             <ul class="breadcrumbs float-start">
                                 <li><a href="<?php echo $toUrl('admin/dashboard'); ?>">Home</a></li>
                                 <li><span><?php echo htmlspecialchars($title ?? '', ENT_QUOTES, 'UTF-8'); ?></span></li>
@@ -163,7 +171,11 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
 
     </div>
 
-    <script src="<?php echo $assetUrl('js/bootstrap.bundle.min.js'); ?>"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="<?php echo $assetUrl('js/swiper-bundle.min.js'); ?>"></script>
     <script src="<?php echo $assetUrl('js/metismenujs.min.js'); ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@10/dist/umd/simple-datatables.min.js"></script>
@@ -174,31 +186,59 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        // Init DataTables
         ['dataTable', 'dataTable2', 'dataTable3'].forEach(function(id) {
             const element = document.getElementById(id);
+
             if (element) {
                 new simpleDatatables.DataTable(element, {
                     perPage: 10
                 });
             }
         });
-    });
-    </script>
 
-    <script>
-    // Highlight menu item đang active
-    const currentPath = window.location.pathname;
-    document.querySelectorAll('#menu a').forEach(function(link) {
-        const href = link.getAttribute('href');
-        if (href && href === currentPath) {
-            link.classList.add('active');
-            link.closest('li').classList.add('active');
-            const parentCollapse = link.closest('ul.collapse');
-            if (parentCollapse) {
-                parentCollapse.classList.add('show');
-                parentCollapse.closest('li').classList.add('active');
+        // Highlight menu item active
+        const currentPath = window.location.pathname;
+
+        document.querySelectorAll('#menu a').forEach(function(link) {
+
+            const href = link.getAttribute('href');
+
+            if (
+                href &&
+                currentPath.includes(href) &&
+                href !== '<?php echo $publicBase; ?>/'
+            ) {
+
+                link.classList.add('active');
+
+                const parentLi = link.closest('li');
+                if (parentLi) {
+                    parentLi.classList.add('active');
+                }
+
+                const parentCollapse = link.closest('ul.collapse');
+
+                if (parentCollapse) {
+
+                    parentCollapse.classList.add('show');
+
+                    const grandParentLi = parentCollapse.closest('li');
+
+                    if (grandParentLi) {
+                        grandParentLi.classList.add('active');
+                    }
+                }
             }
-        }
+        });
+    });
+
+    // Preloader
+    $(window).on('load', function() {
+        $('#preloader').fadeOut('slow', function() {
+            $(this).remove();
+        });
     });
     </script>
 </body>
