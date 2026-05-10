@@ -10,73 +10,7 @@ $currentPage = $currentPage ?? 1;
 $search = $_GET['search'] ?? '';
 $sort = $_GET['sort'] ?? 'title_asc';
 ?>
-
-<style>
-    /* 1. Ô SEARCH BO TRÒN, ICON BÊN PHẢI */
-    .search-container {
-        display: flex;
-        align-items: center;
-        background: #fff;
-        border: 1px solid #dee2e6;
-        border-radius: 25px;
-        padding: 0 15px 0 20px;
-        transition: all 0.3s;
-        height: 45px;
-    }
-    .search-container:focus-within {
-        border-color: #007bff;
-        box-shadow: 0 0 8px rgba(0, 123, 255, 0.1);
-    }
-    .search-container input {
-        border: none !important;
-        box-shadow: none !important;
-        background: transparent;
-        font-size: 14px;
-        width: 100%;
-        color: #495057;
-        outline: none;
-    }
-    .search-container i {
-        color: #6c757d;
-        margin-left: 10px;
-        cursor: pointer;
-    }
-
-    /* 2. DROPDOWN MŨI TÊN TAM GIÁC CHUẨN */
-    .custom-dropdown-select {
-        height: 45px;
-        border: 1px solid #dee2e6;
-        border-radius: 10px !important;
-        padding: 0 35px 0 15px !important;
-        font-size: 14px;
-        background-color: #f8f9fa;
-        appearance: none;
-        -webkit-appearance: none;
-        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath fill='%23333' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 15px center;
-        background-size: 10px;
-        cursor: pointer;
-    }
-
-    /* 3. PHÂN TRANG VUÔNG VỨC DÍNH LIỀN */
-    .pagination .page-item .page-link {
-        padding: 10px 18px;
-        margin-left: -1px;
-        color: #333;
-        border: 1px solid #dee2e6;
-        border-radius: 0 !important;
-        font-size: 14px;
-    }
-    .pagination .page-item.active .page-link {
-        background-color: #007bff;
-        border-color: #007bff;
-        color: #fff;
-    }
-
-    .post-link { color: #0c2233; font-weight: 600; transition: 0.2s; }
-    .post-link:hover { color: #007bff; text-decoration: none; }
-</style>
+<link rel="stylesheet" href="<?= $assetUrl('css/comments_list.css?v=' . time()) ?>">
 
 <div class="main-content-inner text-dark">
     <div class="row">

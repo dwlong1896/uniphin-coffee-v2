@@ -37,6 +37,9 @@
         href="<?php echo htmlspecialchars($asset('css/user/cart.css') . '?v=' . $assetVersion('css/user/cart.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet"
         href="<?php echo htmlspecialchars($asset('css/user/checkout.css') . '?v=' . $assetVersion('css/user/checkout.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    
+        <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/news_details.css'), ENT_QUOTES, 'UTF-8'); ?>">
+
     <!-- CSS của Slick Slider (ĐÃ SỬA THÀNH LINK CDN TRỰC TIẾP) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <link rel="stylesheet" type="text/css"
@@ -90,6 +93,9 @@
     <script
         src="<?php echo htmlspecialchars($asset('js/user/cart.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>">
     </script>
+    <script src="<?php echo htmlspecialchars($asset('js/user/news_details.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo htmlspecialchars($asset('js/user/tin-tuc.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>"></script>
+
 </body>
 
 </html>

@@ -1,0 +1,31 @@
+.pagination .page-item .page-link {
+    border-radius: 0 !important;
+    color: #444;
+    padding: 8px 16px;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: #fff !important;
+}
+
+.pagination .page-item.disabled .page-link {
+    background-color: #f4f7f6;
+    color: #ccc;
+}
+
+/* Icon hành động trần */
+.action-icon {
+    font-size: 18px;
+    transition: 0.3s;
+    text-decoration: none !important;
+}
+
+.action-icon:hover {
+    opacity: 0.7;
+}
+
+.modal-header .close {
+    outline: none;
+}
