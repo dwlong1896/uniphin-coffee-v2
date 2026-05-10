@@ -1,32 +1,35 @@
-# Hướng Dẫn Test Toàn Bộ Website UniPhin2
+# Huong Dan Test Toan Bo Website UniPhin2
 
-## 1. Mục tiêu
+## 1. Muc tieu
 
-Tài liệu này dùng để test toàn bộ chức năng của website theo:
-
-1. Từng nhóm nghiệp vụ.
-2. Từng route.
-3. Từng tình huống `happy path`, validation, phân quyền và dữ liệu sau xử lý.
-
-Phạm vi hiện tại bám theo source code trong:
+Tai lieu nay dung de test website theo source hien tai trong:
 
 - `backend/routes/web.php`
 - `backend/app/controllers/*.php`
 - `backend/app/models/*.php`
+- `backend/app/views/*.php`
 
-## 2. Chuẩn bị môi trường test
+Tai lieu da duoc cap nhat theo source moi nhat voi cac diem quan trong:
 
-### 2.1. URL chạy ứng dụng
+- Khong con route `GET /admin/dashboard`.
+- Admin sau khi login se vao `GET /admin/users`.
+- Route danh muc san pham da tach rieng thanh `POST /admin/product-categories/*`.
+- Link public da dung `GET /tai-khoan` va `GET /dieu-khoan`.
+- Database source hien tai nam trong `database/shop_db2 (1).sql`.
 
-Nếu bạn chạy bằng XAMPP đúng cấu trúc repo hiện tại, URL thường là:
+## 2. Chuan bi moi truong test
+
+### 2.1. Base URL
+
+Neu chay bang XAMPP theo cau truc repo hien tai:
 
 ```text
 http://localhost/uniphin2/backend/public
 ```
 
-Trong tài liệu bên dưới, mọi route đều hiểu là đi kèm base URL này.
+Tat ca route ben duoi deu hieu la di kem base URL nay.
 
-Ví dụ:
+Vi du:
 
 ```text
 GET http://localhost/uniphin2/backend/public/login
@@ -34,100 +37,75 @@ GET http://localhost/uniphin2/backend/public/login
 
 ### 2.2. Import database
 
-Để test đầy đủ, nên import theo đúng thứ tự:
+Source hien tai dang khop voi file:
 
-1. `database/shop_db.sql`
-2. `database/setup_about_faq.sql`
+```text
+database/shop_db2 (1).sql
+```
 
-Lý do:
+File nay da bao gom:
 
-- `shop_db.sql` tạo schema dữ liệu chính.
-- `setup_about_faq.sql` bổ sung bảng `about_sections` và cấu trúc FAQ mới có `sort_order`, `is_active`.
+- bang `about_sections`
+- cot `sort_order`, `is_active` trong `faqs`
+- cot `parent_comment_id` trong `comments`
 
-Nếu chỉ import `shop_db.sql` mà không import file bổ sung, các trang/route sau có thể lỗi:
+Khuyen nghi:
 
-- `/gioi-thieu`
-- `/faqs`
-- `/admin/qa`
-- `/admin/aboutpage`
-- `/admin/about/save`
-- `/admin/faq/save`
-- `/admin/faq/delete`
+1. Tao database moi, vi du `shop_db`.
+2. Import duy nhat file `database/shop_db2 (1).sql`.
+3. Kiem tra khong con loi thieu bang/cot truoc khi test.
 
-### 2.3. Thư mục upload cần ghi được
+### 2.3. Thu muc upload can ghi duoc
 
-Đảm bảo các thư mục sau có quyền ghi:
+Dam bao cac thu muc sau ghi duoc:
 
 - `backend/public/uploads/`
 - `backend/public/uploads/news/`
 
-### 2.4. Tài khoản mẫu để test
+### 2.4. Tai khoan mau
 
-Theo dữ liệu hiện tại đang dùng trong project:
+Theo dump SQL hien tai:
 
-- Admin:
+- Admin
   - Email: `admin@gmail.com`
   - Password: `admin123`
-- Customer:
+- Customer
   - Email: `customer1@gmail.com`
   - Password: `customer123`
 
-Nên chuẩn bị thêm:
+Nen chuan bi 3 session:
 
-1. Một cửa sổ ẩn danh cho khách chưa đăng nhập.
-2. Một session customer.
-3. Một session admin.
+1. Cua so chua login.
+2. Cua so login customer.
+3. Cua so login admin.
 
-### 2.5. Công cụ nên dùng khi test
+### 2.5. Cong cu nen dung
 
-Nên dùng đồng thời:
+- Trinh duyet + DevTools.
+- Tab `Network` de xem request AJAX.
+- phpMyAdmin hoac SQL client de doi chieu DB.
 
-- Trình duyệt để test giao diện.
-- `DevTools > Network` để kiểm tra các route AJAX.
-- phpMyAdmin hoặc SQL client để đối chiếu dữ liệu DB.
-
-### 2.6. Query kiểm tra nhanh sau test
+### 2.6. Query kiem tra nhanh
 
 ```sql
 SELECT * FROM users ORDER BY ID DESC;
+SELECT * FROM customer ORDER BY ID DESC;
 SELECT * FROM carts ORDER BY ID DESC;
 SELECT * FROM cart_items ORDER BY Cart_ID DESC, Product_ID DESC;
 SELECT * FROM orders ORDER BY ID DESC;
 SELECT * FROM order_items ORDER BY Order_ID DESC, Product_ID DESC;
 SELECT * FROM products ORDER BY ID DESC;
-SELECT * FROM news ORDER BY ID DESC;
-SELECT * FROM comments ORDER BY ID DESC;
-SELECT * FROM news_categories ORDER BY ID DESC;
 SELECT * FROM product_categories ORDER BY ID DESC;
+SELECT * FROM news ORDER BY ID DESC;
+SELECT * FROM news_categories ORDER BY ID DESC;
+SELECT * FROM comments ORDER BY ID DESC;
 SELECT * FROM faqs ORDER BY id DESC;
 SELECT * FROM about_sections ORDER BY id ASC;
 ```
 
-## 3. Quy ước ghi nhận kết quả
+## 3. Danh sach route can test
 
-Với mỗi test case, nên ghi:
-
-1. Route.
-2. Điều kiện trước test.
-3. Dữ liệu nhập.
-4. Kết quả mong đợi.
-5. Kết quả thực tế.
-6. Ảnh chụp màn hình hoặc log nếu lỗi.
-
-Mẫu:
-
-```text
-Route:
-Điều kiện:
-Bước test:
-Kỳ vọng:
-Thực tế:
-Kết luận: Pass / Fail
-```
-
-## 4. Danh sách route cần test
-
-### 4.1. Public / Customer
+### 3.1. Public va customer
 
 - `GET /`
 - `GET /gioi-thieu`
@@ -160,9 +138,8 @@ Kết luận: Pass / Fail
 - `POST /register`
 - `POST /logout`
 
-### 4.2. Admin
+### 3.2. Admin
 
-- `GET /admin/dashboard`
 - `GET /admin/users`
 - `GET /admin/users/viewdetail`
 - `POST /admin/users/update`
@@ -206,149 +183,167 @@ Kết luận: Pass / Fail
 - `POST /admin/faq/delete`
 - `POST /admin/about/save`
 
-## 5. Test theo nhóm chức năng
+## 4. Quy uoc ghi ket qua
 
-## 5.1. Nhóm trang public tĩnh
+Mau ghi ket qua cho tung test case:
+
+```text
+Route:
+Tien dieu kien:
+Buoc test:
+Input:
+Ket qua mong doi:
+Ket qua thuc te:
+Ket luan: Pass / Fail
+Bang chung: screenshot / SQL / response JSON
+```
+
+## 5. Test theo nhom chuc nang
+
+## 5.1. Public static pages
 
 ### Route: `GET /`
 
-Mục tiêu:
+Muc tieu:
 
-- Trang chủ render bình thường.
+- Trang chu render binh thuong.
 
-Bước test:
+Buoc test:
 
-1. Mở `/`.
-2. Quan sát header, menu, footer.
-3. Kiểm tra các link chính có bấm được.
+1. Mo `/`.
+2. Kiem tra header, menu, footer.
+3. Bam cac link chinh.
 
-Kỳ vọng:
+Ky vong:
 
-- Không lỗi PHP, không trắng trang.
-- Header hiển thị nút `Đăng ký`, `Đăng nhập` nếu chưa login.
-- Nếu đã login customer, hiển thị icon giỏ hàng, tài khoản, logout.
+- Khong loi PHP.
+- Khong trang trang.
+- Footer link `Account` ve `/tai-khoan`.
+- Footer link terms ve `/dieu-khoan`.
 
 ### Route: `GET /gioi-thieu`
 
-Mục tiêu:
+Buoc test:
 
-- Trang giới thiệu đọc được dữ liệu từ `about_sections`.
+1. Mo `/gioi-thieu`.
+2. Kiem tra du lieu cac section.
 
-Bước test:
+Ky vong:
 
-1. Mở `/gioi-thieu`.
-2. Kiểm tra nội dung các block giới thiệu.
-
-Kỳ vọng:
-
-- Trang render thành công.
-- Nội dung lấy từ bảng `about_sections`.
-- Nếu lỗi `Table 'about_sections' doesn't exist` thì chưa import `setup_about_faq.sql`.
+- Du lieu doc tu bang `about_sections`.
+- Neu thieu bang nay, trang co the loi.
 
 ### Route: `GET /lien-he`
 
-Mục tiêu:
+Buoc test:
 
-- Smoke test trang liên hệ.
+1. Mo `/lien-he`.
+2. Kiem tra render giao dien.
 
-Bước test:
+Ky vong:
 
-1. Mở `/lien-he`.
-2. Kiểm tra giao diện hiển thị đầy đủ.
-
-Kỳ vọng:
-
-- Trang mở được.
-- Không có route submit liên hệ ở code hiện tại, nên chỉ cần test hiển thị.
+- Trang hien thi duoc.
+- Hien tai source khong co route submit contact public, nen chi smoke test giao dien.
 
 ### Route: `GET /faqs`
 
-Mục tiêu:
+Buoc test:
 
-- Trang FAQ đọc dữ liệu active từ DB.
+1. Mo `/faqs`.
+2. Kiem tra danh sach FAQ.
+3. Test tim kiem tren giao dien neu co JS filter.
 
-Bước test:
+Ky vong:
 
-1. Mở `/faqs`.
-2. Kiểm tra danh sách câu hỏi/đáp.
-
-Kỳ vọng:
-
-- Chỉ hiện FAQ có `is_active = 1`.
-- Thứ tự theo `sort_order ASC`.
+- Du lieu doc tu `FaqModel::getActive()`.
+- Chi hien record `is_active = 1`.
+- Thu tu theo `sort_order ASC`.
 
 ### Route: `GET /dieu-khoan`
 ### Route: `GET /terms`
 
-Mục tiêu:
+Buoc test:
 
-- Hai route phải mở cùng một trang điều khoản.
+1. Mo `/dieu-khoan`.
+2. Mo `/terms`.
+3. So sanh noi dung.
 
-Bước test:
+Ky vong:
 
-1. Mở `/dieu-khoan`.
-2. Mở `/terms`.
-3. So sánh nội dung.
+- Ca 2 route deu mo cung view.
+- Khong 404.
 
-Kỳ vọng:
-
-- Cả hai route cùng render view điều khoản.
-- Không 404.
-
-## 5.2. Nhóm xác thực
+## 5.2. Authentication
 
 ### Route: `GET /login`
 
-Bước test:
+Buoc test:
 
-1. Truy cập khi chưa đăng nhập.
-2. Truy cập khi đã đăng nhập customer.
-3. Truy cập khi đã đăng nhập admin.
+1. Truy cap khi chua login.
+2. Truy cap khi dang login customer.
+3. Truy cap khi dang login admin.
 
-Kỳ vọng:
+Ky vong:
 
-- Khi chưa đăng nhập: hiển thị form login.
-- Khi đã login customer: redirect về `/`.
-- Khi đã login admin: redirect về `/admin/dashboard`.
+- Chua login: hien form login.
+- Customer: redirect ve `/`.
+- Admin: redirect ve `/admin/users`.
 
 ### Route: `GET /register`
 
-Kỳ vọng:
+Buoc test:
 
-- Khi chưa đăng nhập: hiển thị form đăng ký.
-- Khi đã login: redirect theo role như login.
+1. Truy cap khi chua login.
+2. Truy cap khi dang login customer.
+3. Truy cap khi dang login admin.
+
+Ky vong:
+
+- Chua login: hien form register.
+- Customer: redirect ve `/`.
+- Admin: redirect ve `/admin/users`.
 
 ### Route: `POST /login`
 
-Payload chính:
+Payload:
 
 - `email`
 - `password`
 
 Test case:
 
-1. Login đúng bằng customer.
-2. Login đúng bằng admin.
-3. Bỏ trống email/password.
-4. Sai mật khẩu.
-5. Sai email.
-6. Tài khoản bị `banned` hoặc `inactive`.
+1. Login dung customer.
+2. Login dung admin.
+3. Bo trong email.
+4. Bo trong password.
+5. Sai mat khau.
+6. Sai email.
+7. User co `status != active`.
 
-Kỳ vọng:
+Ky vong:
 
-- Đúng customer: tạo session và về `/`.
-- Đúng admin: tạo session và về `/admin/dashboard`.
-- Trống: redirect `/login?error=empty`.
-- Sai: redirect `/login?error=invalid`.
-- Bị khóa: redirect `/login?error=banned`.
+- Customer: tao session va redirect `/`.
+- Admin: tao session va redirect `/admin/users`.
+- Empty field: `/login?error=empty`.
+- Sai thong tin: `/login?error=invalid`.
+- User khong active: `/login?error=banned`.
 
-Kiểm tra thêm:
+Session can co:
 
-- Session phải có `user_id`, `role`, `email`, `name`.
+- `user_id`
+- `email`
+- `role`
+- `name`
+- `first_name`
+- `last_name`
+- `phone`
+- `address`
+- `gender`
+- `birth_date`
 
 ### Route: `POST /register`
 
-Payload chính:
+Payload:
 
 - `fullName`
 - `email`
@@ -357,31 +352,33 @@ Payload chính:
 
 Test case:
 
-1. Đăng ký hợp lệ.
-2. Thiếu trường.
+1. Dang ky hop le.
+2. Thieu field.
 3. Email sai format.
-4. Password ngắn hơn 6 ký tự.
-5. Email trùng.
+4. Password ngan hon 6 ky tu.
+5. Email trung.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: tạo user mới role `customer`, redirect `/login?registered=1`.
-- Thiếu field: `/register?error=empty`.
+- Hop le: redirect `/login?registered=1`.
+- Empty: `/register?error=empty`.
 - Email sai: `/register?error=email`.
-- Password ngắn: `/register?error=password`.
-- Email trùng: `/register?error=exists`.
+- Password ngan: `/register?error=password`.
+- Trung email: `/register?error=exists`.
 
-Kiểm tra DB:
+Kiem tra DB:
 
 ```sql
 SELECT * FROM users WHERE email = 'email-vua-test';
-SELECT * FROM customer WHERE ID = <id-user-moi>;
-SELECT * FROM carts WHERE Customer_ID = <id-user-moi>;
+SELECT * FROM customer WHERE ID = <id-moi>;
+SELECT * FROM carts WHERE Customer_ID = <id-moi>;
 ```
 
-Kỳ vọng DB:
+Ky vong DB:
 
-- Trigger `after_user_insert` tạo `customer` và `cart`.
+- Tao user role `customer`.
+- Trigger tao record trong `customer`.
+- Trigger tao gio hang trong `carts`.
 
 ### Route: `POST /logout`
 
@@ -390,33 +387,35 @@ Test case:
 1. Logout customer.
 2. Logout admin.
 
-Kỳ vọng:
+Ky vong:
 
-- Session bị xóa.
-- Redirect về `/`.
+- Session bi xoa.
+- Redirect ve `/`.
 
-## 5.3. Nhóm tài khoản khách hàng
+## 5.3. Customer profile
 
 ### Route: `GET /tai-khoan`
 
-Quyền:
+Luu y:
 
-- Chỉ customer.
+- Route nay dang dung `AuthMiddleware::requireLogin()`.
+- Middleware nay chi cho `customer`.
 
 Test case:
 
-1. Customer truy cập.
-2. Chưa login truy cập.
-3. Admin truy cập.
+1. Customer truy cap.
+2. Chua login truy cap.
+3. Admin truy cap truc tiep.
 
-Kỳ vọng:
+Ky vong:
 
-- Customer: mở trang tài khoản.
-- Chưa login hoặc admin: `403 Forbidden` theo middleware hiện tại.
+- Customer: mo duoc trang profile.
+- Chua login: `403 Forbidden`.
+- Admin: `403 Forbidden`.
 
 ### Route: `POST /tai-khoan`
 
-Payload chính:
+Payload:
 
 - `first_name`
 - `last_name`
@@ -425,69 +424,63 @@ Payload chính:
 - `address`
 - `gender`
 - `birth_date`
-- `avatar` (optional)
+- `avatar` optional
 
 Test case:
 
-1. Cập nhật text không upload avatar.
-2. Upload avatar `jpg`.
-3. Upload avatar `png`.
-4. Upload file sai định dạng như `pdf`.
-5. Thử đổi email sang email đã tồn tại.
+1. Update text khong doi avatar.
+2. Upload `jpg`.
+3. Upload `png`.
+4. Upload `webp`.
+5. Upload file sai dinh dang nhu `pdf`.
+6. Doi email sang email da ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: cập nhật DB, set flash success, redirect lại `/tai-khoan`.
-- File sai định dạng: báo lỗi và không lưu.
-- Email trùng: kỳ vọng nghiệp vụ là báo lỗi; nếu rơi ra lỗi SQL hoặc trang hỏng thì ghi nhận bug.
+- Hop le: cap nhat DB, flash success, redirect lai `/tai-khoan`.
+- File sai dinh dang: flash error.
+- Neu email trung, co the va cham unique DB. Neu bi loi SQL hoac trang vo, ghi nhan bug.
 
-Kiểm tra DB:
+Kiem tra DB:
 
 ```sql
 SELECT first_name, last_name, email, phone, address, gender, birth_date, image
 FROM users
-WHERE email = 'customer1@gmail.com';
+WHERE ID = 2;
 ```
 
-## 5.4. Nhóm sản phẩm public
+## 5.4. Public products
 
 ### Route: `GET /san-pham`
 
-Mục tiêu:
+Buoc test:
 
-- Hiển thị danh sách sản phẩm public.
+1. Mo khi chua login.
+2. Mo khi dang login customer.
+3. Kiem tra danh sach san pham.
 
-Test case:
+Ky vong:
 
-1. Mở trang sản phẩm khi chưa login.
-2. Mở khi đã login customer.
+- Trang hien danh sach public products.
+- Chi san pham dung theo logic `ProductModel::getPublicProducts()`.
 
-Kỳ vọng:
-
-- Trang hiển thị danh sách sản phẩm active/public theo dữ liệu model.
-- Nút thêm giỏ hàng hoạt động cho customer.
-- Khi chưa login, thao tác add-to-cart phải yêu cầu login.
-
-## 5.5. Nhóm giỏ hàng
+## 5.5. Cart
 
 ### Route: `GET /cart`
 ### Route: `GET /gio-hang`
 
-Quyền:
-
-- Chỉ customer.
-
 Test case:
 
-1. Chưa login truy cập.
-2. Customer truy cập khi giỏ có hàng.
-3. Customer truy cập khi giỏ trống.
+1. Chua login truy cap.
+2. Customer truy cap khi gio co hang.
+3. Customer truy cap khi gio trong.
+4. Admin truy cap.
 
-Kỳ vọng:
+Ky vong:
 
-- Chưa login: redirect về `/login`.
-- Có hàng: hiển thị item, quantity, subtotal, total.
-- Trống: hiển thị trạng thái giỏ trống.
+- Chua login: flash error va redirect `/login`.
+- Customer: vao trang gio hang.
+- Admin: `403 Forbidden` vi middleware customer-only.
 
 ### Route: `POST /cart/add`
 ### Route: `POST /gio-hang/them`
@@ -499,33 +492,27 @@ Payload:
 
 Test case:
 
-1. Add 1 sản phẩm hợp lệ khi đã login customer.
-2. Add lại cùng sản phẩm để kiểm tra cộng dồn.
-3. Chưa login gọi route.
+1. Add hop le.
+2. Add cung san pham lan 2.
+3. Chua login goi route.
 4. `product_id = 0`.
-5. `product_id` không tồn tại.
-6. Sản phẩm `inactive`, `archived`, `out_of_stock`.
+5. `product_id` khong ton tai.
+6. San pham `inactive`.
+7. San pham `archived`.
+8. San pham `out_of_stock`.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: JSON `success: true`.
-- Chưa login: HTTP `401`, trả `redirect_url`.
-- ID lỗi: HTTP `422`.
-- Không tồn tại: HTTP `404`.
-- Status không active: HTTP `422`.
+- Hop le: JSON `success = true`.
+- Chua login: HTTP `401`, co `redirect_url`.
+- ID khong hop le: HTTP `422`.
+- Khong ton tai: HTTP `404`.
+- Status khac `active`: HTTP `422`.
 
-Kiểm tra DB:
+Luu y theo source:
 
-```sql
-SELECT * FROM cart_items WHERE Cart_ID = (
-  SELECT ID FROM carts WHERE Customer_ID = 2
-);
-```
-
-Lưu ý cần test kỹ:
-
-- Code hiện tại không kiểm tra `stock_quantity` khi add giỏ.
-- Nếu thêm được sản phẩm hết hàng, ghi nhận bug nghiệp vụ.
+- Hien tai khong co check `stock_quantity` khi add gio.
+- Neu san pham con status `active` nhung stock = 0 van co the add. Can test va ghi nhan bug neu xay ra.
 
 ### Route: `POST /cart/update`
 ### Route: `POST /gio-hang/cap-nhat`
@@ -537,17 +524,18 @@ Payload:
 
 Test case:
 
-1. Tăng số lượng.
-2. Giảm số lượng về `1`.
-3. Gửi `quantity = 0`.
-4. Gửi `product_id` không tồn tại trong giỏ.
-5. Chưa login.
+1. Tang so luong.
+2. Giam so luong ve `1`.
+3. Gui `quantity = 0`.
+4. Gui `product_id` khong co trong gio.
+5. Chua login.
 
-Kỳ vọng:
+Ky vong:
 
-- `quantity = 0` sẽ bị ép thành `1`.
-- Hợp lệ: JSON success + `quantity` + `subtotal`.
-- Chưa login: `401`.
+- `quantity = 0` bi ep thanh `1`.
+- Hop le: JSON success, co `quantity`, `subtotal`.
+- Khong co item trong gio: co the tra `404`.
+- Chua login: `401`.
 
 ### Route: `POST /cart/remove`
 ### Route: `POST /gio-hang/xoa`
@@ -558,16 +546,24 @@ Payload:
 
 Test case:
 
-1. Xóa sản phẩm có trong giỏ.
-2. Xóa sản phẩm không còn trong giỏ.
-3. Chưa login.
+1. Xoa item co trong gio.
+2. Xoa item khong ton tai.
+3. Chua login.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: JSON success.
-- Chưa login: `401`.
+- Hop le: JSON success.
+- `product_id <= 0`: HTTP `422`.
+- Chua login: `401`.
 
-## 5.6. Nhóm checkout và đặt hàng
+Kiem tra DB sau cart:
+
+```sql
+SELECT * FROM cart_items
+WHERE Cart_ID = (SELECT ID FROM carts WHERE Customer_ID = 2);
+```
+
+## 5.6. Checkout va place order
 
 ### Route: `GET /checkout`
 ### Route: `GET /thanh-toan`
@@ -578,15 +574,18 @@ Query:
 
 Test case:
 
-1. Customer mở checkout với `items` hợp lệ.
-2. Customer mở checkout với `items` rỗng.
-3. Chưa login mở checkout.
+1. Customer mo checkout voi danh sach item hop le.
+2. Customer mo checkout voi `items` rong.
+3. Customer mo checkout voi item khong co trong gio.
+4. Chua login.
+5. Admin truy cap.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: render trang checkout với đúng item đã chọn.
-- `items` rỗng hoặc không hợp lệ: redirect về `/cart`.
-- Chưa login: redirect `/login`.
+- Hop le: render trang checkout voi dung item da chon.
+- Khong co item hop le: flash error va redirect `/cart`.
+- Chua login: flash error va redirect `/login`.
+- Admin: `403 Forbidden`.
 
 ### Route: `POST /checkout`
 ### Route: `POST /thanh-toan`
@@ -601,50 +600,50 @@ Payload:
 
 Test case:
 
-1. Đặt hàng thành công với `COD`.
-2. Đặt hàng thành công với `Bank_Transfer`.
-3. Thiếu `address`.
-4. Thiếu `full_name`.
-5. Thiếu `phone`.
-6. `payment_method` sai giá trị.
-7. `selected_items` rỗng.
-8. Chưa login.
+1. Dat hang thanh cong voi `COD`.
+2. Dat hang thanh cong voi `Bank_Transfer`.
+3. Thieu `address`.
+4. Thieu `full_name`.
+5. Thieu `phone`.
+6. `payment_method` sai gia tri.
+7. `selected_items` rong.
+8. Chua login.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: tạo order mới, order_items mới, flash success, redirect `/cart`.
-- Thiếu dữ liệu: render lại checkout với lỗi.
-- Payment sai: render lại checkout với lỗi.
-- Chưa login: redirect `/login`.
+- Hop le: tao order, tao order_items, xoa selected items khoi gio, flash success, redirect `/cart`.
+- Thieu thong tin: render lai checkout va hien loi.
+- Payment method sai: render lai checkout va hien loi.
+- Chua login: redirect `/login`.
 
-Kiểm tra DB sau đơn hàng thành công:
+Kiem tra DB:
 
 ```sql
-SELECT * FROM orders ORDER BY ID DESC LIMIT 1;
+SELECT * FROM orders ORDER BY ID DESC LIMIT 3;
 SELECT * FROM order_items ORDER BY Order_ID DESC, Product_ID DESC;
-SELECT * FROM cart_items WHERE Cart_ID = (
-  SELECT ID FROM carts WHERE Customer_ID = 2
-);
+SELECT * FROM cart_items
+WHERE Cart_ID = (SELECT ID FROM carts WHERE Customer_ID = 2);
 ```
 
-Kỳ vọng DB:
+Luu y rat quan trong theo source hien tai:
 
-- Có order mới `status = pending`.
-- `payment_status` mặc định `unpaid`.
-- Item vừa checkout bị xóa khỏi giỏ.
+- `OrderModel::createOrderFromCartItems()` co tao `orders` va `order_items`.
+- Ham nay co xoa selected items khoi `cart_items`.
+- Ham nay KHONG tru `products.stock_quantity`.
+- Ham nay KHONG doi `products.status` sang `out_of_stock`.
 
-Điểm phải test rất kỹ:
+Vi vay, sau order thanh cong:
 
-1. Sau khi đặt hàng, `stock_quantity` có giảm không.
-2. Nếu sản phẩm hết kho sau khi mua, `status` có đổi `out_of_stock` không.
+- `orders.status` ky vong la `pending`.
+- `orders.payment_status` de DB mac dinh `unpaid`.
+- `cart_items` bi xoa dung item da checkout.
+- `stock_quantity` hien tai van nguyen. Neu nghiep vu muon tru kho thi ghi nhan bug, nhung ve mat source hien tai day la hanh vi dang ton tai.
 
-Nếu không giảm kho, ghi nhận bug vì stored procedure trong SQL có xử lý kho nhưng code PHP hiện tại đang tạo đơn trực tiếp qua model.
-
-## 5.7. Nhóm tin tức public
+## 5.7. Public news
 
 ### Route: `GET /tin-tuc`
 
-Query hỗ trợ:
+Query co the test:
 
 - `search`
 - `category`
@@ -653,36 +652,41 @@ Query hỗ trợ:
 
 Test case:
 
-1. Mở trang danh sách tin.
-2. Search theo từ khóa đúng.
-3. Search từ khóa không có kết quả.
+1. Mo trang danh sach.
+2. Search co ket qua.
+3. Search khong co ket qua.
 4. Filter theo category.
 5. Sort `newest`.
 6. Sort `oldest`.
-7. Chuyển trang.
-8. Gọi bằng AJAX.
+7. Phan trang.
+8. Goi bang AJAX.
 
-Kỳ vọng:
+Ky vong:
 
-- Dữ liệu hiển thị đúng filter.
-- AJAX phải trả JSON có `news`, `categories`, `totalPages`, `currentPage`, `filters`.
+- Render dung danh sach.
+- Neu request AJAX, response JSON co:
+  - `news`
+  - `categories`
+  - `totalPages`
+  - `currentPage`
+  - `filters`
 
 ### Route: `GET /tin-tuc/{slug}`
 
 Test case:
 
-1. Mở slug hợp lệ.
-2. Mở slug không tồn tại.
-3. Đổi `comment_sort=newest`.
-4. Đổi `comment_sort=oldest`.
-5. Chuyển `comment_page`.
+1. Mo slug hop le.
+2. Mo slug khong ton tai.
+3. `comment_sort=newest`.
+4. `comment_sort=oldest`.
+5. `comment_page=2` neu du data.
 
-Kỳ vọng:
+Ky vong:
 
-- Slug hợp lệ: hiển thị chi tiết bài, bình luận, bài liên quan.
+- Slug hop le: hien bai viet, comments, bai lien quan.
 - Slug sai: redirect `/tin-tuc`.
 
-## 5.8. Nhóm bình luận public
+## 5.8. Public comments
 
 ### Route: `POST /post-comment`
 
@@ -690,31 +694,38 @@ Payload:
 
 - `news_id`
 - `content`
-- `parent_id` (optional)
+- `parent_id` optional
 
 Test case:
 
-1. Customer comment gốc.
+1. Customer post comment goc.
 2. Customer reply comment.
-3. Chưa login comment.
-4. `content` rỗng.
-5. `content` > 1000 ký tự.
-6. `news_id` sai.
-7. Gửi dạng AJAX.
-8. Gửi dạng form thường.
+3. Chua login.
+4. `content` rong.
+5. `content` > 1000 ky tu.
+6. `news_id <= 0`.
+7. Goi bang AJAX.
+8. Goi bang form thuong.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: comment được insert vào DB.
-- AJAX: trả JSON `status=success`.
-- Form thường: redirect lại bài viết.
-- Chưa login: JSON error hoặc redirect login tùy cách gọi.
+- Hop le: insert vao `comments`.
+- AJAX thanh cong: JSON `status = success`.
+- Form thuong thanh cong: redirect ve trang truoc.
+- Chua login:
+  - AJAX: JSON error.
+  - Form thuong: redirect `/login`.
 
-Kiểm tra DB:
+Kiem tra DB:
 
 ```sql
-SELECT * FROM comments ORDER BY ID DESC LIMIT 5;
+SELECT * FROM comments ORDER BY ID DESC LIMIT 10;
 ```
+
+Luu y:
+
+- Source dang ghi vao cot `parent_comment_id`.
+- Vi vay database can dung dump moi, neu khong cac route comment se loi SQL.
 
 ### Route: `POST /comment-action`
 
@@ -722,58 +733,52 @@ Payload:
 
 - `action=edit|delete`
 - `comment_id`
-- `content` (khi edit)
+- `content` khi edit
 
 Test case:
 
-1. Customer sửa comment của chính mình.
-2. Customer xóa comment của chính mình.
-3. Customer sửa comment của người khác.
-4. Customer xóa comment của người khác.
-5. `comment_id` sai.
-6. `action` sai giá trị.
-7. Edit với content rỗng.
-8. Edit với content > 1000 ký tự.
+1. Customer sua comment cua minh.
+2. Customer xoa comment cua minh.
+3. Customer sua comment cua nguoi khac.
+4. Customer xoa comment cua nguoi khac.
+5. `comment_id <= 0`.
+6. `action` sai.
+7. Edit voi content rong.
+8. Edit voi content > 1000 ky tu.
 
-Kỳ vọng:
+Ky vong:
 
-- Chỉ được sửa/xóa comment của chính mình.
-- Sai quyền: trả JSON error.
-- Sai `comment_id`: JSON error.
+- Chi owner moi sua duoc.
+- Chi owner moi xoa duoc.
+- Sai quyen: JSON error.
+- Sai action: JSON error.
 
-## 5.9. Nhóm phân quyền admin
+## 5.9. Phan quyen admin
 
-Áp dụng cho toàn bộ route `/admin/*`.
+Ap dung cho toan bo route `/admin/*`.
 
-Test case bắt buộc cho từng nhóm admin:
+Test toi thieu cho moi route admin:
 
-1. Chưa login truy cập.
-2. Customer truy cập.
-3. Admin truy cập.
+1. Chua login.
+2. Login customer.
+3. Login admin.
 
-Kỳ vọng:
+Ky vong:
 
-- Chưa login hoặc customer: `403 Forbidden`.
-- Admin: truy cập bình thường.
+- Chua login: `403 Forbidden`.
+- Customer: `403 Forbidden`.
+- Admin: truy cap binh thuong.
 
-## 5.10. Nhóm admin dashboard
+Luu y:
 
-### Route: `GET /admin/dashboard`
+- Admin hien tai vao trang quan tri mac dinh la `/admin/users`.
+- Khong con dashboard route de test.
 
-Test case:
-
-1. Admin mở dashboard.
-
-Kỳ vọng:
-
-- Trang mở thành công.
-- Layout admin, sidebar, header hiển thị bình thường.
-
-## 5.11. Nhóm quản lý người dùng admin
+## 5.10. Admin users
 
 ### Route: `GET /admin/users`
 
-Query hỗ trợ:
+Query:
 
 - `keyword`
 - `role`
@@ -781,32 +786,34 @@ Query hỗ trợ:
 
 Test case:
 
-1. Xem danh sách mặc định.
-2. Filter theo `role=customer`.
-3. Filter theo `status=active`.
-4. Search theo email.
-5. Search theo tên.
+1. Xem danh sach mac dinh.
+2. Filter `role=customer`.
+3. Filter `role=admin`.
+4. Filter `status=active`.
+5. Search theo email.
+6. Search theo ten.
+7. Search theo so dien thoai.
 
-Kỳ vọng:
+Ky vong:
 
-- Danh sách user đúng theo filter.
+- Danh sach dung theo filter.
 
 ### Route: `GET /admin/users/viewdetail?id={id}`
 
 Test case:
 
-1. Mở user hợp lệ.
-2. Mở `id` không tồn tại.
-3. Mở `id` rỗng.
+1. Mo user hop le.
+2. Mo `id = 0`.
+3. Mo `id` khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: vào trang chi tiết user.
-- Sai id: redirect về `/admin/users` và có flash error.
+- Hop le: vao duoc trang detail.
+- Sai id: flash error va redirect ve `/admin/users` kem filter neu co.
 
 ### Route: `POST /admin/users/update?id={id}`
 
-Payload chính:
+Payload:
 
 - `status`
 - `new_password`
@@ -817,33 +824,35 @@ Payload chính:
 
 Test case:
 
-1. Đổi status `active -> banned`.
-2. Đổi status `active -> inactive`.
-3. Đổi status với giá trị không hợp lệ.
-4. Reset password hợp lệ.
-5. Reset password ngắn dưới 6 ký tự.
-6. Confirm password không khớp.
-7. Admin tự ban chính mình.
+1. Doi status `active -> banned`.
+2. Doi status `active -> inactive`.
+3. Doi status `active -> pending`.
+4. Status sai gia tri.
+5. Reset password hop le.
+6. Password moi < 6 ky tu.
+7. Confirm password khong khop.
+8. Admin tu khoa chinh minh bang cach doi status sang khac `active`.
 
-Kỳ vọng:
+Ky vong:
 
-- Status hợp lệ: update thành công.
-- Password hợp lệ: hash mới được lưu.
-- Admin không thể tự đổi trạng thái tài khoản hiện tại sang khác `active`.
+- Status hop le: update thanh cong.
+- Password hop le: duoc hash va luu.
+- Admin khong the tu doi tai khoan hien tai sang `banned`, `pending`, `inactive`.
 
-## 5.12. Nhóm quản lý sản phẩm admin
+## 5.11. Admin products va product categories
 
 ### Route: `GET /admin/products`
 
-Test case:
+Buoc test:
 
-1. Mở danh sách sản phẩm.
-2. Kiểm tra bảng sản phẩm.
-3. Kiểm tra bảng danh mục sản phẩm.
+1. Mo trang products.
+2. Kiem tra bang products.
+3. Kiem tra bang categories.
 
-Kỳ vọng:
+Ky vong:
 
-- Hiển thị đầy đủ products và product categories.
+- Load duoc danh sach san pham.
+- Load duoc danh sach `product_categories`.
 
 ### Route: `POST /admin/product-categories/create`
 
@@ -853,45 +862,46 @@ Payload:
 
 Test case:
 
-1. Tạo danh mục hợp lệ.
-2. Tạo trùng tên.
-3. Tạo với tên rỗng.
+1. Tao category hop le.
+2. Name rong.
+3. Name trung.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: flash success.
-- Trùng hoặc rỗng: flash error.
+- Thanh cong: flash success, redirect `/admin/products`.
+- Loi: flash error.
 
 ### Route: `POST /admin/product-categories/update?id={id}`
 
 Test case:
 
-1. Sửa tên hợp lệ.
-2. Sửa thành tên trùng.
-3. Sửa với `id` không tồn tại.
-4. Sửa với tên rỗng.
+1. Sua hop le.
+2. Name rong.
+3. Name trung.
+4. `id <= 0`.
+5. `id` khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: cập nhật thành công.
-- Lỗi: flash error.
+- Hop le: flash success.
+- Loi: flash error.
 
 ### Route: `POST /admin/product-categories/delete?id={id}`
 
 Test case:
 
-1. Xóa category chưa có sản phẩm.
-2. Xóa category đang có sản phẩm.
-3. Xóa `id` không tồn tại.
+1. Xoa category khong co san pham.
+2. Xoa category dang duoc san pham su dung.
+3. Xoa `id` khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Chưa có sản phẩm: xóa thành công.
-- Đang có sản phẩm: bị chặn.
+- Khong co san pham: xoa duoc.
+- Dang duoc dung: bi chan.
 
 ### Route: `POST /admin/products/create`
 
-Payload chính:
+Payload:
 
 - `name`
 - `description`
@@ -903,75 +913,85 @@ Payload chính:
 
 Test case:
 
-1. Tạo sản phẩm hợp lệ.
-2. Thiếu `name`.
-3. Thiếu `slug`.
-4. Thiếu `image`.
-5. `price < 0`.
-6. `status` sai.
-7. `P_Cate_ID` không tồn tại.
-8. Slug trùng.
-9. Upload file không phải ảnh.
-10. Upload ảnh > 2MB.
+1. Tao san pham hop le.
+2. Thieu `name`.
+3. Thieu `description`.
+4. Thieu `slug`.
+5. Thieu `price`.
+6. Thieu `image`.
+7. `status = archive` de xem co duoc map sang `archived` khong.
+8. `status` sai gia tri.
+9. `price < 0`.
+10. `P_Cate_ID` sai.
+11. Slug trung.
+12. Upload file khong phai anh.
+13. Upload anh > 2MB.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: tạo record mới + file ảnh lưu vào `uploads`.
-- Các case invalid: flash error và không tạo sản phẩm.
-
-Kiểm tra DB:
-
-```sql
-SELECT * FROM products ORDER BY ID DESC LIMIT 5;
-```
+- Hop le: tao record moi, file duoc luu vao `uploads`.
+- Neu `status = archive`, source map sang `archived`.
+- Cac case invalid: flash error, khong tao san pham.
 
 ### Route: `GET /admin/products/viewdetail?id={id}`
 
 Test case:
 
-1. Xem sản phẩm hợp lệ.
-2. Xem `id` không tồn tại.
-3. Xem `id` rỗng.
+1. Xem product hop le.
+2. `id = 0`.
+3. `id` khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: mở trang chi tiết.
-- Sai id: trả 404.
+- Hop le: vao trang chi tiet.
+- Sai id: `404`.
 
 ### Route: `POST /admin/products/update?id={id}`
 
 Test case:
 
-1. Update text hợp lệ.
-2. Update kèm ảnh mới hợp lệ.
-3. Update với slug trùng.
-4. Update với status sai.
-5. Update với category sai.
-6. Update với ảnh > 2MB.
-7. Update với file không phải ảnh.
+1. Update text hop le.
+2. Update voi anh moi hop le.
+3. Slug trung.
+4. `status = archive`.
+5. `status` sai.
+6. Category sai.
+7. `price < 0`.
+8. File anh sai dinh dang.
+9. File anh > 2MB.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: sản phẩm được cập nhật, ảnh cũ bị xóa nếu có ảnh mới.
+- Hop le: cap nhat thanh cong.
+- Neu co anh moi: anh cu bi xoa.
+- `status = archive` duoc map sang `archived`.
 
 ### Route: `POST /admin/products/delete?id={id}`
 
 Test case:
 
-1. Xóa sản phẩm chưa từng có trong đơn hàng.
-2. Xóa sản phẩm đã xuất hiện trong `order_items`.
-3. Xóa sản phẩm không tồn tại.
+1. Xoa san pham chua co trong order.
+2. Xoa san pham da co trong `order_items`.
+3. Xoa `id` khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Chưa có trong đơn: xóa thành công.
-- Đã có trong đơn: bị chặn.
+- Chua co trong order: xoa duoc.
+- Da co trong order: bi chan.
+- Khi xoa duoc, `cart_items` lien quan cung duoc xoa truoc.
 
-## 5.13. Nhóm quản lý đơn hàng admin
+Kiem tra DB:
+
+```sql
+SELECT * FROM products ORDER BY ID DESC LIMIT 10;
+SELECT * FROM product_categories ORDER BY ID DESC;
+```
+
+## 5.12. Admin orders
 
 ### Route: `GET /admin/orders`
 
-Query hỗ trợ:
+Query:
 
 - `keyword`
 - `status`
@@ -982,30 +1002,33 @@ Query hỗ trợ:
 
 Test case:
 
-1. Xem danh sách mặc định.
-2. Lọc theo status.
-3. Lọc theo payment method.
-4. Lọc theo payment status.
-5. Lọc theo ngày.
-6. Search theo ID đơn.
-7. Search theo email.
-8. Search theo tên khách.
+1. Xem danh sach mac dinh.
+2. Loc theo status.
+3. Loc theo payment method.
+4. Loc theo payment status.
+5. Loc theo start/end date.
+6. Search theo order ID.
+7. Search theo ten khach.
+8. Search theo sdt.
+9. Search theo email.
 
-Kỳ vọng:
+Ky vong:
 
-- Danh sách và các box thống kê hiển thị đúng.
+- Danh sach dung filter.
+- Box thong ke hien thi duoc.
 
 ### Route: `GET /admin/orders/viewdetail?id={id}`
 
 Test case:
 
-1. Xem đơn hợp lệ.
-2. Xem đơn sai id.
+1. Xem order hop le.
+2. `id = 0`.
+3. `id` khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: hiển thị order + order items.
-- Sai id: redirect về `/admin/orders` với flash error.
+- Hop le: hien order va order_items.
+- Sai id: flash error va redirect `/admin/orders`.
 
 ### Route: `POST /admin/orders/update?id={id}`
 
@@ -1017,40 +1040,35 @@ Payload:
 
 Test case:
 
-1. Đổi trạng thái `pending -> confirmed`.
-2. Đổi `confirmed -> shipping`.
-3. Đổi `shipping -> completed`.
-4. Đổi payment `unpaid -> paid`.
-5. Gửi status sai.
-6. Gửi payment_status sai.
+1. `pending -> confirmed`.
+2. `confirmed -> shipping`.
+3. `shipping -> completed`.
+4. `payment_status unpaid -> paid`.
+5. `payment_status paid -> refunded`.
+6. `status` sai gia tri.
+7. `payment_status` sai gia tri.
 
-Kỳ vọng:
+Ky vong:
 
-- Giá trị hợp lệ: update thành công.
-- Giá trị sai: flash error.
+- Gia tri hop le: update thanh cong.
+- Gia tri sai: flash error.
 
-Kiểm tra trigger loyalty:
-
-1. Chọn đơn của customer.
-2. Update status sang `completed`.
-3. Kiểm tra `customer.loyalty_point`.
-
-Query:
+Kiem tra trigger loyalty:
 
 ```sql
 SELECT * FROM orders WHERE ID = <order_id>;
 SELECT * FROM customer WHERE ID = <customer_id>;
 ```
 
-Kỳ vọng:
+Ky vong:
 
-- Điểm thưởng tăng theo `FLOOR(total_price / 100000)`.
+- Khi update `orders.status` sang `completed`, trigger `update_loyalty_points` tang diem.
 
-## 5.14. Nhóm quản lý danh mục tin tức admin
+## 5.13. Admin news categories
 
 ### Route: `GET /admin/categories`
 
-Query hỗ trợ:
+Query:
 
 - `search`
 - `sort`
@@ -1058,27 +1076,30 @@ Query hỗ trợ:
 
 Test case:
 
-1. Xem danh sách category tin tức.
-2. Search theo tên.
+1. Xem danh sach.
+2. Search theo ten.
 3. Sort `name_asc`.
 4. Sort `name_desc`.
-5. Chuyển trang.
+5. Sort `newest`.
+6. Sort `oldest`.
+7. Page > tong so trang.
 
-Kỳ vọng:
+Ky vong:
 
-- Danh sách đúng filter.
+- Danh sach dung.
+- Neu page vuot qua tong trang, source redirect ve page cuoi.
 
 ### Route: `GET /admin/categories/get-json?id={id}`
 
 Test case:
 
-1. Gọi với id hợp lệ.
-2. Gọi với id không tồn tại.
+1. Goi id hop le.
+2. Goi id khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: trả JSON category.
-- Sai: JSON error.
+- Hop le: JSON category.
+- Khong ton tai: JSON error.
 
 ### Route: `POST /admin/categories/create`
 
@@ -1088,17 +1109,17 @@ Payload:
 
 Test case:
 
-1. Tạo category hợp lệ.
-2. Tên rỗng.
-3. Tên < 2 ký tự.
-4. Tên > 50 ký tự.
-5. Tên có ký tự đặc biệt lạ.
-6. Tên trùng.
+1. Name hop le.
+2. Name rong.
+3. Name 1 ky tu.
+4. Name > 50 ky tu.
+5. Name co ky tu dac biet.
+6. Name trung.
 
-Kỳ vọng:
+Ky vong:
 
-- AJAX JSON `status=success` khi hợp lệ.
-- Validation fail: JSON `status=error`.
+- Hop le: JSON `status=success`.
+- Invalid: JSON `status=error` va co message.
 
 ### Route: `POST /admin/categories/update`
 
@@ -1107,10 +1128,19 @@ Payload:
 - `id`
 - `name`
 
-Test case giống create, cộng thêm:
+Test case:
 
-1. `id` không hợp lệ.
-2. Sửa thành tên trùng category khác.
+1. Update hop le.
+2. `id <= 0`.
+3. Name rong.
+4. Name qua ngan.
+5. Name qua dai.
+6. Name trung category khac.
+
+Ky vong:
+
+- Hop le: JSON `status=success`.
+- Invalid: JSON `status=error`.
 
 ### Route: `POST /admin/categories/delete`
 
@@ -1120,20 +1150,21 @@ Payload:
 
 Test case:
 
-1. Xóa category không có bài viết.
-2. Xóa category có bài viết.
-3. Xóa `id` không tồn tại.
+1. Xoa category khong co post.
+2. Xoa category dang co post.
+3. Xoa `id <= 0`.
+4. Xoa `id` khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Có bài viết: bị chặn, trả JSON error.
-- Không có bài viết: JSON success.
+- Khong co post: JSON `success`.
+- Dang co post: JSON `error`.
 
-## 5.15. Nhóm quản lý bài viết admin
+## 5.14. Admin posts
 
 ### Route: `GET /admin/posts`
 
-Query hỗ trợ:
+Query:
 
 - `search`
 - `category`
@@ -1142,58 +1173,62 @@ Query hỗ trợ:
 
 Test case:
 
-1. Xem danh sách post.
-2. Search theo tiêu đề.
+1. Xem danh sach.
+2. Search theo title.
 3. Filter category.
 4. Sort `newest`.
 5. Sort `oldest`.
+6. Sort `title_asc`.
 
-Kỳ vọng:
+Ky vong:
 
-- Bảng bài viết hiển thị đúng.
+- Danh sach dung theo filter.
 
 ### Route: `GET /admin/posts/get-json?id={id}`
 ### Route: `GET /admin/posts/get-post-detail-full?id={id}`
 
 Test case:
 
-1. Gọi với id hợp lệ.
-2. Gọi với id sai.
+1. Goi id hop le.
+2. Goi id sai.
 
-Kỳ vọng:
+Ky vong:
 
-- Trả JSON dữ liệu bài viết.
+- Tra du lieu JSON cho modal/detail.
 
 ### Route: `POST /admin/posts/create`
 
-Payload chính:
+Payload:
 
 - `title`
 - `content`
 - `category_id`
 - `keywords`
 - `meta_description`
-- `thumbnail` (optional nhưng nên test cả có và không)
+- `thumbnail` optional
 
 Test case:
 
-1. Tạo bài hợp lệ không có ảnh.
-2. Tạo bài hợp lệ có ảnh.
-3. Tiêu đề < 10 ký tự.
-4. Nội dung rỗng.
-5. Category không hợp lệ.
-6. `meta_description > 160`.
-7. `keywords > 255`.
-8. Ảnh > 2MB.
-9. Ảnh sai định dạng.
+1. Tao bai hop le khong co anh.
+2. Tao bai hop le co anh.
+3. `title < 10`.
+4. `title > 255`.
+5. Noi dung rong.
+6. `category_id <= 0`.
+7. `meta_description > 160`.
+8. `keywords > 255`.
+9. Anh > 2MB.
+10. Anh sai dinh dang.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: JSON success, DB có post mới, slug tự sinh.
+- Hop le: JSON `status=success`.
+- Slug duoc tao tu dong boi `createUniqueSlug($title)`.
+- Invalid: JSON `status=error`.
 
 ### Route: `POST /admin/posts/update`
 
-Payload chính:
+Payload:
 
 - `id`
 - `title`
@@ -1202,23 +1237,24 @@ Payload chính:
 - `status`
 - `keywords`
 - `meta_description`
-- `thumbnail` (optional)
+- `thumbnail` optional
 
 Test case:
 
-1. Update text hợp lệ.
-2. Update đổi trạng thái sang `archived`.
-3. Update với ảnh mới.
-4. `id` sai.
-5. Tiêu đề ngắn.
-6. Nội dung rỗng.
+1. Update text hop le.
+2. Update `status=archived`.
+3. Update voi anh moi.
+4. `id <= 0`.
+5. Title ngan.
+6. Noi dung rong.
 7. Category sai.
-8. SEO quá dài.
+8. SEO qua dai.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: JSON success.
-- Ảnh cũ bị xóa khi thay ảnh mới.
+- Hop le: JSON `status=success`.
+- Neu thay anh moi va anh cu khong phai `default-news.png`, anh cu bi xoa.
+- Neu `status` sai, source se fallback ve `published` thay vi bao loi. Can test va ghi nhan dung hanh vi hien tai.
 
 ### Route: `POST /admin/posts/delete`
 
@@ -1228,57 +1264,73 @@ Payload:
 
 Test case:
 
-1. Xóa bài hợp lệ.
-2. Xóa id không tồn tại.
+1. Xoa bai hop le.
+2. Xoa `id <= 0`.
+3. Xoa bai khong ton tai.
 
-Kỳ vọng:
+Ky vong:
 
-- Bài bị xóa khỏi DB.
-- Nếu bài có ảnh thật khác `default-news.png`, ảnh nên bị xóa khỏi thư mục.
+- Hop le: JSON success.
+- Neu bai co anh thuc va khac `default-news.png`, anh do nen bi xoa.
 
-## 5.16. Nhóm quản lý bình luận admin
+Luu y:
+
+- Source dang xoa file theo duong dan `$_SERVER['DOCUMENT_ROOT'] . '/public/uploads/news/'`.
+- Neu app chay trong subfolder `uniphin2/backend/public`, can test ky xem xoa file co that su dung path dung hay khong.
+
+## 5.15. Admin comments
 
 ### Route: `GET /admin/comments`
 
-Test 2 mode:
+Co 2 mode:
 
-1. Không có `news_id`.
-2. Có `news_id`.
+1. Khong truyen `news_id`.
+2. Co `news_id`.
 
-Mode 1:
+Mode 1 test:
 
-- Hiển thị danh sách bài viết để chọn quản lý comment.
+1. Mo `/admin/comments`.
+2. Search danh sach bai viet neu co o man hinh list.
 
-Mode 2 query hỗ trợ:
+Ky vong:
 
-- `news_id`
-- `search`
-- `status`
-- `page`
+- Hien list bai viet de chon quan ly comment.
 
-Test case mode 2:
+Mode 2 route:
 
-1. Xem comment bài cụ thể.
-2. Search theo nội dung.
-3. Filter theo status.
-4. Phân trang.
+```text
+GET /admin/comments?news_id=<id>&search=...&status=...&page=...
+```
 
-Kỳ vọng:
+Test case:
 
-- Không `news_id`: list bài viết.
-- Có `news_id`: list comment bài đó.
+1. Xem comments cua bai hop le.
+2. `news_id` khong ton tai.
+3. Search theo content.
+4. Filter status.
+5. Phan trang.
 
-Lưu ý test kỹ:
+Ky vong:
 
-- Code hiện dùng filter `visible/hidden` trong controller, nhưng DB comment đang lưu `presented/hidden`.
-- Nếu lọc comment hiển thị không đúng, ghi nhận bug mapping status.
+- `news_id` sai: redirect ve `/admin/comments`.
+- `news_id` dung: hien danh sach comment cua bai.
+
+Luu y quan trong:
+
+- Controller filter chi nhan `status=visible|hidden`.
+- DB va cac ham toggle dang dung `presented|hidden`.
+- Day la diem rat de sai. Can test ky va ghi nhan bug neu filter `visible` khong ra du lieu dung.
 
 ### Route: `GET /admin/comments/get-json?id={id}`
 
 Test case:
 
-1. Gọi với comment hợp lệ.
-2. Gọi với id sai.
+1. Goi id hop le.
+2. Goi id sai.
+
+Ky vong:
+
+- Tra du lieu JSON comment.
 
 ### Route: `POST /admin/comments/toggle`
 
@@ -1288,10 +1340,17 @@ Payload:
 
 Test case:
 
-1. Toggle từ `presented -> hidden`.
-2. Toggle từ `hidden -> presented`.
+1. Toggle `presented -> hidden`.
+2. Toggle `hidden -> presented`.
+3. `id <= 0`.
+4. `id` khong ton tai.
 
-Kiểm tra DB:
+Ky vong:
+
+- Hop le: JSON success.
+- Invalid: JSON error.
+
+Kiem tra DB:
 
 ```sql
 SELECT ID, status FROM comments WHERE ID = <comment_id>;
@@ -1305,8 +1364,14 @@ Payload:
 
 Test case:
 
-1. Xóa comment hợp lệ.
-2. Xóa id sai.
+1. Xoa comment hop le.
+2. `id <= 0`.
+3. `id` khong ton tai.
+
+Ky vong:
+
+- Hop le: JSON success.
+- Invalid: JSON error.
 
 ### Route: `POST /admin/comments/post-admin`
 
@@ -1314,15 +1379,20 @@ Payload:
 
 - `news_id`
 - `content`
-- `parent_id` (optional)
+- `parent_id` optional
 
 Test case:
 
-1. Admin comment mới.
-2. Admin reply vào comment có sẵn.
-3. Nội dung rỗng.
-4. Nội dung > 1000 ký tự.
-5. `news_id` sai.
+1. Admin comment moi.
+2. Admin reply.
+3. Noi dung rong.
+4. Noi dung > 1000 ky tu.
+5. `news_id <= 0`.
+
+Ky vong:
+
+- Hop le: JSON success.
+- Invalid: JSON error.
 
 ### Route: `POST /admin/comments/update`
 
@@ -1333,29 +1403,39 @@ Payload:
 
 Test case:
 
-1. Admin sửa comment do chính admin tạo.
-2. Admin sửa comment của customer.
+1. Admin sua comment do chinh admin tao.
+2. Admin sua comment cua customer.
+3. `id <= 0`.
+4. Noi dung rong.
+5. Noi dung > 1000 ky tu.
 
-Kỳ vọng:
+Ky vong theo source hien tai:
 
-- Theo code hiện tại, model chỉ cho update khi `User_ID` trùng user hiện tại.
-- Vì vậy admin chỉ sửa được comment do chính admin viết.
-- Nếu nghiệp vụ muốn admin sửa mọi comment thì đây là điểm cần ghi nhận.
+- Validation hop le: controller goi `CommentModel::updateComment($commentId, $_SESSION['user_id'], $content)`.
+- Model chi update khi `User_ID` cua comment trung voi `$_SESSION['user_id']`.
+- Nghia la admin chi sua duoc comment cua chinh admin.
+- Neu nghiep vu muon admin sua moi comment thi day la bug/han che can ghi nhan.
 
-## 5.17. Nhóm FAQ admin
+## 5.16. Admin FAQ, profile va content pages
 
 ### Route: `GET /admin/qa`
 
-Test case:
+Buoc test:
 
-1. Mở trang quản lý FAQ.
-2. Kiểm tra danh sách FAQ hiện có.
+1. Mo trang QA.
+2. Kiem tra list FAQ.
+3. Kiem tra modal them/sua/xoa.
+
+Ky vong:
+
+- Load duoc `FaqModel::getAllAdmin()`.
+- CRUD thuc hien qua `/admin/faq/save` va `/admin/faq/delete`.
 
 ### Route: `POST /admin/faq/save`
 
 Payload:
 
-- `id` (optional)
+- `id` optional
 - `question`
 - `answer`
 - `sort_order`
@@ -1363,13 +1443,14 @@ Payload:
 
 Test case:
 
-1. Tạo FAQ mới.
-2. Sửa FAQ cũ.
-3. Set `is_active = 0`, sau đó kiểm tra public `/faqs`.
+1. Tao FAQ moi.
+2. Sua FAQ cu.
+3. Set `is_active = 0`, sau do refresh `/faqs`.
 
-Kỳ vọng:
+Ky vong:
 
-- FAQ inactive không hiện ở public.
+- Tao/sua thanh cong.
+- FAQ inactive khong hien o public `/faqs`.
 
 ### Route: `POST /admin/faq/delete`
 
@@ -1379,16 +1460,26 @@ Payload:
 
 Test case:
 
-1. Xóa FAQ hợp lệ.
-2. Xóa id không tồn tại.
+1. Xoa FAQ hop le.
+2. Xoa id khong ton tai.
 
-## 5.18. Nhóm profile admin
+Ky vong:
+
+- Xoa hop le: redirect ve `/admin/qa` voi flash success.
 
 ### Route: `GET /admin/profile`
 
-Test case:
+Buoc test:
 
-1. Mở trang profile admin.
+1. Mo profile admin.
+2. Test dropdown header `My Profile`.
+3. Test button `Log Out`.
+
+Ky vong:
+
+- Dropdown hoat dong binh thuong.
+- Bam `My Profile` vao duoc route.
+- Bam `Log Out` submit duoc `POST /logout`.
 
 ### Route: `POST /admin/profile`
 
@@ -1401,29 +1492,31 @@ Payload:
 - `address`
 - `gender`
 - `birth_date`
-- `avatar` (optional)
+- `avatar` optional
 
 Test case:
 
-1. Cập nhật text.
-2. Upload avatar đúng định dạng.
-3. Upload avatar sai định dạng.
-4. Đổi email trùng email khác.
+1. Update text.
+2. Upload avatar hop le.
+3. Upload avatar sai dinh dang.
+4. Doi email trung.
 
-Kỳ vọng:
+Ky vong:
 
-- Hợp lệ: cập nhật thành công.
+- Hop le: flash success, redirect lai `/admin/profile`.
 - File sai: flash error.
-- Email trùng: kỳ vọng nên báo lỗi; nếu rơi lỗi SQL thì ghi nhận bug.
-
-## 5.19. Nhóm trang nội dung admin
+- Email trung co the gay loi DB neu khong duoc chan truoc. Neu trang vo hoac loi SQL, ghi nhan bug.
 
 ### Route: `GET /admin/aboutpage`
 
-Test case:
+Buoc test:
 
-1. Mở trang about admin.
-2. Kiểm tra dữ liệu section đang load từ `about_sections`.
+1. Mo trang About admin.
+2. Kiem tra list `about_sections`.
+
+Ky vong:
+
+- Hien du lieu tu bang `about_sections`.
 
 ### Route: `POST /admin/about/save`
 
@@ -1436,124 +1529,131 @@ Payload:
 
 Test case:
 
-1. Sửa section hợp lệ.
-2. Refresh `/gioi-thieu` để đối chiếu dữ liệu public.
+1. Sua section hop le.
+2. Refresh `/gioi-thieu` de doi chieu.
 
-Kỳ vọng:
+Ky vong:
 
-- Public about page đổi theo dữ liệu mới.
+- Public about page thay doi theo DB moi.
 
 ### Route: `GET /admin/homepage`
 ### Route: `GET /admin/faqpage`
 ### Route: `GET /admin/contactpage`
 ### Route: `GET /admin/contacts`
 
-Mục tiêu:
+Test case:
 
-- Smoke test các trang admin này mở được.
+1. Smoke test tung route.
+2. Kiem tra co render duoc layout admin.
 
-Kỳ vọng:
+Ky vong:
 
-- Trang render được.
-- Không có route save tương ứng cho `homepage` và `contactpage` trong code hiện tại, nên hiện chỉ test hiển thị.
+- Trang mo duoc.
+- Hien tai source khong co route save tuong ung cho `homepage` va `contactpage`, nen tam thoi chi test hien thi.
 
-## 6. Checklist phân quyền tối thiểu
+## 6. Checklist du lieu sau nghiep vu
 
-Thực hiện cho mọi route quan trọng:
+### 6.1. Sau register
 
-1. Chưa login.
-2. Login customer.
-3. Login admin.
+Kiem tra:
 
-Checklist mong đợi:
+- Co user moi trong `users`.
+- Co customer moi trong `customer`.
+- Co gio hang moi trong `carts`.
 
-- Route public: ai cũng vào được.
-- Route customer như `/tai-khoan`, `/cart`, `/checkout`: chỉ customer.
-- Route admin `/admin/*`: chỉ admin.
-- AJAX customer khi chưa login nên trả JSON lỗi hoặc redirect URL rõ ràng.
+### 6.2. Sau cart add/update/remove
 
-## 7. Checklist dữ liệu sau các nghiệp vụ quan trọng
+Kiem tra:
 
-### 7.1. Sau đăng ký
+- `cart_items` thay doi dung.
+- JSON `subtotal` va `quantity` hop le.
 
-Kiểm tra:
+### 6.3. Sau place order
 
-- Có record mới trong `users`.
-- Có record tương ứng trong `customer`.
-- Có cart trong `carts`.
+Kiem tra:
 
-### 7.2. Sau add/update/remove cart
+- Co record moi trong `orders`.
+- Co record trong `order_items`.
+- Selected items bi xoa khoi `cart_items`.
+- `payment_status = unpaid`.
+- `status = pending`.
+- `stock_quantity` hien tai khong doi theo source.
 
-Kiểm tra:
+### 6.4. Sau admin complete order
 
-- `cart_items` thay đổi đúng.
-- `subtotal` trả về đúng.
-
-### 7.3. Sau đặt hàng
-
-Kiểm tra:
-
-1. `orders` có record mới.
-2. `order_items` có dữ liệu đúng.
-3. `cart_items` của selected items bị xóa.
-4. `payment_status = unpaid`.
-5. `status = pending`.
-6. `stock_quantity` có giảm không.
-
-### 7.4. Sau admin hoàn tất đơn
-
-Kiểm tra:
+Kiem tra:
 
 - `orders.status = completed`.
-- `customer.loyalty_point` tăng đúng.
+- `customer.loyalty_point` tang dung theo trigger.
 
-### 7.5. Sau CRUD bài viết
+### 6.5. Sau CRUD product
 
-Kiểm tra:
+Kiem tra:
 
-- `news` insert/update/delete đúng.
-- `slug` unique.
-- File ảnh được tạo/xóa đúng.
+- DB `products` thay doi dung.
+- Slug khong trung.
+- File anh duoc tao/xoa dung.
 
-### 7.6. Sau CRUD category
+### 6.6. Sau CRUD news/post
 
-Kiểm tra:
+Kiem tra:
 
-- `product_categories` hoặc `news_categories` đổi đúng.
-- Trường hợp category còn liên kết dữ liệu thì bị chặn.
+- DB `news` thay doi dung.
+- Slug duoc tao tu dong.
+- File anh news duoc tao/xoa dung.
 
-## 8. Điểm rủi ro nên test kỹ
+### 6.7. Sau CRUD category
 
-Đây là các điểm rất đáng chú ý khi test thực tế:
+Kiem tra:
 
-1. Đặt hàng từ code PHP hiện tại có thể không trừ kho sản phẩm.
-2. Add to cart có thể chưa chặn sản phẩm hết hàng nếu `status` vẫn là `active`.
-3. Update email ở profile user/admin có thể đụng lỗi unique DB nếu email trùng.
-4. Filter status comment trong admin có khả năng lệch giữa `visible` và `presented`.
-5. FAQ/About phụ thuộc `setup_about_faq.sql`.
+- `product_categories` hoac `news_categories` thay doi dung.
+- Category dang duoc su dung thi bi chan khi xoa.
 
-## 9. Cách chạy test đề xuất
+## 7. Regression checklist ngan sau cac thay doi route moi
 
-Thứ tự khuyên dùng:
+Day la checklist can chay lai moi khi sua route:
 
-1. Test public pages.
+1. Login admin phai vao `/admin/users`, khong duoc tro ve dashboard.
+2. Logo admin va breadcrumb Home phai tro ve `/admin/users`.
+3. Khong con tham chieu route `/admin/dashboard`.
+4. Form CRUD product category phai dung `/admin/product-categories/*`.
+5. Form CRUD news category phai dung `/admin/categories/*`.
+6. Footer link `Account` phai vao `/tai-khoan`.
+7. Footer link terms phai vao `/dieu-khoan`.
+8. Route `/terms` van phai mo duoc trang dieu khoan.
+9. Dropdown admin `My Profile` va `Log Out` phai bam duoc.
+
+## 8. Diem rui ro nen test ky
+
+1. Dat hang hien tai khong tru kho san pham.
+2. Add cart hien tai chi check `status`, khong check `stock_quantity`.
+3. Filter admin comments dang lech giua `visible` va `presented`.
+4. Admin comment update chi sua duoc comment cua chinh admin.
+5. Profile update customer/admin khong chan trung email truoc khi update.
+6. Xoa anh news trong admin post delete co kha nang sai duong dan tren moi truong XAMPP subfolder.
+7. Route public va admin co nhieu form AJAX; can xem ky response JSON thay vi chi nhin UI.
+
+## 9. Thu tu chay test de xuat
+
+1. Import DB va smoke test trang public.
 2. Test auth.
-3. Test customer account.
-4. Test cart + checkout.
-5. Test news + public comments.
-6. Test admin login và phân quyền.
-7. Test admin users.
-8. Test admin products + product categories.
-9. Test admin orders.
-10. Test admin news categories + posts + comments.
-11. Test FAQ/About/Profile admin.
+3. Test customer profile.
+4. Test products + cart.
+5. Test checkout + order.
+6. Test public news + comments.
+7. Test phan quyen admin.
+8. Test admin users.
+9. Test admin products + product categories.
+10. Test admin orders.
+11. Test admin news categories + posts + comments.
+12. Test admin FAQ + profile + about/content pages.
 
-## 10. Kết quả cuối cùng cần có sau một vòng test đầy đủ
+## 10. Dau ra can co sau 1 vong test day du
 
-Bạn nên có:
+Ban nen co:
 
-1. Danh sách route pass/fail.
-2. Danh sách bug theo nhóm chức năng.
-3. Ảnh hoặc video ngắn cho bug UI.
-4. SQL snapshot trước và sau các nghiệp vụ quan trọng.
-5. Một file tổng hợp regression để retest sau mỗi lần sửa.
+1. Danh sach route pass/fail.
+2. Danh sach bug theo nhom chuc nang.
+3. Screenshot hoac video ngan cho bug UI.
+4. SQL snapshot truoc va sau cac nghiep vu quan trong.
+5. Checklist regression de retest sau moi lan sua.

@@ -1,315 +1,285 @@
-# UNIPHIN Coffee Web App
+# UniPhin2
 
-## Project Overview
+Website ban hang va quan tri noi dung cho UniPhin Coffee, viet bang PHP thuan theo cau truc MVC don gian.
 
-**Tên dự án:** UNIPHIN Coffee Web App
+## Tong quan
 
-**Mô tả ngắn:** Website bán hàng và quản trị nội dung cho UNIPHIN Coffee, gồm khu vực người dùng, đăng nhập/đăng ký, tài khoản cá nhân và dashboard admin.
+Project gom 2 khu vuc chinh:
 
-## Mục tiêu dự án
+- Public/customer: trang chu, gioi thieu, san pham, gio hang, thanh toan, tin tuc, binh luan, tai khoan.
+- Admin: quan ly tai khoan, san pham, danh muc san pham, don hang, bai viet, danh muc tin tuc, comment, FAQ, profile va noi dung trang.
 
-- Xây dựng website giới thiệu và bán hàng cho người dùng cuối.
-- Cung cấp khu vực quản trị để admin quản lý nội dung và dữ liệu hệ thống.
-- Tổ chức code theo kiến trúc MVC đơn giản, dễ mở rộng cho team.
+Luu y theo source hien tai:
 
-## Tech Stack
+- Khong con admin dashboard route.
+- Sau khi admin dang nhap, he thong redirect ve `GET /admin/users`.
+- Route danh muc san pham da tach rieng thanh `/admin/product-categories/*`.
 
-- **Frontend:** PHP View, HTML, CSS, JavaScript thuần
-- **Backend:** PHP thuần, MySQL, MySQLi
-- **Web Server:** Apache
-- **Môi trường local hiện tại:** XAMPP
-- **Khác:** Git
+## Tech stack
 
-## Getting Started
+- PHP thuan
+- MySQL / MariaDB
+- MySQLi
+- Apache
+- HTML / CSS / JavaScript
+- XAMPP de chay local
 
-### Prerequisites
+## Yeu cau moi truong
 
-- PHP >= 8.0
-- Apache >= 2.4
-- MySQL hoặc MariaDB
-- XAMPP là lựa chọn phù hợp nhất với cấu trúc hiện tại
-- Git
+- PHP 8.x
+- Apache 2.4+
+- MySQL hoac MariaDB
+- XAMPP khuyen nghi cho moi truong local
 
-### Clone project
+## Cau hinh va chay local
 
-```bash
-git clone <repo-url>
-cd backend
+### 1. Dat source vao web root
+
+Repo hien tai duoc ky vong nam o:
+
+```text
+c:\xampp\htdocs\uniphin2
 ```
 
-### Cấu hình web root
+### 2. Tao database
 
-Project hiện dùng `public/index.php` làm front controller.
+Trong source hien tai, file cau hinh DB la:
 
-Khuyến nghị chạy theo một trong hai cách:
+- [backend/config/database.php](/c:/xampp/htdocs/uniphin2/backend/config/database.php:1)
 
-- Trỏ Apache DocumentRoot vào thư mục `public/`
-- Hoặc truy cập theo đường dẫn dạng:
-
-```
-http://localhost/uniphin2/backend/public
-```
-
-### Cấu hình database
-
-Hiện tại project chưa dùng `.env`. Cấu hình đang đặt trực tiếp trong file:
-
-- `config/config.php`
-- `config/database.php`
-
-Ví dụ hiện tại:
+Cau hinh mac dinh:
 
 ```php
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'shop_db');
+define('DB_NAME', 'shop_db2');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 ```
 
-### Chạy project ở môi trường dev
+Ban nen tao database ten `shop_db2` de khoi phai doi config.
 
-1. Bật Apache
-2. Bật MySQL
-3. Import database `shop_db`
-4. Truy cập: `http://localhost/uniphin2/backend/public`
+### 3. Import database
 
-## Folder Structure
+Import file:
 
-```
-uniphin2/
-├── README.md
-├── database/
-│   └── shop_db.sql
-└── backend/
-    ├── app/
-    │   ├── controllers/
-    │   │   ├── AdminController.php
-    │   │   ├── AuthController.php
-    │   │   ├── PageController.php
-    │   │   └── UserController.php
-    │   ├── middleware/
-    │   │   └── AuthMiddleware.php
-    │   ├── models/
-    │   │   └── UserModel.php
-    │   └── views/
-    │       ├── admin/
-    │       │   ├── layouts/
-    │       │   │   └── main.php
-    │       │   ├── pages/
-    │       │       ├── aboutpage.php
-    │       │       ├── comments.php
-    │       │       ├── contactpage.php
-    │       │       ├── contacts.php
-    │       │       ├── faqpage.php
-    │       │       ├── homepage.php
-    │       │       ├── index.php
-    │       │       ├── orders.php
-    │       │       ├── posts.php
-    │       │       ├── products.php
-    │       │       ├── profile.php
-    │       │       ├── qa.php
-    │       │       └── users.php
-    │       ├── auth/
-    │       │   ├── signin.php
-    │       │   └── signup.php
-    │       └── users/
-    │           ├── layouts/
-    │           │   ├── main.php
-    │           │   └── partials/
-    │           │       ├── footer.php
-    │           │       ├── header.php
-    │           │       └── sidebar.php
-    │           └── pages/
-    │               ├── dieu-khoan.php
-    │               ├── faqs.php
-    │               ├── gioi-thieu.php
-    │               ├── lien-he.php
-    │               ├── san-pham.php
-    │               ├── tai-khoan.php
-    │               ├── tin-tuc.php
-    │               └── trang-chu.php
-    ├── config/
-    │   ├── config.php
-    │   └── database.php
-    ├── core/
-    │   ├── Controller.php
-    │   ├── Database.php
-    │   ├── Model.php
-    │   └── Router.php
-    ├── public/
-    │   ├── .htaccess
-    │   ├── index.php
-    │   ├── uploads/
-    │   │   ├── avatar_1_1777136667.jpg
-    │   │   ├── avatar_2_1777136548.jpg
-    │   │   └── user.png
-    │   └── assets/
-    │       ├── css/
-    │       │   ├── auth/
-    │       │   │   ├── signin.css
-    │       │   │   └── signup.css
-    │       │   └── user/
-    │       │       ├── footer.css
-    │       │       ├── header.css
-    │       │       ├── main-layout.css
-    │       │       ├── pages.css
-    │       │       ├── sidebar.css
-    │       │       └── tai-khoan.css
-    │       ├── js/
-    │       │   └── user/
-    │       │       ├── auth.js
-    │       │       └── sidebar.js
-    │       ├── image/
-    │           ├── facebook.png
-    │           ├── instargram.png
-    │           ├── rmbgblack1.png
-    │           ├── rmbgwhite.png
-    │           ├── shopping-bag.png
-    │           ├── twiter.png
-    │           └── user.png
-    └── routes/
-        └── web.php
-
+```text
+database/shop_db2 (1).sql
 ```
 
-### Ý nghĩa từng thư mục
+File nay da bao gom schema can thiet cho source hien tai, gom ca:
 
-- `app/controllers` — xử lý request, điều phối model và view
-- `app/models` — truy vấn database
-- `app/middleware` — kiểm tra đăng nhập, quyền truy cập
-- `app/views` — giao diện render ra browser
-- `config` — cấu hình hệ thống và database
-- `core` — lớp nền của framework nội bộ
-- `public` — entry point và static assets
-- `routes` — nơi khai báo route
+- `about_sections`
+- `faqs.sort_order`
+- `faqs.is_active`
+- `comments.parent_comment_id`
 
-## Luồng chạy chính
+### 4. Bat Apache va MySQL
 
-```
-Request -> public/index.php -> routes/web.php -> Controller -> Model/View -> Response
-```
+Khoi dong:
 
-## Feature Development Guide
+- Apache
+- MySQL
 
-### User Side
+### 5. Truy cap project
 
-#### Khi thêm một trang tĩnh mới
+Base URL local:
 
-- Tạo file view trong `app/views/users/pages/`
-- Nếu cần style riêng, tạo CSS trong `public/assets/css/user/`
-- Khai báo route trong `routes/web.php`
-- Nếu chỉ là trang tĩnh, dùng `PageController`
-
-Ví dụ:
-
-```php
-$router->get('/chinh-sach-doi-tra', static function () use ($pageController): void {
-    $pageController->show('chinh-sach-doi-tra', 'Chính sách đổi trả');
-});
+```text
+http://localhost/uniphin2/backend/public
 ```
 
-#### Khi thêm một trang có dữ liệu động
+## Tai khoan test
 
-- Tạo controller riêng, ví dụ `ProductController`
-- Tạo method xử lý trong controller
-- Gọi model để lấy dữ liệu
-- Truyền dữ liệu vào view qua `$this->view(...)`
-- Khai báo route trỏ vào controller đó
+Theo dump SQL hien tai:
 
-Ví dụ:
+- Admin: `admin@gmail.com` / `admin123`
+- Customer: `customer1@gmail.com` / `customer123`
 
-```php
-$router->get('/san-pham', static function () use ($productController): void {
-    $productController->index();
-});
-```
+## Cac route chinh
 
-#### Khi gọi API hoặc xử lý state
+### Public
 
-Vì codebase hiện tại không dùng React/Vue:
-
-- State chủ yếu nằm ở PHP render server-side
-- JS chỉ nên dùng cho UI interaction nhỏ
-- Tránh nhồi quá nhiều business logic vào file JS
-
-#### Khi hiển thị dữ liệu ra view
-
-- Luôn `htmlspecialchars(...)` trước khi render text
-- Với ảnh/file upload, luôn chuẩn hóa URL trước khi dùng
-- Không truy cập trực tiếp biến chưa được controller truyền vào
-
-### Admin Side
-
-#### Khi tạo một trang quản lý mới
-
-- Tạo method trong `AdminController`
-- Gọi `AuthMiddleware::requireAdmin()`
-- Render view tương ứng trong `app/views/admin/pages/`
-- Thêm route `/admin/...` trong `routes/web.php`
-
-Ví dụ:
-
-```php
-public function coupons(): void
-{
-    AuthMiddleware::requireAdmin();
-    $this->view('admin/pages/coupons', ['title' => 'Quản lý mã giảm giá'], 'admin/layouts/main');
-}
-```
-
-#### Khi làm CRUD
-
-- GET để render danh sách/trang form
-- POST để tạo/cập nhật/xóa
-- Validate dữ liệu đầu vào ở controller
-- Chỉ gọi model sau khi dữ liệu hợp lệ
-- Redirect + flash message sau khi xử lý xong
-
-#### Authorization cần nhớ
-
-- Admin page: dùng `AuthMiddleware::requireAdmin()`
-- User page cần đăng nhập: dùng `AuthMiddleware::requireLogin()`
-
-#### Validate đầu vào
-
-Luôn kiểm tra:
-
-- field bắt buộc
-- email hợp lệ
-- độ dài password
-- file upload đúng loại và dung lượng
-- record có tồn tại trước khi update/delete
-
-## Best Practices & Gotchas
+- `GET /`
+- `GET /gioi-thieu`
+- `GET /san-pham`
+- `GET /cart`
+- `GET /checkout`
+- `GET /tin-tuc`
+- `GET /tin-tuc/{slug}`
+- `GET /faqs`
+- `GET /dieu-khoan`
+- `GET /terms`
+- `GET /tai-khoan`
 
 ### Auth
 
-- Session là nguồn xác định đăng nhập hiện tại
-- Redirect theo role sau login nên tập trung trong controller auth
-- Với password mới, ưu tiên `password_hash()` + `password_verify()`
+- `GET /login`
+- `GET /register`
+- `POST /login`
+- `POST /register`
+- `POST /logout`
 
-### Quy ước commit message
+### Admin
 
-- `feat:` thêm tính năng
-- `fix:` sửa bug
-- `refactor:` cải tổ code không đổi behavior
-- `style:` sửa giao diện/CSS
-- `docs:` cập nhật tài liệu
+- `GET /admin/users`
+- `GET /admin/products`
+- `GET /admin/orders`
+- `GET /admin/posts`
+- `GET /admin/categories`
+- `GET /admin/comments`
+- `GET /admin/qa`
+- `GET /admin/profile`
+- `GET /admin/aboutpage`
 
-## Tóm tắt nhanh cho dev mới
+Route day du hon nam trong:
 
-- **Entry point:** `public/index.php`
-- **Route:** `routes/web.php`
-- **Trang tĩnh:** `PageController`
-- **Trang có dữ liệu:** controller riêng
-- **DB config:** `config/database.php`
-- **Asset public:** `public/assets/`
-- **User auth:** `AuthController`
-- **User account:** `UserController`
-- **Admin authz:** `AuthMiddleware::requireAdmin()`
+- [backend/routes/web.php](/c:/xampp/htdocs/uniphin2/backend/routes/web.php:1)
 
-## tài khoản test
+## Cau truc thu muc
 
-**Admin:** admin@gmail.com - admin123
-**User:** customer1@gmail.com - customer123
+```text
+uniphin2/
+|-- README.md
+|-- TESTING_GUIDE.md
+|-- database/
+|   `-- shop_db2 (1).sql
+`-- backend/
+    |-- app/
+    |   |-- controllers/
+    |   |-- middleware/
+    |   |-- models/
+    |   `-- views/
+    |-- config/
+    |-- core/
+    |-- public/
+    `-- routes/
+```
+
+Y nghia nhanh:
+
+- `backend/app/controllers`: xu ly request va nghiep vu.
+- `backend/app/models`: truy van du lieu.
+- `backend/app/middleware`: phan quyen va kiem tra dang nhap.
+- `backend/app/views`: giao dien public va admin.
+- `backend/config`: cau hinh he thong va DB.
+- `backend/core`: lop nen cua app.
+- `backend/public`: entry point, assets, uploads.
+- `backend/routes`: khai bao route.
+
+## Luong chay
+
+```text
+Request
+-> backend/public/index.php
+-> backend/routes/web.php
+-> Controller
+-> Model / View
+-> Response
+```
+
+## Chuc nang hien co
+
+### Customer side
+
+- Dang ky, dang nhap, dang xuat
+- Cap nhat ho so ca nhan
+- Xem danh sach san pham
+- Them, sua, xoa gio hang
+- Chon item va dat hang
+- Xem tin tuc va chi tiet bai viet
+- Comment, reply, edit, delete comment cua chinh minh
+- Xem FAQ, gioi thieu, lien he, dieu khoan
+
+### Admin side
+
+- Quan ly tai khoan nguoi dung
+- Quan ly san pham
+- Quan ly danh muc san pham
+- Quan ly don hang
+- Quan ly bai viet
+- Quan ly danh muc tin tuc
+- Quan ly comment
+- Quan ly FAQ
+- Quan ly profile admin
+- Chinh sua noi dung trang gioi thieu
+
+## Ghi chu quan trong cho dev
+
+### 1. Admin landing page
+
+Admin dang nhap xong se vao:
+
+```text
+/admin/users
+```
+
+Khong con su dung:
+
+```text
+/admin/dashboard
+```
+
+### 2. Route danh muc san pham va danh muc tin tuc da tach rieng
+
+- Danh muc san pham:
+  - `/admin/product-categories/create`
+  - `/admin/product-categories/update`
+  - `/admin/product-categories/delete`
+- Danh muc tin tuc:
+  - `/admin/categories/create`
+  - `/admin/categories/update`
+  - `/admin/categories/delete`
+
+### 3. Terms page co 2 route
+
+Ca 2 route deu mo cung mot view:
+
+- `/dieu-khoan`
+- `/terms`
+
+### 4. Tai khoan customer
+
+Link tai khoan public dung route:
+
+```text
+/tai-khoan
+```
+
+Khong dung:
+
+```text
+/account
+```
+
+## Testing
+
+Huong dan test chi tiet da duoc cap nhat theo source moi nhat tai:
+
+- [TESTING_GUIDE.md](/c:/xampp/htdocs/uniphin2/TESTING_GUIDE.md:1)
+
+Tai lieu nay bao gom:
+
+- test tung route
+- test theo tung nhom chuc nang
+- test auth va phan quyen
+- test DB sau moi nghiep vu quan trong
+
+## Cac file quan trong de bat dau doc source
+
+- [backend/routes/web.php](/c:/xampp/htdocs/uniphin2/backend/routes/web.php:1)
+- [backend/public/index.php](/c:/xampp/htdocs/uniphin2/backend/public/index.php:1)
+- [backend/core/Router.php](/c:/xampp/htdocs/uniphin2/backend/core/Router.php:1)
+- [backend/config/database.php](/c:/xampp/htdocs/uniphin2/backend/config/database.php:1)
+- [backend/app/controllers/AuthController.php](/c:/xampp/htdocs/uniphin2/backend/app/controllers/AuthController.php:1)
+- [backend/app/controllers/AdminController.php](/c:/xampp/htdocs/uniphin2/backend/app/controllers/AdminController.php:1)
+- [backend/app/controllers/ProductController.php](/c:/xampp/htdocs/uniphin2/backend/app/controllers/ProductController.php:1)
+- [backend/app/controllers/CartController.php](/c:/xampp/htdocs/uniphin2/backend/app/controllers/CartController.php:1)
+- [backend/app/controllers/NewsController.php](/c:/xampp/htdocs/uniphin2/backend/app/controllers/NewsController.php:1)
+
+## Known notes theo source hien tai
+
+- Checkout hien tai tao order va xoa item khoi gio, nhung chua tru `stock_quantity`.
+- Add to cart hien tai check `status` san pham, nhung chua check chat che ton kho.
+- Admin filter comment co kha nang lech giua `visible` va `presented`.
+- Admin chi sua duoc comment do chinh admin tao theo logic model hien tai.
