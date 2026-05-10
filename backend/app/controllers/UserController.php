@@ -40,6 +40,21 @@ class UserController extends Controller
 
         // 🔥 lấy avatar cũ
         $currentUser = $this->userModel->findById($userId);
+        if ($currentUser === null) {
+            $this->setFlash('error', 'Không tìm thấy tài khoản người dùng.');
+            $this->redirect($this->baseUrl('tai-khoan'));
+        }
+
+        $existingUser = $this->userModel->findByEmail($data['email']);
+        if (
+            $data['email'] !== ''
+            && $existingUser !== null
+            && (int) ($existingUser['ID'] ?? 0) !== (int) $userId
+        ) {
+            $this->setFlash('error', 'Email đã tồn tại. Vui lòng chọn email khác.');
+            $this->redirect($this->baseUrl('tai-khoan'));
+        }
+
         $oldImage = $currentUser['image'] ?? null;
 
         if ($file && $file['error'] === UPLOAD_ERR_OK) {

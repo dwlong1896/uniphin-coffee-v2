@@ -731,6 +731,21 @@ class AdminController extends Controller
         $imageName = null;
 
         $currentUser = $this->userModel->findById($userId);
+        if ($currentUser === null) {
+            $this->setFlash('error', 'Không tìm thấy tài khoản quản trị viên.');
+            $this->redirect($this->baseUrl('admin/profile'));
+        }
+
+        $existingUser = $this->userModel->findByEmail($data['email']);
+        if (
+            $data['email'] !== ''
+            && $existingUser !== null
+            && (int) ($existingUser['ID'] ?? 0) !== (int) $userId
+        ) {
+            $this->setFlash('error', 'Email đã tồn tại. Vui lòng chọn email khác.');
+            $this->redirect($this->baseUrl('admin/profile'));
+        }
+
         $oldImage = $currentUser['image'] ?? null;
 
         if ($file && $file['error'] === UPLOAD_ERR_OK) {
