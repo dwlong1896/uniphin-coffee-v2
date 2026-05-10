@@ -48,6 +48,9 @@
 
 
 
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($asset('css/user/faqs.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet"
+        href="<?php echo htmlspecialchars($asset('css/user/gioi-thieu.css'), ENT_QUOTES, 'UTF-8'); ?>">
 </head>
 
 <body>

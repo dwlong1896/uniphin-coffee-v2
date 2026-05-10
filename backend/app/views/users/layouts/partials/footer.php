@@ -17,7 +17,7 @@ $assetUrl = static function (string $path) use ($publicBase): string {
                 <a href="<?php echo htmlspecialchars($toUrl('/tin-tuc'), ENT_QUOTES, 'UTF-8'); ?>">News</a>
                 <a href="<?php echo htmlspecialchars($toUrl('/gioi-thieu'), ENT_QUOTES, 'UTF-8'); ?>">About us</a>
                 <a href="<?php echo htmlspecialchars($toUrl('/faqs'), ENT_QUOTES, 'UTF-8'); ?>">FAQs</a>
-                <a href="<?php echo htmlspecialchars($toUrl('/account'), ENT_QUOTES, 'UTF-8'); ?>">Account</a>
+                <a href="<?php echo htmlspecialchars($toUrl('/tai-khoan'), ENT_QUOTES, 'UTF-8'); ?>">Account</a>
                 <a href="<?php echo htmlspecialchars($toUrl('/lien-he'), ENT_QUOTES, 'UTF-8'); ?>">Contact us</a>
             </div>
         </div>
@@ -57,7 +57,7 @@ $assetUrl = static function (string $path) use ($publicBase): string {
             <p><span class="cyan-text">Email:</span> uniphincoffee@gmail.com</p>
         </div>
         <div class="legal-links">
-            <a href="<?php echo htmlspecialchars($toUrl('/terms'), ENT_QUOTES, 'UTF-8'); ?>">Terms of Use - Private Policy</a>
+            <a href="<?php echo htmlspecialchars($toUrl('/dieu-khoan'), ENT_QUOTES, 'UTF-8'); ?>">Terms of Use - Private Policy</a>
         </div>
     </div>
 </footer>

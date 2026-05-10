@@ -47,7 +47,7 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
         <div class="sidebar-menu">
             <div class="sidebar-header">
                 <div class="logo">
-                    <a href="<?php echo $toUrl('admin/dashboard'); ?>">
+                    <a href="<?php echo $toUrl('admin/users'); ?>">
                         <img src="<?php echo $assetUrl('images/icon/rmbgwhite.png'); ?>" alt="logo" />
                     </a>
                 </div>
@@ -56,8 +56,6 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
                 <div class="menu-inner">
                     <nav>
                         <ul class="metismenu" id="menu">
-                            <li><a href="<?php echo $toUrl('admin/dashboard'); ?>"><i
-                                        class="ti-dashboard"></i><span>Dashboard</span></a></li>
                             <li><a href="<?php echo $toUrl('admin/users'); ?>"><i class="ti-user"></i><span>Quản lý tài
                                         khoản</span></a></li>
                             <li><a href="<?php echo $toUrl('admin/products'); ?>"><i class="ti-package"></i><span>Quản
@@ -128,7 +126,7 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
                                 <?php echo htmlspecialchars($title ?? '', ENT_QUOTES, 'UTF-8'); ?>
                             </h1>
                             <ul class="breadcrumbs float-start">
-                                <li><a href="<?php echo $toUrl('admin/dashboard'); ?>">Home</a></li>
+                                <li><a href="<?php echo $toUrl('admin/users'); ?>">Home</a></li>
                                 <li><span><?php echo htmlspecialchars($title ?? '', ENT_QUOTES, 'UTF-8'); ?></span></li>
                             </ul>
                         </div>
@@ -173,7 +171,7 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="<?php echo $assetUrl('js/swiper-bundle.min.js'); ?>"></script>
@@ -185,6 +183,43 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
     <script src="<?php echo $assetUrl('js/scripts.js'); ?>"></script>
 
     <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Bootstrap 4 -> 5 compatibility for older admin partials.
+        document.querySelectorAll('[data-toggle]').forEach(function(element) {
+            if (!element.hasAttribute('data-bs-toggle')) {
+                element.setAttribute('data-bs-toggle', element.getAttribute('data-toggle'));
+            }
+        });
+
+        document.querySelectorAll('[data-target]').forEach(function(element) {
+            if (!element.hasAttribute('data-bs-target')) {
+                element.setAttribute('data-bs-target', element.getAttribute('data-target'));
+            }
+        });
+
+        document.querySelectorAll('[data-dismiss]').forEach(function(element) {
+            if (!element.hasAttribute('data-bs-dismiss')) {
+                element.setAttribute('data-bs-dismiss', element.getAttribute('data-dismiss'));
+            }
+        });
+
+        if (window.jQuery && !window.jQuery.fn.modal) {
+            window.jQuery.fn.modal = function(action) {
+                return this.each(function() {
+                    var instance = bootstrap.Modal.getOrCreateInstance(this);
+
+                    if (action === 'show') {
+                        instance.show();
+                    } else if (action === 'hide') {
+                        instance.hide();
+                    } else if (action === 'toggle') {
+                        instance.toggle();
+                    }
+                });
+            };
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
 
         // Init DataTables

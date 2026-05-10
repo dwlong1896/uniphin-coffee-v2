@@ -42,11 +42,12 @@ function renderAdminCommentsRecursive($comments, $parentId = null, $level = 0, $
 
 
                         <div class="dropdown">
-                            <button class="btn btn-sm btn-light dropdown-toggle no-caret" type="button" data-toggle="dropdown"
+                            <button class="btn btn-sm btn-light dropdown-toggle no-caret" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false"
                                 style="background: transparent; border: none;">
                                 <i class="fa fa-ellipsis-v" style="color: #a4a4ba;"></i>
                             </button>
-                            <div class="dropdown-menu dropdown-menu-right shadow-sm border-0"
+                            <div class="dropdown-menu dropdown-menu-end shadow-sm border-0"
                                 style="border-radius: 12px; padding: 8px; min-width: 160px;">
                                 <a class="dropdown-item small font-weight-bold py-2" href="javascript:void(0)"
                                     onclick="showReplyForm(<?= $cmt['ID'] ?>, '<?= $cmt['first_name'] ?>')"
@@ -365,7 +366,7 @@ function renderAdminCommentsRecursive($comments, $parentId = null, $level = 0, $
         <div class="modal-content card">
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title font-weight-bold">Chỉnh sửa bình luận của tôi</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="edit-comment-id">

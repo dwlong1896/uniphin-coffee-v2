@@ -40,6 +40,21 @@ class Controller
         $data['flashPopupSuccess'] ??= $this->getFlash('popup_success');
         $data['flashPopupError']   ??= $this->getFlash('popup_error');
 
+        // Helper variables – available in both view and layout
+        $publicBase = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+        
+        $asset = static function (string $path) use ($publicBase): string {
+            return $publicBase . '/assets/' . ltrim($path, '/');
+        };
+
+        $toUrl = static function (string $path = '/') use ($publicBase): string {
+            return $publicBase . '/' . ltrim($path, '/');
+        };
+
+        $assetUrl = static function (string $path) use ($publicBase): string {
+            return $publicBase . '/assets/admin/' . ltrim($path, '/');
+        };
+
         extract($data, EXTR_SKIP);
 
         ob_start();

@@ -27,6 +27,8 @@ $router->get('/checkout', static function () use ($cartController): void {$cartC
 $router->get('/thanh-toan', static function () use ($cartController): void {$cartController->checkout();});
 $router->get('/lien-he', static function () use ($pageController): void {$pageController->show('lien-he', 'Liên hệ');});
 $router->get('/faqs', static function () use ($pageController): void {$pageController->show('faqs', 'FAQs');});
+$router->get('/dieu-khoan', static function () use ($pageController): void {$pageController->show('dieu-khoan', 'Dieu khoan');});
+$router->get('/terms', static function () use ($pageController): void {$pageController->show('dieu-khoan', 'Dieu khoan');});
 $router->get('/tai-khoan', static function () use ($userController): void {$userController->profile();});
 $router->post('/tai-khoan', static function () use ($userController): void {$userController->updateProfile();});
 $router->post('/cart/add', static function () use ($cartController): void {$cartController->add();});
@@ -46,15 +48,14 @@ $router->post('/register', static function () use ($authController): void {$auth
 $router->post('/logout', static function () use ($authController): void {$authController->handleLogout();});
 
 // Admin routes
-$router->get('/admin/dashboard', static function () use ($adminController): void {$adminController->dashboard();});
 $router->get('/admin/users', static function () use ($adminUserController): void {$adminUserController->index();});
 $router->get('/admin/users/viewdetail', static function () use ($adminUserController): void {$adminUserController->viewDetail();});
 $router->post('/admin/users/update', static function () use ($adminUserController): void {$adminUserController->update();});
 $router->get('/admin/products/viewdetail', static function () use ($productController): void {$productController->viewdetail();});
 $router->get('/admin/products', static function () use ($productController): void {$productController->index();});
-$router->post('/admin/categories/create', static function () use ($productController): void {$productController->createCategory();});
-$router->post('/admin/categories/update', static function () use ($productController): void {$productController->updateCategory();});
-$router->post('/admin/categories/delete', static function () use ($productController): void {$productController->deleteCategory();});
+$router->post('/admin/product-categories/create', static function () use ($productController): void {$productController->createCategory();});
+$router->post('/admin/product-categories/update', static function () use ($productController): void {$productController->updateCategory();});
+$router->post('/admin/product-categories/delete', static function () use ($productController): void {$productController->deleteCategory();});
 $router->post('/admin/products/create', static function () use ($productController): void {$productController->create();});
 $router->post('/admin/products/update', static function () use ($productController): void {$productController->update();});
 $router->post('/admin/products/delete', static function () use ($productController): void {$productController->delete();});
@@ -98,4 +99,9 @@ $router->get('/admin/homepage', static function () use ($adminController): void 
 $router->get('/admin/faqpage', static function () use ($adminController): void {$adminController->faqspage();});
 $router->get('/admin/contactpage', static function () use ($adminController): void {$adminController->contactpage();});
 $router->get('/admin/aboutpage', static function () use ($adminController): void {$adminController->aboutpage();});
+
 $router->post('/admin/profile', static function () use ($adminController): void {$adminController->updateProfile();});
+
+$router->post('/admin/faq/save', static function () use ($adminController): void {$adminController->faqSave();});
+$router->post('/admin/faq/delete', static function () use ($adminController): void {$adminController->faqDelete();});
+$router->post('/admin/about/save', static function () use ($adminController): void {$adminController->aboutSave();});

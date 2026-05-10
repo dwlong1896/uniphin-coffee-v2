@@ -142,7 +142,7 @@ class AuthController extends Controller
         $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
 
         if ($role === 'admin') {
-            $this->redirect($base . '/admin/dashboard');
+            $this->redirect($base . '/admin/users');
         }
 
         $this->redirect($base . '/');

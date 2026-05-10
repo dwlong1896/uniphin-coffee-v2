@@ -122,7 +122,7 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                     <h4 class="header-title mb-0">Danh sách danh mục</h4>
                 </div>
 
-                <form action="<?php echo $toUrl('admin/categories/create'); ?>" method="post"
+                <form action="<?php echo $toUrl('admin/product-categories/create'); ?>" method="post"
                     class="row g-3 align-items-end mb-4">
                     <div class="col-md-9">
                         <label class="form-label">Tên danh mục mới</label>
@@ -154,7 +154,7 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                                 </td>
                                 <td>
                                     <form
-                                        action="<?php echo $toUrl('admin/categories/update?id=' . urlencode((string) ($category['ID'] ?? ''))); ?>"
+                                        action="<?php echo $toUrl('admin/product-categories/update?id=' . urlencode((string) ($category['ID'] ?? ''))); ?>"
                                         method="post" class="d-flex justify-content-center mb-0">
                                         <div class="input-group" style="max-width: 520px;">
                                             <input type="text" name="name" class="form-control"
@@ -169,7 +169,7 @@ $popupClass = !empty($flashPopupSuccess) ? 'text-success' : 'text-danger';
                                 </td>
                                 <td class="text-center">
                                     <form
-                                        action="<?php echo $toUrl('admin/categories/delete?id=' . urlencode((string) ($category['ID'] ?? ''))); ?>"
+                                        action="<?php echo $toUrl('admin/product-categories/delete?id=' . urlencode((string) ($category['ID'] ?? ''))); ?>"
                                         method="post" class="d-inline-block mb-0"
                                         onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này không?');">
                                         <button type="submit"

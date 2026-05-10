@@ -32,7 +32,7 @@ $assetUrl = static function (string $path) use ($publicBase): string {
     <div class="sidebar-auth">
         <?php if (!empty($_SESSION['user_id'])): ?>
         <!-- Đã đăng nhập -->
-        <a href="<?php echo htmlspecialchars($toUrl('/account'), ENT_QUOTES, 'UTF-8'); ?>">
+        <a href="<?php echo htmlspecialchars($toUrl('/tai-khoan'), ENT_QUOTES, 'UTF-8'); ?>">
             <button class="btn-register-side">THÔNG TIN CÁ NHÂN</button>
         </a>
         <a href="<?php echo htmlspecialchars($toUrl('/cart'), ENT_QUOTES, 'UTF-8'); ?>">

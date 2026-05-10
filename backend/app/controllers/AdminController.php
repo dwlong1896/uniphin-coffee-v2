@@ -41,6 +41,8 @@ class AdminController extends Controller
     }
     public function createCategory(): void
     {
+        AuthMiddleware::requireAdmin();
+
         if (ob_get_length())
             ob_clean();
         header('Content-Type: application/json');
@@ -111,6 +113,8 @@ class AdminController extends Controller
     }
     public function deleteCategory(): void
     {
+        AuthMiddleware::requireAdmin();
+
         // Dọn dẹp bộ đệm đầu ra để loại bỏ các ký tự lạ hoặc Warning phát sinh trước đó
         if (ob_get_length())
             ob_clean();
@@ -688,7 +692,12 @@ class AdminController extends Controller
     public function qa(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/qa', ['title' => 'Quản lý hỏi đáp'], 'admin/layouts/main');
+        require_once __DIR__ . '/../models/FaqModel.php';
+        $faqModel = new FaqModel();
+        $this->view('admin/pages/qa', [
+            'title' => 'Quản lý hỏi đáp',
+            'faqs'  => $faqModel->getAllAdmin(),
+        ], 'admin/layouts/main');
     }
 
     public function profile(): void
@@ -775,12 +784,77 @@ class AdminController extends Controller
     public function aboutpage(): void
     {
         AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/aboutpage', ['title' => 'About Page'], 'admin/layouts/main');
+        require_once __DIR__ . '/../models/AboutSectionModel.php';
+        $model = new AboutSectionModel();
+        $this->view('admin/pages/aboutpage', [
+            'title'    => 'About Page',
+            'sections' => $model->getAll(),
+        ], 'admin/layouts/main');
     }
 
     public function faqspage(): void
     {
         AuthMiddleware::requireAdmin();
         $this->view('admin/pages/faqpage', ['title' => 'FAQ Page'], 'admin/layouts/main');
+    }
+
+    // --- FAQ CRUD ---
+
+    public function faqSave(): void
+    {
+        AuthMiddleware::requireAdmin();
+        require_once __DIR__ . '/../models/FaqModel.php';
+        $faqModel = new FaqModel();
+
+        $id   = !empty($_POST['id']) ? (int)$_POST['id'] : null;
+        $data = [
+            'question'   => trim($_POST['question'] ?? ''),
+            'answer'     => trim($_POST['answer'] ?? ''),
+            'sort_order' => (int)($_POST['sort_order'] ?? 0),
+            'is_active'  => (int)($_POST['is_active'] ?? 1),
+        ];
+
+        if ($id) {
+            $faqModel->update($id, $data);
+            $this->setFlash('success', 'Cập nhật câu hỏi thành công!');
+        } else {
+            $faqModel->create($data);
+            $this->setFlash('success', 'Thêm câu hỏi thành công!');
+        }
+        $this->redirect($this->baseUrl('admin/qa'));
+    }
+
+    public function faqDelete(): void
+    {
+        AuthMiddleware::requireAdmin();
+        require_once __DIR__ . '/../models/FaqModel.php';
+        $id = (int)($_POST['id'] ?? 0);
+        if ($id) {
+            (new FaqModel())->delete($id);
+            $this->setFlash('success', 'Đã xóa câu hỏi!');
+        }
+        $this->redirect($this->baseUrl('admin/qa'));
+    }
+
+    // --- About Section Save ---
+
+    public function aboutSave(): void
+    {
+        AuthMiddleware::requireAdmin();
+        require_once __DIR__ . '/../models/AboutSectionModel.php';
+        $model = new AboutSectionModel();
+
+        $id   = (int)($_POST['id'] ?? 0);
+        $data = [
+            'title'     => trim($_POST['title'] ?? ''),
+            'content'   => trim($_POST['content'] ?? ''),
+            'image_url' => trim($_POST['image_url'] ?? ''),
+        ];
+
+        if ($id) {
+            $model->update($id, $data);
+            $this->setFlash('success', 'Cập nhật nội dung thành công!');
+        }
+        $this->redirect($this->baseUrl('admin/aboutpage'));
     }
 }
