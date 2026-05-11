@@ -48,6 +48,7 @@ $router->post('/register', static function () use ($authController): void {$auth
 $router->post('/logout', static function () use ($authController): void {$authController->handleLogout();});
 
 // Admin routes
+$router->get('/admin', static function () use ($adminUserController): void {$adminUserController->index();});
 $router->get('/admin/users', static function () use ($adminUserController): void {$adminUserController->index();});
 $router->get('/admin/users/viewdetail', static function () use ($adminUserController): void {$adminUserController->viewDetail();});
 $router->post('/admin/users/update', static function () use ($adminUserController): void {$adminUserController->update();});

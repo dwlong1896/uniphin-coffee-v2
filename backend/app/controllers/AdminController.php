@@ -16,12 +16,6 @@ class AdminController extends Controller
         $this->commentModel = new CommentModel();
     }
 
-    public function dashboard(): void
-    {
-        AuthMiddleware::requireAdmin();
-        $this->view('admin/pages/index', ['title' => 'Dashboard'], 'admin/layouts/main');
-    }
-
     public function users(): void
     {
         AuthMiddleware::requireAdmin();

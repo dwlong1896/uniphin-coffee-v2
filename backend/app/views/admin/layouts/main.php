@@ -47,7 +47,7 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
         <div class="sidebar-menu">
             <div class="sidebar-header">
                 <div class="logo">
-                    <a href="<?php echo $toUrl('admin/users'); ?>">
+                    <a href="<?php echo $toUrl('admin'); ?>">
                         <img src="<?php echo $assetUrl('images/icon/rmbgwhite.png'); ?>" alt="logo" />
                     </a>
                 </div>
@@ -126,7 +126,7 @@ $adminName = htmlspecialchars($_SESSION['name'] ?? 'Admin', ENT_QUOTES, 'UTF-8')
                                 <?php echo htmlspecialchars($title ?? '', ENT_QUOTES, 'UTF-8'); ?>
                             </h1>
                             <ul class="breadcrumbs float-start">
-                                <li><a href="<?php echo $toUrl('admin/users'); ?>">Home</a></li>
+                                <li><a href="<?php echo $toUrl('admin'); ?>">Home</a></li>
                                 <li><span><?php echo htmlspecialchars($title ?? '', ENT_QUOTES, 'UTF-8'); ?></span></li>
                             </ul>
                         </div>
