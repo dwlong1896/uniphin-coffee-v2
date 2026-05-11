@@ -557,18 +557,21 @@ class AdminController extends Controller
                 exit;
             }
 
-            // Bổ sung logic lọc & phân trang cho trang chi tiết
+           
             $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
             $limit = 10;
             $offset = ($page - 1) * $limit;
 
+        
             $search = trim(htmlspecialchars($_GET['search'] ?? ''));
-            $status = in_array($_GET['status'] ?? '', ['visible', 'hidden']) ? $_GET['status'] : '';
 
-            // Lấy cmt theo filter
+           
+            $status = in_array($_GET['status'] ?? '', ['presented', 'hidden']) ? $_GET['status'] : '';
+
+
             $comments = $this->commentModel->getCommentsByNewsWithFilters($newsId, $search, $status, $offset, $limit);
 
-            // Đếm tổng root comments để phân trang
+
             $totalRoots = $this->commentModel->countRootCommentsWithFilter($newsId, $search, $status);
 
             $this->view('admin/pages/comments_detail', [
@@ -579,10 +582,11 @@ class AdminController extends Controller
                 'totalPages' => ceil($totalRoots / $limit),
                 'currentPage' => $page,
                 'search' => $search,
-                'status' => $status
+                'status' => $status 
             ], 'admin/layouts/main');
-        } else {
 
+        } else {
+          
             $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
             $limit = 10;
             $offset = ($page - 1) * $limit;
@@ -690,7 +694,7 @@ class AdminController extends Controller
         $faqModel = new FaqModel();
         $this->view('admin/pages/qa', [
             'title' => 'Quản lý hỏi đáp',
-            'faqs'  => $faqModel->getAllAdmin(),
+            'faqs' => $faqModel->getAllAdmin(),
         ], 'admin/layouts/main');
     }
 
@@ -796,7 +800,7 @@ class AdminController extends Controller
         require_once __DIR__ . '/../models/AboutSectionModel.php';
         $model = new AboutSectionModel();
         $this->view('admin/pages/aboutpage', [
-            'title'    => 'About Page',
+            'title' => 'About Page',
             'sections' => $model->getAll(),
         ], 'admin/layouts/main');
     }
@@ -815,12 +819,12 @@ class AdminController extends Controller
         require_once __DIR__ . '/../models/FaqModel.php';
         $faqModel = new FaqModel();
 
-        $id   = !empty($_POST['id']) ? (int)$_POST['id'] : null;
+        $id = !empty($_POST['id']) ? (int) $_POST['id'] : null;
         $data = [
-            'question'   => trim($_POST['question'] ?? ''),
-            'answer'     => trim($_POST['answer'] ?? ''),
-            'sort_order' => (int)($_POST['sort_order'] ?? 0),
-            'is_active'  => (int)($_POST['is_active'] ?? 1),
+            'question' => trim($_POST['question'] ?? ''),
+            'answer' => trim($_POST['answer'] ?? ''),
+            'sort_order' => (int) ($_POST['sort_order'] ?? 0),
+            'is_active' => (int) ($_POST['is_active'] ?? 1),
         ];
 
         if ($id) {
@@ -837,7 +841,7 @@ class AdminController extends Controller
     {
         AuthMiddleware::requireAdmin();
         require_once __DIR__ . '/../models/FaqModel.php';
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
         if ($id) {
             (new FaqModel())->delete($id);
             $this->setFlash('success', 'Đã xóa câu hỏi!');
@@ -853,10 +857,10 @@ class AdminController extends Controller
         require_once __DIR__ . '/../models/AboutSectionModel.php';
         $model = new AboutSectionModel();
 
-        $id   = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
         $data = [
-            'title'     => trim($_POST['title'] ?? ''),
-            'content'   => trim($_POST['content'] ?? ''),
+            'title' => trim($_POST['title'] ?? ''),
+            'content' => trim($_POST['content'] ?? ''),
             'image_url' => trim($_POST['image_url'] ?? ''),
         ];
 

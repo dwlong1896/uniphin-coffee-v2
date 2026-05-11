@@ -25,6 +25,7 @@ DELIMITER $$
 --
 -- Thủ tục
 --
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_place_order` (IN `p_customer_id` INT, IN `p_phone` VARCHAR(20), IN `p_first_name` VARCHAR(50), IN `p_last_name` VARCHAR(50), IN `p_address` TEXT, IN `p_payment_method` VARCHAR(50))   BEGIN
     DECLARE v_cart_id INT;
     DECLARE v_order_id INT;
@@ -101,7 +102,8 @@ CREATE TABLE `about_sections` (
   `image_url` varchar(500) DEFAULT '',
   `sort_order` int(11) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `Admin_ID` int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -172,6 +174,7 @@ CREATE TABLE `comments` (
   `content` text DEFAULT NULL,
   `status` enum('hidden','presented') DEFAULT 'presented',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `User_ID` int(11) DEFAULT NULL,
   `News_ID` int(11) DEFAULT NULL,
   `parent_comment_id` int(11) DEFAULT NULL
@@ -181,10 +184,24 @@ CREATE TABLE `comments` (
 -- Đang đổ dữ liệu cho bảng `comments`
 --
 
-INSERT INTO `comments` (`ID`, `content`, `status`, `created_at`, `User_ID`, `News_ID`, `parent_comment_id`) VALUES
-(1, 'Bài viết review rất tâm huyết, cảm ơn Admin!', 'presented', '2026-05-10 01:23:22', 2, 2, NULL),
-(4, 'Cảm ơn bạn Hoàng đã ủng hộ shop nhé!', 'presented', '2026-05-10 01:23:22', 1, 2, NULL);
-
+INSERT INTO `comments` 
+(`ID`, `content`, `status`, `created_at`, `User_ID`, `News_ID`, `parent_comment_id`) 
+VALUES
+(1, 'Bài viết rất hữu ích!', 'presented', NOW(), 2, 1, NULL),
+(2, 'Mình thích latte matcha lắm', 'presented', NOW(), 2, 2, NULL),
+(3, 'Xu hướng này đúng thật luôn', 'presented', NOW(), 1, 3, NULL),
+(4, 'Công nghệ mới rất hay', 'presented', NOW(), 2, 4, NULL),
+(5, 'Sự kiện này có ưu đãi gì không?', 'presented', NOW(), 2, 5, NULL),
+(6, 'Đồ uống này ngon thật', 'presented', NOW(), 1, 6, NULL),
+(7, 'Rất đồng cảm với bài viết', 'presented', NOW(), 2, 7, NULL),
+(8, 'Hướng dẫn dễ hiểu', 'presented', NOW(), 1, 8, NULL),
+(9, 'Tin nội bộ khá thú vị', 'presented', NOW(), 2, 9, NULL),
+(10, 'Espresso đúng gu mình', 'presented', NOW(), 2, 10, NULL),
+(11, 'Ẩm thực kết hợp hay quá', 'presented', NOW(), 1, 11, NULL),
+(12, 'Bài viết nên có thêm hình ảnh', 'presented', NOW(), 2, 1, NULL),
+(13, 'Mình sẽ thử ngay latte này', 'presented', NOW(), 2, 2, NULL),
+(14, 'Cảm ơn admin chia sẻ', 'presented', NOW(), 1, 3, NULL),
+(15, 'Rất đáng để đọc', 'presented', NOW(), 2, 4, NULL);
 -- --------------------------------------------------------
 
 --
@@ -296,13 +313,20 @@ CREATE TABLE `news` (
 --
 -- Đang đổ dữ liệu cho bảng `news`
 --
-
-INSERT INTO `news` (`ID`, `created_at`, `title`, `content`, `image`, `Admin_ID`, `N_Cate_ID`, `status`, `updated_at`, `slug`, `meta_description`, `keywords`) VALUES
-(1, '2026-05-10 01:23:22', 'Siêu Sale Mùa Hè 2026', 'Giảm giá cực sâu lên đến 50% cho tất cả dòng Laptop...', NULL, 1, 1, 'published', '2026-05-10 01:23:22', 'sieu-sale-mua-he', NULL, NULL),
-(2, '2026-05-10 01:23:22', 'Review Macbook M3 Pro', 'Cấu hình mạnh mẽ, pin trâu, màn hình Liquid Retina cực đẹp...', NULL, 1, 2, 'published', '2026-05-10 01:23:22', 'review-macbook-m3', NULL, NULL),
-(3, '2026-05-10 01:23:22', 'Xu hướng Smartphone 2026', 'Những đột phá về AI và màn hình cuộn sắp ra mắt...', NULL, 1, 3, 'published', '2026-05-10 01:23:22', 'xu-huong-phone-2026', NULL, NULL);
-
--- --------------------------------------------------------
+INSERT INTO `news` 
+(`ID`, `created_at`, `title`, `content`, `image`, `Admin_ID`, `N_Cate_ID`, `status`, `updated_at`, `slug`, `meta_description`, `keywords`) 
+VALUES
+(1, NOW(), 'Khuyến mãi đầu tuần cực sốc', 'Giảm giá 30% toàn bộ sản phẩm...', NULL, 1, 1, 'published', NOW(), 'khuyen-mai-dau-tuan', NULL, NULL),
+(2, NOW(), 'Review Latte Matcha mới', 'Hương vị matcha thanh mát...', NULL, 1, 2, 'published', NOW(), 'review-latte-matcha', NULL, NULL),
+(3, NOW(), 'Xu hướng cà phê 2026', 'Cà phê cold brew lên ngôi...', NULL, 1, 3, 'published', NOW(), 'xu-huong-ca-phe-2026', NULL, NULL),
+(4, NOW(), 'Công nghệ pha chế hiện đại', 'Ứng dụng máy pha tự động...', NULL, 1, 4, 'published', NOW(), 'cong-nghe-pha-che', NULL, NULL),
+(5, NOW(), 'Sự kiện khai trương chi nhánh mới', 'UniPhin mở thêm cửa hàng...', NULL, 1, 5, 'published', NOW(), 'khai-truong-chi-nhanh', NULL, NULL),
+(6, NOW(), 'Top đồ uống bán chạy', 'Danh sách đồ uống hot...', NULL, 1, 6, 'published', NOW(), 'top-do-uong-ban-chay', NULL, NULL),
+(7, NOW(), 'Phong cách sống sinh viên', 'Cân bằng học tập và thư giãn...', NULL, 1, 7, 'published', NOW(), 'phong-cach-song-sv', NULL, NULL),
+(8, NOW(), 'Hướng dẫn đặt hàng nhanh', 'Các bước đặt hàng đơn giản...', NULL, 1, 8, 'published', NOW(), 'huong-dan-dat-hang', NULL, NULL),
+(9, NOW(), 'Tin nội bộ tháng 5', 'Cập nhật hoạt động cửa hàng...', NULL, 1, 9, 'published', NOW(), 'tin-noi-bo-thang-5', NULL, NULL),
+(10, NOW(), 'Review Espresso mới', 'Vị đậm, mạnh mẽ...', NULL, 1, 10, 'published', NOW(), 'review-espresso-moi', NULL, NULL),
+(11, NOW(), 'Ẩm thực kết hợp cà phê', 'Trải nghiệm món ăn kèm cà phê...', NULL, 1, 11, 'published', NOW(), 'am-thuc-ca-phe', NULL, NULL);
 
 --
 -- Cấu trúc bảng cho bảng `news_categories`
@@ -316,12 +340,18 @@ CREATE TABLE `news_categories` (
 --
 -- Đang đổ dữ liệu cho bảng `news_categories`
 --
-
 INSERT INTO `news_categories` (`ID`, `Name`) VALUES
 (1, 'Khuyến mãi'),
 (2, 'Đánh giá'),
-(3, 'Xu hướng');
-
+(3, 'Xu hướng'),
+(4, 'Công nghệ'),
+(5, 'Sự kiện'),
+(6, 'Cà phê'),
+(7, 'Đời sống'),
+(8, 'Hướng dẫn'),
+(9, 'Tin tức nội bộ'),
+(10, 'Review sản phẩm'),
+(11, 'Ẩm thực');
 -- --------------------------------------------------------
 
 --
@@ -553,6 +583,7 @@ DELIMITER ;
 ALTER TABLE `about_sections`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `section_key` (`section_key`);
+
 
 --
 -- Chỉ mục cho bảng `admin`
@@ -818,6 +849,10 @@ ALTER TABLE `relied_contacts`
   ADD CONSTRAINT `relied_contacts_ibfk_1` FOREIGN KEY (`Admin_ID`) REFERENCES `admin` (`ID`),
   ADD CONSTRAINT `relied_contacts_ibfk_2` FOREIGN KEY (`Contact_ID`) REFERENCES `contacts` (`ID`);
 
+
+ALTER TABLE `about_sections`
+ADD CONSTRAINT fk_about_admin
+FOREIGN KEY (`Admin_ID`) REFERENCES admin(`ID`);
 --
 -- Các ràng buộc cho bảng `relied_infor`
 --

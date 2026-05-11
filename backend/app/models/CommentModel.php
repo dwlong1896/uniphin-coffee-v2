@@ -32,43 +32,36 @@ class CommentModel extends Model
 
     public function getCommentsByNewsWithFilters($newsId, $search = '', $status = '', $offset = 0, $limit = 10)
     {
-       
-        $sqlRoot = "SELECT ID FROM COMMENTS WHERE News_ID = ? AND parent_comment_id IS NULL";
+        // 1. Tìm tất cả ID bình luận (không phân biệt root hay con) mà thỏa mãn điều kiện Search/Status
+        $sqlFilter = "SELECT ID FROM COMMENTS WHERE News_ID = ?";
         $params = [(int) $newsId];
         $types = "i";
 
         if (!empty($status)) {
-            $sqlRoot .= " AND status = ?";
+            $sqlFilter .= " AND status = ?";
             $params[] = $status;
             $types .= "s";
         }
-
         if (!empty($search)) {
-            $sqlRoot .= " AND content LIKE ?";
+            $sqlFilter .= " AND content LIKE ?";
             $params[] = "%$search%";
             $types .= "s";
         }
 
-        $sqlRoot .= " ORDER BY created_at DESC LIMIT ? OFFSET ?";
+        // Giới hạn phân trang dựa trên các bản ghi thỏa mãn
+        $sqlFilter .= " ORDER BY created_at DESC LIMIT ? OFFSET ?";
         $params[] = (int) $limit;
         $params[] = (int) $offset;
         $types .= "ii";
 
-        $stmt = $this->db->prepare($sqlRoot);
-        if ($stmt === false) {
-            error_log("SQL Prepare Error (Root): " . $this->db->error);
-            return [];
-        }
-
+        $stmt = $this->db->prepare($sqlFilter);
         $stmt->bind_param($types, ...$params);
         $stmt->execute();
-        $rootIds = array_column($stmt->get_result()->fetch_all(MYSQLI_ASSOC), 'ID');
+        $matchedIds = array_column($stmt->get_result()->fetch_all(MYSQLI_ASSOC), 'ID');
         $stmt->close();
 
-      
-        if (empty($rootIds)) {
+        if (empty($matchedIds))
             return [];
-        }
 
         $sqlAll = "SELECT c.*, u.first_name, u.last_name, u.image as user_avatar 
                FROM COMMENTS c 
@@ -77,11 +70,6 @@ class CommentModel extends Model
                ORDER BY c.created_at ASC";
 
         $stmtAll = $this->db->prepare($sqlAll);
-        if ($stmtAll === false) {
-            error_log("SQL Prepare Error (All): " . $this->db->error);
-            return [];
-        }
-
         $stmtAll->bind_param('i', $newsId);
         $stmtAll->execute();
         $allComments = $stmtAll->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -89,7 +77,6 @@ class CommentModel extends Model
 
         return $allComments;
     }
-
     public function countRootComments(int $newsId, bool $isAdmin = false): int
     {
         $sql = "SELECT COUNT(*) as total FROM COMMENTS 
@@ -147,13 +134,10 @@ class CommentModel extends Model
 
     private function sortCommentsForDisplay(array $comments, array $rootIds, string $direction): array
     {
-        // Nếu sắp xếp cũ nhất (ASC) thì SQL đã trả về đúng thứ tự rồi, 
-        // không cần gom nhóm phức tạp, cứ trả về luôn để đệ quy View tự nhặt.
         if ($direction === 'ASC')
             return $comments;
 
-        // Nếu là Mới nhất (DESC):
-        // 1. Gom nhóm toàn bộ comment theo ID để truy xuất nhanh
+
         $indexed = [];
         foreach ($comments as $c) {
             $indexed[$c['ID']] = $c;
@@ -240,20 +224,31 @@ class CommentModel extends Model
     }
     public function toggleCommentStatus(int $commentId): bool
     {
-        $stmt = $this->db->prepare('
-        UPDATE COMMENTS 
-        SET status = CASE 
-            WHEN status = "presented" THEN "hidden"
-            ELSE "presented"
-        END
-        WHERE ID = ?
-    ');
 
-        $stmt->bind_param('i', $commentId);
+        $currentComment = $this->getCommentById($commentId);
+        if (!$currentComment)
+            return false;
 
-        $result = $stmt->execute();
-        $stmt->close();
+        $newStatus = ($currentComment['status'] === 'presented') ? 'hidden' : 'presented';
 
-        return $result;
+        $this->db->begin_transaction();
+
+        try {
+            // 2. Cập nhật trạng thái cho chính nó
+            $stmt = $this->db->prepare("UPDATE COMMENTS SET status = ? WHERE ID = ?");
+            $stmt->bind_param('si', $newStatus, $commentId);
+            $stmt->execute();
+
+
+            $stmtChild = $this->db->prepare("UPDATE COMMENTS SET status = ? WHERE parent_comment_id = ?");
+            $stmtChild->bind_param('si', $newStatus, $commentId);
+            $stmtChild->execute();
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollback();
+            return false;
+        }
     }
 }

@@ -15,35 +15,14 @@ $sort = $_GET['sort'] ?? 'name_asc';
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<style>
-/* Ép style phân trang chuẩn mẫu */
-.pagination .page-item .page-link {
-    border-radius: 0 !important;
-    color: #444;
-    padding: 8px 16px;
-}
+<div class="main-content-inner">
+    </div>
 
-.pagination .page-item.active .page-link {
-    background-color: #007bff !important;
-    border-color: #007bff !important;
-    color: #fff !important;
-}
+<script>
+    const API_BASE_URL = '<?= $toUrl('admin/categories/') ?>';
+</script>
 
-.pagination .page-item.disabled .page-link {
-    background-color: #f4f7f6;
-    color: #ccc;
-}
-
-/* Icon hành động trần */
-.action-icon {
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-.action-icon:hover {
-    opacity: 0.7;
-}
-</style>
+<script src="<?= $assetUrl('js/category.js?v=' . time()) ?>"></script>
 
 <div class="main-content-inner">
     <div class="row">
@@ -196,91 +175,3 @@ $sort = $_GET['sort'] ?? 'name_asc';
         </div>
     </div>
 </div>
-
-<script>
-// TUI GIỮ NGUYÊN TOÀN BỘ LOGIC SCRIPT CŨ CỦA HIỀN NHÉ
-const API_BASE_URL = '<?= $toUrl('admin/categories/'); ?>';
-const getCategoryModal = () => bootstrap.Modal.getOrCreateInstance(document.getElementById('categoryModal'));
-
-window.showAddModal = function() {
-    $('#categoryForm')[0].reset();
-    $('#category_id').val('');
-    $('#modalTitle').text('Thêm danh mục mới');
-    getCategoryModal().show();
-};
-
-window.editCategory = function(id) {
-    $.get(API_BASE_URL + 'get-json', {
-        id: id
-    }, function(data) {
-        if (data && data.ID) {
-            $('#category_id').val(data.ID);
-            $('#name_input').val(data.Name);
-            $('#modalTitle').text('Chỉnh sửa danh mục');
-            getCategoryModal().show();
-        }
-    }, 'json');
-};
-
-window.deleteCategory = function(id, name) {
-    swal({
-        title: "Xác nhận xóa?",
-        text: "Hành động này sẽ gỡ bỏ [" + name + "] khỏi hệ thống.",
-        icon: "warning",
-        buttons: ["Hủy bỏ", "Xác nhận xóa"],
-        dangerMode: true,
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.post(API_BASE_URL + 'delete', {
-                id: id
-            }, function(res) {
-                if (res.status === 'success') {
-                    swal("Thành công!", "Dữ liệu đã được cập nhật.", "success").then(() => location
-                        .reload());
-                } else {
-                    swal("Thông báo", res.message, "info");
-                }
-            }, 'json');
-        }
-    });
-};
-
-$(document).ready(function() {
-    $('#categoryForm').on('submit', function(e) {
-        e.preventDefault();
-        const name = $('#name_input').val().trim();
-
-        // 1. Check trống & độ dài
-        if (name.length < 2 || name.length > 50) {
-            swal("Lỗi!", "Tên danh mục phải từ 2 đến 50 ký tự nhen Hiền!", "error");
-            return false;
-        }
-
-
-        const regex = /^[\p{L}0-9\s\-_]+$/u;
-
-        const safeRegex = /^[a-zA-Z0-9À-ỹ\s\-_]+$/;
-        if (!safeRegex.test(name)) {
-            swal("Lỗi!", "Tên danh mục không được chứa ký tự lạ nhen!", "error");
-            return false;
-        }
-        const id = $('#category_id').val();
-        const url = id ? API_BASE_URL + 'update' : API_BASE_URL + 'create';
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: $(this).serialize(),
-            dataType: 'json',
-            success: function(res) {
-                if (res.status === 'success') {
-                    getCategoryModal().hide();
-                    swal("Thành công!", "Thông tin đã được lưu lại.", "success").then(() =>
-                        location.reload());
-                } else {
-                    swal("Không thể thực hiện", res.message, "error");
-                }
-            }
-        });
-    });
-});
-</script>

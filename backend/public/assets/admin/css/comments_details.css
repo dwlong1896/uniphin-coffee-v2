@@ -1,0 +1,140 @@
+.avatar-img {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #f0f1f7;
+}
+
+.comment-item-wrap {
+    transition: 0.3s;
+    border-radius: 8px;
+    padding-right: 10px;
+}
+
+.comment-item-wrap:hover {
+    background-color: #f8f9ff;
+}
+
+.comment-hidden {
+    opacity: 0.5;
+    background-color: #fafafa;
+}
+
+.comment-hidden img {
+    filter: grayscale(100%);
+}
+
+.no-caret::after {
+    display: none;
+}
+
+.dropdown-menu {
+    border-radius: 12px;
+    padding: 10px;
+    min-width: 170px;
+    z-index: 1060;
+    border: none;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.filter-round {
+    height: 45px;
+    border-radius: 25px !important;
+    border: 1px solid #e1e6f1;
+}
+
+.card {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.03);
+}
+
+.btn-primary {
+    background-color: #5856d6;
+    border-color: #5856d6;
+}
+
+.search-box-srtdash-new {
+    position: relative;
+    width: 100%;
+}
+
+/* Ô nhập liệu OVAL hoàn toàn */
+.search-box-srtdash-new input {
+    width: 100%;
+    height: 45px;
+    padding-left: 25px;
+    padding-right: 45px;
+    /* Chừa chỗ cho kính lúp nằm ké */
+    border-radius: 25px !important;
+    /* Tạo hình Oval */
+    border: 1px solid #e1e6f1;
+    background-color: #f8f9ff;
+    font-size: 14px;
+    transition: 0.3s;
+    outline: none;
+}
+
+/* Khi rê chuột/click vào ô nhập */
+.search-box-srtdash-new input:focus {
+    background-color: #fff;
+    border-color: #5856d6;
+    box-shadow: 0 0 10px rgba(88, 86, 214, 0.05);
+}
+
+/* Kính lúp "nhập xác" vào bên trong */
+.search-box-srtdash-new i {
+    position: absolute;
+    right: 18px;
+    /* Đẩy vào trong ô nhập */
+    top: 50%;
+    transform: translateY(-50%);
+    /* Căn giữa dọc */
+    color: #a4a4ba;
+    cursor: pointer;
+    font-size: 15px;
+    z-index: 5;
+}
+
+.search-box-srtdash-new i:hover {
+    color: #5856d6;
+}
+
+.custom-select-srtdash {
+    height: 45px;
+    width: 100%;
+    border-radius: 10px !important;
+    /* Bo góc vuông vuông giống mẫu bà gửi */
+    background-color: #f8f9ff !important;
+    border: 1px solid #e1e6f1 !important;
+    padding-left: 20px !important;
+    padding-right: 35px !important;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+
+    /* Triệt hạ giao diện mặc định để tự vẽ mũi tên */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* Vẽ lại mũi tên tam giác nhỏ gọn bên phải */
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath fill='%23333' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 15px center !important;
+    background-size: 10px !important;
+
+    transition: all 0.2s ease-in-out;
+}
+
+.custom-select-srtdash:hover {
+    background-color: #f1f3f9 !important;
+}
+
+.custom-select-srtdash:focus {
+    background-color: #fff !important;
+    border-color: #5856d6 !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(88, 86, 214, 0.1);
+}

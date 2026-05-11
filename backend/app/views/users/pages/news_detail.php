@@ -1,12 +1,20 @@
 <?php
-/**
- * 1. HELPER & ĐỆ QUY CÓ NHÃN ĐẶC BIỆT VÀ THU GỌN LUỒNG
- */
+
 $publicBase = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
 $toUrl = static function (string $path) use ($publicBase): string {
     return ($publicBase === '' ? '' : $publicBase) . '/' . ltrim($path, '/');
 };
+function countAllDescendants($comments, $parentId) {
+        $count = 0;
 
+        $children = array_filter($comments, fn($c) =>(int)$c['parent_comment_id'] === (int)$parentId);
+
+        foreach($children as $child) {
+            $count++; // Đếm chính nó
+            $count += countAllDescendants($comments, $child['ID']);
+        }
+        return $count;
+    }
 function renderCommentsRecursive($comments, $parentId = null, $level = 0, $toUrl, $newsId, $authorId)
 {
 
@@ -15,7 +23,7 @@ function renderCommentsRecursive($comments, $parentId = null, $level = 0, $toUrl
 
         $paddingStep = ($level > 0) ? min($level * 20, 100) : 0;
         $userName = htmlspecialchars($cmt['first_name'] . ' ' . $cmt['last_name']);
-        $childCount = count(array_filter($comments, fn($c) => $c['parent_comment_id'] == $cmt['ID']));
+        $childCount = countAllDescendants($comments, $cmt['ID']);
 
         $isAuthor = ((int) $cmt['User_ID'] === (int) $authorId);
         $isAdminRole = (isset($cmt['role']) && $cmt['role'] === 'admin');
@@ -268,145 +276,9 @@ function renderCommentsRecursive($comments, $parentId = null, $level = 0, $toUrl
         </form>
     </div>
 </div>
+
 <script>
-    // 1. CÁC HÀM XỬ LÝ NÚT BẤM (PHẢI NẰM NGOÀI READY)
-    window.toggleThread = function (id) {
-        const thread = document.getElementById('thread-' + id);
-        const btn = document.getElementById('btn-thread-' + id);
-        if (!thread || !btn) return;
-
-        if (thread.classList.contains('hidden')) {
-            thread.classList.remove('hidden');
-            btn.innerHTML = `<i class="fas fa-chevron-up mr-1"></i> Thu gọn phản hồi`;
-        } else {
-            thread.classList.add('hidden');
-            btn.innerHTML = `<i class="fas fa-chevron-down mr-1"></i> Xem phản hồi`;
-            document.getElementById('comment-wrap-' + id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    };
-
-    window.replyWithTag = function (id, userName) {
-        const f = document.getElementById('reply-form-' + id);
-        if (!f) return;
-        f.classList.remove('hidden');
-        const textarea = f.querySelector('textarea');
-        textarea.value = '';
-        textarea.placeholder = 'Đang trả lời ' + userName + '...';
-        textarea.focus();
-    };
-
-    window.showEditForm = function (id) {
-        const textElement = document.getElementById('content-text-' + id);
-        if (textElement) {
-            document.getElementById('edit-comment-id').value = id;
-            document.getElementById('edit-comment-content').value = textElement.innerText.trim();
-            document.getElementById('edit-modal').classList.remove('hidden');
-        }
-    };
-
-    window.closeEditModal = function () {
-        document.getElementById('edit-modal').classList.add('hidden');
-    };
-
-    window.deleteComment = async function (id) {
-        const result = await Swal.fire({
-            title: 'Xác nhận xóa?',
-            text: "Xóa là mất tiêu luôn đó nhen Hiền!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Xóa luôn!'
-        });
-
-        if (result.isConfirmed) {
-            const fd = new FormData();
-            fd.append('action', 'delete');
-            fd.append('comment_id', id);
-
-            const r = await fetch('<?= $toUrl("comment-action") ?>', {
-                method: 'POST',
-                body: fd,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-            const res = await r.json();
-            if (res.status === 'success') location.reload();
-        }
-    };
-
-    // 2. HÀM XỬ LÝ AJAX (TUI ĐÃ FIX LỖI ĐÓNG NGOẶC CỦA BÀ)
-    async function handleAjax(form) {
-        const textarea = form.querySelector('textarea');
-        const content = textarea ? textarea.value.trim() : "";
-
-        // Kiểm tra nội dung rỗng
-        if (content === "") {
-            Swal.fire({ icon: 'warning', title: 'Nội dung trống!', text: 'Bà chưa nhập gì hết trơn kìa!', confirmButtonColor: '#00aeef' });
-            return;
-        }
-
-        // Kiểm tra độ dài (Đồng bộ với Server)
-        if (content.length > 1000) {
-            Swal.fire({ icon: 'warning', title: 'Quá dài!', text: 'Bình luận tối đa 1000 ký tự thôi nhen Hiền!', confirmButtonColor: '#00aeef' });
-            return;
-        }
-
-        const url = form.getAttribute('action');
-        const formData = new FormData(form);
-
-        try {
-            const res = await fetch(url, {
-                method: 'POST',
-                body: formData,
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            });
-
-            const text = await res.text();
-            let data;
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                console.error("Server trả về không đúng định dạng JSON:", text);
-                throw new Error("Phản hồi không phải JSON");
-            }
-
-            if (data.status === 'success') {
-                location.reload();
-            } else {
-                Swal.fire({ icon: 'error', title: 'Lỗi!', text: data.message });
-            }
-        } catch (err) {
-            console.error(err);
-            Swal.fire({ icon: 'error', title: 'Lỗi!', text: 'Gửi bình luận thất bại!' });
-        }
-    }
-
-    // 3. GẮN SỰ KIỆN KHI TRANG SẴN SÀNG
-    $(document).ready(function () {
-        $(document).on('submit', '.js-ajax-form', function (e) {
-            e.preventDefault();
-            handleAjax(this);
-        });
-    });
+    const COMMENT_ACTION_URL = '<?= $toUrl("comment-action") ?>';
 </script>
 
-<style>
-    .news-content p {
-        margin-bottom: 2rem;
-        color: #456072;
-        line-height: 2.1;
-    }
-
-    .news-content h2 {
-        font-weight: 900;
-        color: #0c2233;
-        margin: 4rem 0 2rem;
-        text-transform: uppercase;
-    }
-
-    .news-content img {
-        border-radius: 2.5rem;
-        margin: 3rem auto;
-        display: block;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
-    }
-</style>
+<script src="<?php echo htmlspecialchars($asset('js/user/news_details.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>"></script>
