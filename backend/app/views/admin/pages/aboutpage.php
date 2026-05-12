@@ -39,9 +39,14 @@
 
                                     <div class="mb-3">
                                         <label class="form-label">Ảnh hiện tại</label>
-                                        <?php if (!empty($section['image_url'])): ?>
+                                        <?php if (!empty($section['image_url'])):
+                                            $previewImage = $section['image_url'];
+                                            if (strpos($previewImage, '/') !== 0 && !preg_match('/^(https?:)?\/\//', $previewImage)) {
+                                                $previewImage = '/' . ltrim($previewImage, '/');
+                                            }
+                                        ?>
                                             <div class="mb-2">
-                                                <img src="<?php echo htmlspecialchars($section['image_url'], ENT_QUOTES, 'UTF-8'); ?>" alt="Ảnh <?php echo htmlspecialchars($section['section_key'], ENT_QUOTES, 'UTF-8'); ?>" style="max-height: 120px; width: auto; display: block;" />
+                                                <img src="<?php echo htmlspecialchars($previewImage, ENT_QUOTES, 'UTF-8'); ?>" alt="Ảnh <?php echo htmlspecialchars($section['section_key'], ENT_QUOTES, 'UTF-8'); ?>" style="max-height: 120px; width: auto; display: block;" />
                                             </div>
                                         <?php else: ?>
                                             <div class="text-muted mb-2">Chưa có ảnh. Upload ảnh mới nếu cần.</div>
