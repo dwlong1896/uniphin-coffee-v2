@@ -14,7 +14,6 @@ class Database {
             die("Kết nối thất bại: " . $this->connection->connect_error);
         }
 
-        // Set charset de doc/ghi tieng Viet dung (utf8mb4).
         $this->connection->set_charset(DB_CHARSET);
     }
 
@@ -30,7 +29,6 @@ class Database {
     }
 
     public function getConnection(): mysqli {
-        // Tra ve ket noi MySQLi de model su dung query.
         return $this->connection;
     }
 }

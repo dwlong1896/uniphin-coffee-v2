@@ -115,7 +115,9 @@ html {
 /* ── BANNER SLIDER ── */
 .uniphin-banner-slider {
   position: relative;
+  width: min(1600px, 100%);
   max-width: 1600px;
+  margin: 0 auto;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
@@ -795,6 +797,7 @@ body.uniphin-modal-open {
   padding: 30px;
   margin: 60px 50px;
   max-width: 1500px;
+  box-sizing: border-box;
 }
 .flashsale-header {
   display: flex;
@@ -1206,6 +1209,14 @@ body.uniphin-modal-open {
 }
 
 /* ── RESPONSIVE ── */
+@media (min-width: 1601px) {
+  .uniphin-flashsale-wrapper {
+    width: min(1500px, calc(100% - 100px));
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 @media (max-width: 1366px) {
   .uniphin-menu-header,
   .uniphin-menu-body {

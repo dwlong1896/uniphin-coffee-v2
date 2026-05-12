@@ -2,8 +2,7 @@
 
 class Router
 {
-    // Bang luu route theo tung HTTP method.
-    // Vi du: $routes['GET']['/users'] = [UserController::class, 'index']
+
     private array $routes = [
         'GET' => [],
         'POST' => [],
@@ -32,7 +31,7 @@ class Router
         $requestPath = rtrim($requestPath, '/');
         $requestPath = $requestPath === '' ? '/' : $requestPath;
 
-        // ↓ Thay chỗ tra bảng cũ bằng matchRoute()
+    
         $matched = $this->matchRoute($method, $requestPath);
 
         if ($matched === null) {
@@ -42,17 +41,17 @@ class Router
         }
 
         $handler = $matched['handler'];
-        $params  = $matched['params'];   // ví dụ: ['id' => '42']
+        $params  = $matched['params'];   
 
         if (is_callable($handler)) {
-            $handler($params);   // truyền params vào closure
+            $handler($params);   
             return;
         }
 
         if (is_array($handler) && count($handler) === 2) {
             [$controllerClass, $action] = $handler;
             $controller = new $controllerClass();
-            $controller->$action($params);   // truyền params vào method
+            $controller->$action($params);   
             return;
         }
 
@@ -64,19 +63,19 @@ class Router
     private function matchRoute(string $method, string $requestPath): array|null
     {
         foreach ($this->routes[$method] as $pattern => $handler) {
-            // Đổi /users/{id} thành regex: /users/([^/]+)
+         
             $regex = preg_replace('/\{[^\/]+\}/', '([^/]+)', $pattern);
             $regex = '#^' . $regex . '$#';
 
             if (preg_match($regex, $requestPath, $matches)) {
-                // $matches[0] là full match, bỏ đi
+               
                 array_shift($matches);
 
-                // Lấy tên param từ pattern: {id}, {slug},...
+               
                 preg_match_all('/\{([^\/]+)\}/', $pattern, $paramNames);
 
-                // Ghép tên param với giá trị
-                // /users/{id}  +  /users/42  →  ['id' => '42']
+            
+    
                 $params = array_combine($paramNames[1], $matches);
 
                 return ['handler' => $handler, 'params' => $params];

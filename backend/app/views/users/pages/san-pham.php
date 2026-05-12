@@ -53,15 +53,15 @@ $bestseller_items = array_slice($products, 0, 5);
 ?>
 
 <div class="uniphin-menu-wrapper">
-    <!-- ── BANNER SLIDER ── -->
+    <!-- BANNER SLIDER -->
     <div class="uniphin-banner-slider">
         <?php
         // Fallback URL dùng chung cho tất cả banner khi ảnh local bị lỗi
         $bannerFallback = 'https://minio.thecoffeehouse.com/image/admin/1777871117_collect-banner-912x456px.jpg';
         $banners = [
-            ['src' => $asset('images/banners/banner1.jpg'), 'alt' => 'Banner 1'],
-            ['src' => $asset('images/banners/banner2.jpg'), 'alt' => 'Banner 2'],
-            ['src' => $asset('images/banners/banner3.jpg'), 'alt' => 'Banner 3'],
+            ['src' => $asset('image/banner1.jpg'), 'alt' => 'Banner 1'],
+            ['src' => $asset('image/banner2.jpg'), 'alt' => 'Banner 2'],
+            ['src' => $asset('image/banner3.jpg'), 'alt' => 'Banner 3'],
         ];
         foreach ($banners as $banner): ?>
         <div class="banner-item">
@@ -340,8 +340,7 @@ $bestseller_items = array_slice($products, 0, 5);
     data-login-url="<?= htmlspecialchars($publicBase . '/login', ENT_QUOTES, 'UTF-8') ?>">
     <div class="uniphin-product-modal__dialog" role="dialog" aria-modal="true"
         aria-labelledby="uniphinProductModalTitle">
-        <button type="button" class="uniphin-product-modal__close" data-modal-close
-            aria-label="Đóng chi tiết sản phẩm">
+        <button type="button" class="uniphin-product-modal__close" data-modal-close aria-label="Đóng chi tiết sản phẩm">
             <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M6 6L18 18M18 6L6 18"></path>
             </svg>
