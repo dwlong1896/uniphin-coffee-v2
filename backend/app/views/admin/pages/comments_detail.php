@@ -15,19 +15,19 @@ function renderAdminCommentsRecursive($comments, $parentId = null, $level = 0, $
     });
 
     foreach ($children as $cmt) {
-        
+
         if (!empty($filterStatus) && $cmt['status'] !== $filterStatus) {
             continue;
         }
         $isMatch = empty($searchKeyword) || mb_strpos(mb_strtolower($cmt['content']), mb_strtolower($searchKeyword)) !== false;
 
         if (!$isMatch) {
-            
+
             renderAdminCommentsRecursive($comments, $cmt['ID'], $level + 1, $toUrl, $filterStatus, $searchKeyword);
-            continue; 
+            continue;
         }
         $isHidden = ($cmt['status'] === 'hidden');
-        $childCount = count(array_filter($comments, fn($c) => (int)$c['parent_comment_id'] === (int)$cmt['ID'] && (empty($searchKeyword) || mb_strpos(mb_strtolower($c['content']), mb_strtolower($searchKeyword)) !== false)));
+        $childCount = count(array_filter($comments, fn($c) => (int) $c['parent_comment_id'] === (int) $cmt['ID'] && (empty($searchKeyword) || mb_strpos(mb_strtolower($c['content']), mb_strtolower($searchKeyword)) !== false)));
         $paddingStep = ($level > 0) ? 30 : 0;
         $opacityClass = $isHidden ? 'comment-hidden' : '';
         ?>
@@ -64,6 +64,13 @@ function renderAdminCommentsRecursive($comments, $parentId = null, $level = 0, $
                                     <i class="fa <?= $isHidden ? 'fa-eye' : 'fa-eye-slash' ?> mr-2"></i>
                                     <?= $isHidden ? 'Hiện bình luận' : 'Ẩn bình luận' ?>
                                 </a>
+                                <?php if (isset($_SESSION['user_id']) && (int) $_SESSION['user_id'] === (int) $cmt['User_ID']): ?>
+                                    <a class="dropdown-item small font-weight-bold py-2" href="javascript:void(0)"
+                                        onclick="showEditForm(<?= $cmt['ID'] ?>)" style="color: #666;">
+                                        <i class="fa fa-edit mr-2"></i> Sửa bình luận
+                                    </a>
+                                <?php endif; ?>
+                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item small font-weight-bold py-2 text-danger" href="javascript:void(0)"
                                     onclick="deleteComment(<?= $cmt['ID'] ?>)">
                                     <i class="fa fa-trash mr-2"></i> Xóa vĩnh viễn

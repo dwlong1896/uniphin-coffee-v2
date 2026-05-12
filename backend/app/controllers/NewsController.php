@@ -24,8 +24,8 @@ class NewsController extends Controller
         $limit = 9;
         $offset = ($page - 1) * $limit;
 
-        $newsList = $this->newsModel->getNews($filters, $limit, $offset);
-        $totalNews = $this->newsModel->countNews($filters);
+        $newsList = $this->newsModel->getNews($filters, $limit, $offset,false);
+        $totalNews = $this->newsModel->countNews($filters,false);
         $categories = $this->categoryModel->getAll();
         $data = [
             'news' => $newsList,

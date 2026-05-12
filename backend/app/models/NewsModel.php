@@ -3,7 +3,7 @@
 class NewsModel extends Model
 {
     // Lấy danh sách tin tức
-    public function getNews(array $filters, int $limit, int $offset): array
+    public function getNews(array $filters, int $limit, int $offset, bool $isAdmin = true): array
     {
         $sql = "SELECT n.*, n.ID as ID, n.image as post_image, n.Admin_ID, c.Name as category_name, 
                    u.first_name as admin_fname, u.last_name as admin_lname,
@@ -17,6 +17,9 @@ class NewsModel extends Model
 
         $params = [];
         $types = '';
+        if (!$isAdmin) {
+            $sql .= " AND n.status = 'published'";
+        }
 
         if (!empty($filters['search'])) {
             $sql .= " AND n.title LIKE ?";
@@ -56,12 +59,14 @@ class NewsModel extends Model
         return $result;
     }
 
-    public function countNews(array $filters): int
+    public function countNews(array $filters, bool $isAdmin = false): int
     {
         $sql = "SELECT COUNT(*) as total FROM NEWS WHERE status = 'published'";
         $params = [];
         $types = '';
-
+        if (!$isAdmin) {
+            $sql .= " AND status = 'published'";
+        }
         if (!empty($filters['search'])) {
             $sql .= " AND title LIKE ?";
             $params[] = '%' . $filters['search'] . '%';
@@ -279,7 +284,7 @@ class NewsModel extends Model
 
         $stmt = $this->db->prepare($sql);
 
-        
+
         $stmt->bind_param(
             'ssississsi',
             $data['title'],
@@ -290,7 +295,7 @@ class NewsModel extends Model
             $data['admin_id'],
             $data['meta_description'],
             $data['keywords'],
-            $data['status'], 
+            $data['status'],
             $id
         );
 

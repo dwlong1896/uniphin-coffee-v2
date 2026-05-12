@@ -93,9 +93,7 @@
     <script
         src="<?php echo htmlspecialchars($asset('js/user/cart.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>">
     </script>
-    <script src="<?php echo htmlspecialchars($asset('js/user/news_details.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>"></script>
-    <script src="<?php echo htmlspecialchars($asset('js/user/tin-tuc.js'), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo time(); ?>"></script>
-
+    
 </body>
 
 </html>

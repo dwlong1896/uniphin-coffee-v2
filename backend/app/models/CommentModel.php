@@ -224,7 +224,6 @@ class CommentModel extends Model
     }
     public function toggleCommentStatus(int $commentId): bool
     {
-
         $currentComment = $this->getCommentById($commentId);
         if (!$currentComment)
             return false;
@@ -234,13 +233,25 @@ class CommentModel extends Model
         $this->db->begin_transaction();
 
         try {
-            // 2. Cập nhật trạng thái cho chính nó
+      
             $stmt = $this->db->prepare("UPDATE COMMENTS SET status = ? WHERE ID = ?");
             $stmt->bind_param('si', $newStatus, $commentId);
             $stmt->execute();
 
+            $sqlChildren = "
+            UPDATE COMMENTS 
+            SET status = ? 
+            WHERE ID IN (
+                WITH RECURSIVE comment_path AS (
+                    SELECT ID FROM COMMENTS WHERE parent_comment_id = ?
+                    UNION ALL
+                    SELECT c.ID FROM COMMENTS c 
+                    INNER JOIN comment_path cp ON c.parent_comment_id = cp.ID
+                )
+                SELECT ID FROM comment_path
+            )";
 
-            $stmtChild = $this->db->prepare("UPDATE COMMENTS SET status = ? WHERE parent_comment_id = ?");
+            $stmtChild = $this->db->prepare($sqlChildren);
             $stmtChild->bind_param('si', $newStatus, $commentId);
             $stmtChild->execute();
 
@@ -248,6 +259,7 @@ class CommentModel extends Model
             return true;
         } catch (Exception $e) {
             $this->db->rollback();
+            error_log("Lỗi ẩn bình luận: " . $e->getMessage());
             return false;
         }
     }
