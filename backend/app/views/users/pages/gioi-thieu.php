@@ -6,6 +6,17 @@
 $s = function (string $key, string $field, string $default = '') use ($sections) {
     return htmlspecialchars($sections[$key][$field] ?? $default, ENT_QUOTES, 'UTF-8');
 };
+
+$img = function (string $key, string $default) use ($sections, $publicBase, $asset): string {
+    $path = trim($sections[$key]['image_url'] ?? '');
+    if ($path !== '') {
+        if (preg_match('/^(https?:)?\/\//', $path) || strpos($path, '/') === 0) {
+            return $path;
+        }
+        return ($publicBase === '' ? '' : $publicBase) . '/' . ltrim($path, '/');
+    }
+    return $default;
+};
 ?>
 
 <div class="about-page">
@@ -18,14 +29,14 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
 
     <!-- Hero Banner -->
     <section class="about-hero">
-        <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-1.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Sinh viên UniPhin Coffee">
+        <img src="<?php echo htmlspecialchars($img('hero', $asset('image/gioi-thieu-1.png')), ENT_QUOTES, 'UTF-8'); ?>" alt="Sinh viên UniPhin Coffee">
     </section>
 
     <!-- Nguồn gốc -->
     <section class="about-section">
         <div class="about-section-container">
             <div class="about-section-image">
-                <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-nguon-goc.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Nguồn gốc">
+                <img src="<?php echo htmlspecialchars($img('origin', $asset('image/gioi-thieu-nguon-goc.png')), ENT_QUOTES, 'UTF-8'); ?>" alt="Nguồn gốc">
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('origin', 'title', 'Nguồn gốc'); ?></h3>
@@ -38,7 +49,7 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
     <section class="about-section about-mission-bg reverse">
         <div class="about-section-container">
             <div class="about-section-image">
-                <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-su-menh.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Sứ mệnh">
+                <img src="<?php echo htmlspecialchars($img('mission', $asset('image/gioi-thieu-su-menh.png')), ENT_QUOTES, 'UTF-8'); ?>" alt="Sứ mệnh">
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('mission', 'title', 'Sứ mệnh'); ?></h3>
@@ -51,7 +62,7 @@ $s = function (string $key, string $field, string $default = '') use ($sections)
     <section class="about-section">
         <div class="about-section-container">
             <div class="about-section-image">
-                <img src="<?php echo htmlspecialchars($asset('image/gioi-thieu-chat-luong.png'), ENT_QUOTES, 'UTF-8'); ?>" alt="Chất lượng" class="image-glow">
+                <img src="<?php echo htmlspecialchars($img('quality', $asset('image/gioi-thieu-chat-luong.png')), ENT_QUOTES, 'UTF-8'); ?>" alt="Chất lượng" class="image-glow">
             </div>
             <div class="about-section-content">
                 <h3><?php echo $s('quality', 'title', 'Từ hạt cà phê ngon đến ly cà phê trọn vị'); ?></h3>

@@ -22,8 +22,9 @@
                                 <span class="badge bg-info text-dark"><?php echo htmlspecialchars($section['section_key'], ENT_QUOTES, 'UTF-8'); ?></span>
                             </div>
                             <div class="card-body">
-                                <form action="<?php echo $toUrl('admin/about/save'); ?>" method="post">
+                                <form action="<?php echo $toUrl('admin/about/save'); ?>" method="post" enctype="multipart/form-data">
                                     <input type="hidden" name="id" value="<?php echo (int)$section['id']; ?>">
+                                    <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($section['image_url'], ENT_QUOTES, 'UTF-8'); ?>">
 
                                     <div class="mb-3">
                                         <label class="form-label">Tiêu đề</label>
@@ -37,10 +38,17 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label class="form-label">URL hình ảnh</label>
-                                        <input type="text" name="image_url" class="form-control"
-                                            value="<?php echo htmlspecialchars($section['image_url'], ENT_QUOTES, 'UTF-8'); ?>"
-                                            placeholder="https://... hoặc để trống">
+                                        <label class="form-label">Ảnh hiện tại</label>
+                                        <?php if (!empty($section['image_url'])): ?>
+                                            <div class="mb-2">
+                                                <img src="<?php echo htmlspecialchars($section['image_url'], ENT_QUOTES, 'UTF-8'); ?>" alt="Ảnh <?php echo htmlspecialchars($section['section_key'], ENT_QUOTES, 'UTF-8'); ?>" style="max-height: 120px; width: auto; display: block;" />
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="text-muted mb-2">Chưa có ảnh. Upload ảnh mới nếu cần.</div>
+                                        <?php endif; ?>
+
+                                        <input type="file" name="image" class="form-control" accept="image/*">
+                                        <small class="text-muted">Chọn file ảnh mới để thay thế ảnh hiện tại.</small>
                                     </div>
 
                                     <div class="text-end">

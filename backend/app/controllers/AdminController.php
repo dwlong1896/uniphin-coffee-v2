@@ -858,10 +858,40 @@ class AdminController extends Controller
         $model = new AboutSectionModel();
 
         $id = (int) ($_POST['id'] ?? 0);
+        $currentImage = trim($_POST['current_image'] ?? '');
+        $imageUrl = $currentImage;
+
+        if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $file = $_FILES['image'];
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+            if (in_array($ext, $allowed, true)) {
+                $uploadDir = dirname(__DIR__, 2) . '/public/uploads/about/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                $newFileName = 'about_' . time() . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
+                $targetPath = $uploadDir . $newFileName;
+
+                if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                    if ($currentImage !== '' && substr($currentImage, 0, 14) === 'uploads/about/') {
+                        $oldFile = dirname(__DIR__, 2) . '/public/' . ltrim($currentImage, '/');
+                        if (is_file($oldFile)) {
+                            unlink($oldFile);
+                        }
+                    }
+
+                    $imageUrl = 'uploads/about/' . $newFileName;
+                }
+            }
+        }
+
         $data = [
             'title' => trim($_POST['title'] ?? ''),
             'content' => trim($_POST['content'] ?? ''),
-            'image_url' => trim($_POST['image_url'] ?? ''),
+            'image_url' => $imageUrl,
         ];
 
         if ($id) {
