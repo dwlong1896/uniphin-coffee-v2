@@ -32,7 +32,7 @@ Project gồm 2 khu vực chính:
 Repo hiện tại được kỳ vọng nằm ở:
 
 ```text
-c:\xampp\htdocs\uniphin2
+c:\xampp\htdocs\uniphin-coffe-v2
 ```
 
 ### 2. Tạo database
@@ -45,20 +45,20 @@ Cấu hình mặc định:
 
 ```php
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'shop_db3');
+define('DB_NAME', 'shop_db2');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');
 ```
 
-Nên tạo database tên `shop_db3` để khỏi phải đổi config.
+Nên tạo database tên `shop_db2` để khỏi phải đổi config.
 
 ### 3. Import database
 
 Import file:
 
 ```text
-database/shop_db3.sql
+database/shop_db2.sql
 ```
 
 ### 4. Bật Apache và MySQL
@@ -73,7 +73,7 @@ Khởi động:
 Base URL local:
 
 ```text
-http://localhost/uniphin2/backend/public
+http://localhost/uniphin-coffe-v2/backend/public
 ```
 
 ## Tài khoản test
@@ -81,16 +81,15 @@ http://localhost/uniphin2/backend/public
 Theo dump SQL hiện tại:
 
 - Admin: `admin@gmail.com` / `admin`
-- Customer: `customer@gmail.com` / `000000`
+- Customer: `customer1@gmail.com` / `customer`
 
 ## Cấu trúc thư mục
 
 ```text
-uniphin2/
+uniphin-coffe-v2/
 |-- README.md
-|-- TESTING_GUIDE.md
 |-- database/
-|   `-- shop_db3.sql
+|   `-- shop_db2.sql
 `-- backend/
     |-- app/
     |   |-- controllers/
